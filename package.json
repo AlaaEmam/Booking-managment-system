@@ -12,13 +12,16 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@fortawesome/fontawesome-free": "^6.7.1",
     "@mui/icons-material": "^6.2.0",
     "@mui/material": "^6.2.0",
     "axios": "^1.7.9",
+    "bootstrap-icons": "^1.11.3",
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-hook-form": "^7.54.0",
+    "react-hook-form": "^7.54.1",
+    "react-pro-sidebar": "^1.1.0",
     "react-router-dom": "^7.0.2",
     "react-toastify": "^10.0.6"
   },
