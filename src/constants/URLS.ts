@@ -1,7 +1,10 @@
 import axios from "axios";
 
+// https://upskilling-egypt.com:3000
+const baseURL=`http://154.41.228.234:3000`
 
-
+export  const axiosInstance=axios.create({baseURL, 
+  headers:{Authorization:localStorage.getItem("token")} })
 
 // Admin
 export const ADMINAUTHURLS={
