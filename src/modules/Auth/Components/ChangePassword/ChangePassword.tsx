@@ -1,8 +1,8 @@
-import React from 'react'
 
+import './changePassword.css'
 export default function ChangePassword() {
   return (
-    <div>
+    <div className='center'>
       ChangePassword
     </div>
   )
