@@ -1,9 +1,9 @@
 import axios from "axios";
 
 // https://upskilling-egypt.com:3000
-const baseURL=`http://154.41.228.234:3000`
+const baseURL=`https://upskilling-egypt.com:3000`
 
-export  const axiosInstance=axios.create({baseURL, 
+export  const axiosInstance=axios.create({baseURL,
   headers:{Authorization:localStorage.getItem("token")} })
 
 // Admin
@@ -60,7 +60,7 @@ export const PORTALAUTHURLS={
 
 export const PORTALUSERS={
   getUserProfile:(id: string) =>`/api/v0/portal/users/${id}`,
-  GOOGLEAUTH:`/api/v0/portal/users/auth/google`, 
+  GOOGLEAUTH:`/api/v0/portal/users/auth/google`,
   FACEBOOKAUTH:`/api/v0/portal/users/auth/facebook`,
 }
 

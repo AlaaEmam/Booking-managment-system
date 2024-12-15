@@ -23,6 +23,8 @@ import logo from "../../../../assets/logo.png";
 import Link from "@mui/material/Link";
 import Login from "../Login/Login";
 import { useNavigate } from "react-router-dom";
+import { axiosInstance, PORTALAUTHURLS } from "../../../../constants/URLS";
+import { toast } from "react-toastify";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -69,10 +71,13 @@ export default function Registration() {
 
     try {
       console.log(data);
-      const res = await axios.post(
-        "https://upskilling-egypt.com:3000/api/v0/portal/users",
-        formata
-      );
+      const res = await axiosInstance.post(PORTALAUTHURLS.createUser,formata)
+      // const res = await axios.post(
+      //   "https://upskilling-egypt.com:3000/api/v0/portal/users",
+      //formata
+      // );
+      toast.success(res.data.message);
+      navigate('/login')
       console.log(res);
     } catch (error) {
       console.log(error);

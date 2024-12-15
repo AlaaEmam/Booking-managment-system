@@ -22,6 +22,8 @@ import Room_facility from "./modules/Room_facility/Room_facility";
 import { useContext } from "react";
 import ProtectedRoute from "./modules/Auth/Components/ProtectedRoute/ProtectedRoute";
 import { AuthContext } from "./context/AuthContext";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; 
 
 function App() {
 
@@ -81,6 +83,7 @@ function App() {
   return (
     <>
       <RouterProvider router={router}></RouterProvider>
+      <ToastContainer />
 
     </>
   );
