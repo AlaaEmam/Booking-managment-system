@@ -18,6 +18,8 @@ import "./reg.css";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import axios from "axios";
 import regist from "../../../../assets/regist.png";
+import logo from "../../../../assets/logo.png";
+
 import Link from "@mui/material/Link";
 import Login from "../Login/Login";
 import { useNavigate } from "react-router-dom";
@@ -95,11 +97,15 @@ export default function Registration() {
                 xs: "20px", // 20px padding for extra-small screens
                 sm: "50px", // 30px padding for small screens and up
                 md: "100px", // 40px padding for medium screens and up
-                lg: " 50px 100px", // 50px padding for large screens and up
+                lg: "  100px", // 50px padding for large screens and up
               },
               boxShadow:"none"
             }}
           >
+
+
+<CardMedia component="img"  style={{width:"auto",position:"absolute",top:"35px",left:"35px"}} image={logo} alt="Example Image"  />
+
             <Typography variant="h5">Sign up</Typography>
             <Typography variant="h6" style={{ marginBottom: "20px" }}>
               If you already have an account register You can
