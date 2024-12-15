@@ -72,6 +72,8 @@ function App() {
         { path: "room-comments", element: <Room_comments /> },
         { path: "room-reviews", element: <Room_reviews /> },
         { path: "room-facility", element: <Room_facility /> },
+        { path: "**" , element: < Notfound/> },
+
       ],
     },
   ]);
@@ -79,6 +81,7 @@ function App() {
   return (
     <>
       <RouterProvider router={router}></RouterProvider>
+
     </>
   );
 }
