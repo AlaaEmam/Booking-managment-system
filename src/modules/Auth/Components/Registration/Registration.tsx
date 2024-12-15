@@ -144,6 +144,7 @@ export default function Registration() {
                 fullWidth
                 margin="dense"
                 className="custom-textfield"
+                size="small"
                 {...register("userName", UserNameValidation)}
               />
 
@@ -158,6 +159,8 @@ export default function Registration() {
                 fullWidth
                 margin="dense"
                 className="custom-textfield"
+                size="small"
+
 
                 {...register("email", EmailValidation)}
               />
@@ -175,6 +178,7 @@ export default function Registration() {
                     margin="dense"
                     type="number"
                     className="custom-textfield"
+                    size="small"
 
                     sx={{ border: "none" }}
                     {...register("phoneNumber", PhoneNumberValidation)}
@@ -186,6 +190,7 @@ export default function Registration() {
                         {errors.phoneNumber.message}
                       </span>
                     )}
+
                   </Typography>
                 </Box>
                 <Box>
@@ -193,6 +198,7 @@ export default function Registration() {
 
                   <TextField
                     placeholder="Please type here "
+                    size="small"
                     variant="outlined"
                     margin="dense"
                     className="custom-textfield"
@@ -218,6 +224,7 @@ export default function Registration() {
                 variant="outlined"
                 type="password"
                 className="custom-textfield"
+                size="small"
 
                 fullWidth
                 margin="dense"
@@ -234,6 +241,8 @@ export default function Registration() {
                 type="password"
                 fullWidth
                 margin="dense"
+                size="small"
+
                 className="custom-textfield"
 
                 {...register("confirmPassword", PasswordValidation)}
