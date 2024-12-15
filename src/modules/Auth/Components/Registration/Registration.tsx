@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Grid2";
 import { Button, colors, Container, SvgIcon, Typography } from "@mui/material";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Card, CardMedia, CardContent } from "@mui/material";
@@ -48,8 +48,7 @@ type Inputs = {
 };
 
 export default function Registration() {
-
- const navigate= useNavigate();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -90,7 +89,7 @@ export default function Registration() {
   return (
     <>
       <Grid container spacing={1}>
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <Item
             sx={{
               padding: {
@@ -99,42 +98,50 @@ export default function Registration() {
                 md: "100px", // 40px padding for medium screens and up
                 lg: "  100px", // 50px padding for large screens and up
               },
-              boxShadow:"none"
+              boxShadow: "none",
             }}
           >
-
-
-<CardMedia component="img"  style={{width:"auto",position:"absolute",top:"35px",left:"35px"}} image={logo} alt="Example Image"  />
+            <CardMedia
+              component="img"
+              style={{
+                width: "auto",
+                position: "absolute",
+                top: "35px",
+                left: "35px",
+              }}
+              image={logo}
+              alt="Example Image"
+            />
 
             <Typography variant="h5">Sign up</Typography>
             <Typography variant="h6" style={{ marginBottom: "20px" }}>
               If you already have an account register You can
-              <Link onClick={() => {navigate("/login")}}  className="text-danger" underline="none" sx={{color: "red",cursor:"pointer"}}>
-                {'   Login here !'}
+              <Link
+                onClick={() => {
+                  navigate("/login");
+                }}
+                className="text-danger"
+                underline="none"
+                sx={{ color: "red", cursor: "pointer" }}
+              >
+                {"   Login here !"}
               </Link>
             </Typography>
 
-
-            {/* <link className="text-danger">Login here !</link> */}
             <form onSubmit={handleSubmit(onSubmit)}>
-
-
-
-
-
-              <Typography  sx={{display:"none"}} variant="subtitle1">role </Typography>
+              <Typography sx={{ display: "none" }} variant="subtitle1">
+                role{" "}
+              </Typography>
               <TextField
                 placeholder="Please type here ..."
                 variant="filled"
                 fullWidth
                 margin="dense"
-                sx={{display:"none"}}
+                sx={{ display: "none" }}
                 className="custom-textfield "
                 value={"user"}
                 {...register("role")}
               />
-
-
 
               <Typography variant="subtitle1">user name</Typography>
               <TextField
@@ -160,8 +167,6 @@ export default function Registration() {
                 margin="dense"
                 className="custom-textfield"
                 size="small"
-
-
                 {...register("email", EmailValidation)}
               />
               {errors.email && (
@@ -179,7 +184,6 @@ export default function Registration() {
                     type="number"
                     className="custom-textfield"
                     size="small"
-
                     sx={{ border: "none" }}
                     {...register("phoneNumber", PhoneNumberValidation)}
                   />
@@ -190,7 +194,6 @@ export default function Registration() {
                         {errors.phoneNumber.message}
                       </span>
                     )}
-
                   </Typography>
                 </Box>
                 <Box>
@@ -202,7 +205,6 @@ export default function Registration() {
                     variant="outlined"
                     margin="dense"
                     className="custom-textfield"
-
                     type="text"
                     {...register("country", {
                       required: "country is required",
@@ -225,7 +227,6 @@ export default function Registration() {
                 type="password"
                 className="custom-textfield"
                 size="small"
-
                 fullWidth
                 margin="dense"
                 {...register("password", PasswordValidation)}
@@ -242,15 +243,12 @@ export default function Registration() {
                 fullWidth
                 margin="dense"
                 size="small"
-
                 className="custom-textfield"
-
                 {...register("confirmPassword", PasswordValidation)}
               />
               {errors.confirmPassword && (
                 <span className="text-danger">This field is required</span>
               )}
-
 
               <Typography variant="subtitle1"> Upload Your photo</Typography>
 
@@ -299,11 +297,11 @@ export default function Registration() {
             </form>
           </Item>
         </Grid>
-        <Grid item md={6} xs={12} >
-          <Item sx={{position:"sticky",top:"0",  boxShadow:"none"}}>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Item sx={{ position: "sticky", top: "0", boxShadow: "none" }}>
             {/* <img src={regist} alt="" full /> */}
 
-            <CardMedia component="img" image={regist} alt="Example Image"  />
+            <CardMedia component="img" image={regist} alt="Example Image" />
           </Item>
         </Grid>
       </Grid>
