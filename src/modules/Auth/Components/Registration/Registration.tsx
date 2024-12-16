@@ -91,8 +91,11 @@ export default function Registration() {
     border: "none",
   }));
 
+ 
   return (
     <>
+
+
       <Grid container spacing={1}>
         <Grid size={{ xs: 12, md: 6 }}>
           <Item
@@ -268,27 +271,14 @@ export default function Registration() {
                 <VisuallyHiddenInput
                   type="file"
                   {...register("profileImage")}
-                  onChange={(event) => {
-                    console.log(event.target.files);
-                  }}
+                  // onChange={(event) => {
+                  //   console.log(event.target.files);
+                  // }}
                   multiple
                 />
               </Button>
 
-              {/*
-      {imageUrl && (
-        <Box sx={{ boxShadow:"none ",border:"none" }}>
-          <Typography variant="body1" gutterBottom>
-          </Typography>
-          <Paper sx={{ padding: 2, display: 'flex', justifyContent: 'center' }}>
-            <img
-              src={imageUrl}
-              alt="Preview"
-              style={{ maxWidth: '100%', maxHeight: '300px', objectFit: 'contain' }}
-            />
-          </Paper>
-        </Box>
-      )} */}
+
 
               <Button
                 sx={{ marginTop: "1rem" }}
