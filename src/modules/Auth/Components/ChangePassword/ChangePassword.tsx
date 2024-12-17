@@ -7,23 +7,18 @@ import Grid from "@mui/material/Grid";
 import { Button, Typography, Link } from "@mui/material";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { EmailValidation, PasswordValidation } from "../../../../constants/validations";
+import { PasswordValidation } from "../../../../constants/validations";
 import ChangePasswordImage from '../../../../assets/changePassword.jpg'; 
 import LogoImage  from '../../../../assets/logo.png';
 import IconButton from '@mui/material/IconButton';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
+
 import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import Input from '@mui/material/Input';
-import FilledInput from '@mui/material/FilledInput';
-import FormHelperText from '@mui/material/FormHelperText';
+
 import { ADMINAUTHURLS, axiosInstance, PORTALAUTHURLS } from '../../../../constants/URLS';
 import { toast } from 'react-toastify';
-import { AuthContext } from '../../../../context/AuthContext';
-import axios from 'axios';
+
 
 
 interface ChangePassword {
