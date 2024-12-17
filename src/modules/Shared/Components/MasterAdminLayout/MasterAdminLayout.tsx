@@ -1,10 +1,11 @@
 import { Outlet } from "react-router-dom";
 import SideBar from "../../../Admin/Components/Shared/Components/SideBar/SideBar";
-import Navbar from "../../../User/Components/Shared/Components/Navbar/Navbar";
+import NavbarAdmin from "../../../Admin/Components/Shared/Components/NavbarAdmin/NavbarAdmin";
 export default function MasterAdminLayout() {
   return (
     <div>
-      <Navbar/>
+      
+      <NavbarAdmin/>
       <SideBar/>
       <Outlet />
     </div>
