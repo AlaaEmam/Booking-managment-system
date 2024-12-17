@@ -23,8 +23,13 @@ import RoomDetailsPage from "./modules/User/Components/RoomDetailsPage/RoomDetai
 import BookingPage from "./modules/User/Components/BookingPage/BookingPage";
 import ExploarePage from "./modules/User/Components/ExploarePage/ExploarePage";
 import FavoriteRoomPage from "./modules/User/Components/FavoriteRoomPage/FavoriteRoomPage";
+import ProtectedRoute from "./modules/Auth/Components/ProtectedRoute/ProtectedRoute";
+import { useContext } from "react";
+import { AuthContext } from "./context/AuthContext";
 
 function App() {
+  const  loginData  = useContext(AuthContext); // Get loginData from context
+
   const router = createBrowserRouter([
     {
       path: "",
@@ -43,8 +48,10 @@ function App() {
     {
       path: "dashboard",
       element: (
-        <MasterAdminLayout />
-      ),
+        <ProtectedRoute loginData={loginData}>
+           <MasterAdminLayout />
+        </ProtectedRoute>
+            ),
       errorElement: <Notfound />,
       children: [
         { index: true, element: <DashBoard /> },
@@ -67,9 +74,11 @@ function App() {
       ],
     },
     {
-      path: "dashboard",
+      path: "homepage",
       element: (
-        <MasterUserLayout />
+        <ProtectedRoute loginData={loginData}>
+          <MasterUserLayout />
+        </ProtectedRoute>
       ),
       errorElement: <Notfound />,
       children: [

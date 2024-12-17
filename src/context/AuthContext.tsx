@@ -32,7 +32,6 @@ export default function AuthContextProvider({ children }: AuthContextProviderPro
   const saveLoginData = () => {
     const token = localStorage.getItem("token");
     if (token) {
-      // Check if the token is in the correct format
       const parts = token.split('.');
       if (parts.length === 3) {
         try {
