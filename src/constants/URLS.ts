@@ -9,7 +9,7 @@ export  const axiosInstance=axios.create({baseURL,
 // Admin
 export const ADMINAUTHURLS={
   createUser:`/api/v0/admin/users`,
-  forgetPassword:`/api/v0/admin/users`,
+  forgetPassword:`/api/v0/portal/users/forgot-password`,
   changePassword:`/api/v0/admin/users/change-password`,
   resetPassword:`/api/v0/admin/users/reset-password`,
   login:`/api/v0/admin/users/login`,
