@@ -153,6 +153,9 @@ export default function Navbar() {
                     >
                       <MenuItem onClick={handleClose}>Profile</MenuItem>
                       <MenuItem onClick={handleClose}>Settings</MenuItem>
+                      <MenuItem href="/change-password">
+                        Change Password
+                      </MenuItem>
                       <MenuItem onClick={handleClose}>Logout</MenuItem>
                     </Menu>
                   </Box>
