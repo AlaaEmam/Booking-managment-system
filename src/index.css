@@ -1,8 +1,16 @@
 * {
-  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
-:root{
-  --primary-color: #152C5B; 
+:root {
+  --darkBlue: #152c5b; /* dark blue */
+   --primary-color: #152C5B; 
   --light-color: #4D4D4D;
+}
+
+.css-1f1pqi-MuiTypography-root {
+  font-family: "Poppins", sans-serif !important;
 }

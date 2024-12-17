@@ -20,13 +20,11 @@ import Room_comments from "./modules/Room_comments/Room_comments";
 import Room_reviews from "./modules/Room_reviews/Room_reviews";
 import Room_facility from "./modules/Room_facility/Room_facility";
 import { useContext } from "react";
-import ProtectedRoute from "./modules/Auth/Components/ProtectedRoute/ProtectedRoute";
+// import ProtectedRoute from "./modules/Auth/Components/ProtectedRoute/ProtectedRoute";
 import { AuthContext } from "./context/AuthContext";
 
 function App() {
-
-  const LoginData = useContext(AuthContext);
-
+  // const LoginData = useContext(AuthContext);
 
   // const [loginData, setLoginData] = useState(null);
   // const saveLoginData = () => {
@@ -57,9 +55,9 @@ function App() {
       path: "dashboard",
 
       element: (
-        <ProtectedRoute loginData={LoginData}>
-          <MasterLayout />
-        </ProtectedRoute>
+        // <ProtectedRoute loginData={LoginData}>
+        // </ProtectedRoute>
+        <MasterLayout />
       ),
       errorElement: <Notfound />,
       children: [

@@ -1,10 +1,13 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet } from "react-router-dom";
+import Navbar from "../Navbar/Navbar";
+import Footer from "../Footer/Footer";
 
 export default function MasterLayout() {
   return (
     <div>
-     <Outlet/>
+      <Navbar />
+      <Outlet />
+      <Footer />
     </div>
-  )
+  );
 }
