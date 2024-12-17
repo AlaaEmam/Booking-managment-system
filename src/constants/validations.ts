@@ -6,17 +6,17 @@ export const EmailValidation = {
     },
   };
   
-  const PasswordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+  // const PasswordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
   
   export const PasswordValidation = {
     required: "Password is required Please enter your Password.",
-    pattern: {
-      value: PasswordRegEx,
-      message: "At least 6 characters: UPPER/lowercase, numbers and special characters",
-    },
+    // pattern: {
+    //   value: PasswordRegEx,
+    //   message: "At least 6 characters: UPPER/lowercase, numbers and special characters",
+    // },
   };
 
-  const PhoneNumberwordRegEx = /^01[0-9]{9}$/;
+   const PhoneNumberwordRegEx = /^01[0-9]{9}$/;
   
   export const PhoneNumberValidation ={
     required: "Phone Number is required Please enter your Phone Number.",
