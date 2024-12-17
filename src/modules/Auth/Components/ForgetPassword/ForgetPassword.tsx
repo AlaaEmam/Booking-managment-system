@@ -9,7 +9,7 @@ import {
   Typography,
   Link,
 } from "@mui/material";
-import LogoImage from "../../../../assets/logo.png";
+import LogoImage from "../../../../assets/Logo.svg";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import forgetImg from "../../../../assets/forget-pass.png";

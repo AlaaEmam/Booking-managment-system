@@ -186,16 +186,8 @@ const OverlayText = styled(Typography)(({ theme }) => ({
                   ),
                 }}
               />
-
-
-
-            {/* <Link
-              component="button"
-              onClick={() => navigate("/forget-password")}
-              sx={{ color: 'var(--light-color)' ,textDecorationColor:'var(--light-color)' , textAlign: 'right'}}
-            > Forgot Password ?
-            </Link> */}
-            <Button
+    
+          <Button
               disabled={isSubmitting}
               sx={{ marginTop: "20%" }}
               variant="contained"
@@ -205,8 +197,16 @@ const OverlayText = styled(Typography)(({ theme }) => ({
             >
             {isSubmitting ? "Logging in..." : "Login"}
             </Button>
+
+  
           </form>
         </Item>
+        <Link
+          component="button"
+          onClick={() => navigate("/forget-password")}
+          sx={{ color: 'var(--light-color)' ,textDecorationColor:'var(--light-color)' , textAlign: 'right'}}
+        > Forgot Password ?
+        </Link>
       </Grid>
       <Grid item md={6} xs={12}>
       <Item >
