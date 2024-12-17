@@ -8,8 +8,8 @@ import { Button, Typography, Link } from "@mui/material";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { EmailValidation, PasswordValidation } from "../../../../constants/validations";
-import LoginImage from '../../../../assets/signin.png'; 
-import LogoImage  from '../../../../assets/logo.png';
+import LoginImage from '../../../../assets/LoginImage.png'; 
+import LogoImage  from '../../../../assets/Logo.svg';
 import IconButton from '@mui/material/IconButton';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -43,41 +43,34 @@ export default function Login() {
 
   
   //Handel Login data
-  // const onSubmit: SubmitHandler<LoginData> = async (data) => {
-  //   try {
-  //     const response = await axios.post<{ token: string }>(
-  //       `https://upskilling-egypt.com:3000/api/v0/portal/users/login`,
-  //       data
-  //     );
-  //     console.log("res", response);
-  //     toast.success("Login Succeed");
-  //     navigate("/dashboard");
-  //     localStorage.setItem("token", response?.data.token);
-  //     saveLoginData();
-  //   } catch (error: any) {
-  //     toast.error(error.response?.data.message || "Login failed");
-  //   }
-  // }
-
   const [isAdmin, setIsAdmin] = React.useState(false); // Default to user login
+
   const onSubmit: SubmitHandler<LoginData> = async (data) => {
     try {
-      const loginUrl = isAdmin ? ADMINAUTHURLS.login : PORTALAUTHURLS.login;
+      const loginUrl = isAdmin
+        ? `https://upskilling-egypt.com:3000/api/v0/admin/users/login`
+        : `https://upskilling-egypt.com:3000/api/v0/portal/users/login`;
   
-      const response = await axiosInstance.post<{ token: string; role: string }>(loginUrl, {
-   data
+      // Send data directly
+      const response = await axios.post<{ data: { token: string; role: string } }>(loginUrl, {
+        email: data.email,
+        password: data.password,
       });
   
       console.log("Login response:", response); // Log the response
   
+      // Access token and role from the response
+      const token = response.data.data.token;
+      const role = response.data.data.role;
+  
       // Check if the response is valid
-      if (response?.data?.token) {
+      if (token) {
         toast.success("Login Succeeded");
-        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("token", token);
         saveLoginData();
-        
+  
         // Navigate based on role
-        if (response.data.role === "admin") {
+        if (role === "admin") {
           navigate("/dashboard");
         } else {
           navigate("/homepage");
@@ -90,7 +83,7 @@ export default function Login() {
       toast.error(error.response?.data.message || "Login failed");
     }
   };
-
+  
   //Handel show password
   const [showPassword, setShowPassword] = React.useState(false);
 
@@ -196,12 +189,12 @@ const OverlayText = styled(Typography)(({ theme }) => ({
 
 
 
-            <Link
+            {/* <Link
               component="button"
               onClick={() => navigate("/forget-password")}
               sx={{ color: 'var(--light-color)' ,textDecorationColor:'var(--light-color)' , textAlign: 'right'}}
             > Forgot Password ?
-            </Link>
+            </Link> */}
             <Button
               disabled={isSubmitting}
               sx={{ marginTop: "20%" }}
