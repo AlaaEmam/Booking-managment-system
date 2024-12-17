@@ -16,14 +16,14 @@ export const EmailValidation = {
     },
   };
 
-  const PhoneNumberwordRegEx = /^01[0-9]{9}$/;
+  // const PhoneNumberwordRegEx = /^01[0-9]{9}$/;
   
   export const PhoneNumberValidation ={
     required: "Phone Number is required Please enter your Phone Number.",
-      pattern: {
-        value: PhoneNumberwordRegEx,
-        message: 'Phone number must start with 01 and contain 11 digits.'
-      }
+      // pattern: {
+      //   value: PhoneNumberwordRegEx,
+      //   message: 'Phone number must start with 01 and contain 11 digits.'
+      // }
 
   }
 

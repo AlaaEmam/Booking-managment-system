@@ -7,9 +7,10 @@
 
 :root {
   --darkBlue: #152c5b; /* dark blue */
+   --primary-color: #152C5B; 
+  --light-color: #4D4D4D;
 }
 
 .css-1f1pqi-MuiTypography-root {
   font-family: "Poppins", sans-serif !important;
 }
-    
