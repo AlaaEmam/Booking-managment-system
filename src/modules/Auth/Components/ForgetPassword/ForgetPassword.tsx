@@ -1,42 +1,40 @@
 import {
   Button,
   Grid,
-  IconButton,
-  InputAdornment,
+  Link,
   Paper,
   styled,
   TextField,
   Typography,
-  Link,
-} from "@mui/material";
-import LogoImage from "../../../../assets/Logo.svg";
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import forgetImg from "../../../../assets/forget-pass.png";
-import { useForm } from "react-hook-form";
-import { EmailValidation } from "../../../../constants/validations";
-import { ADMINAUTHURLS, axiosInstance } from "../../../../constants/URLS";
-import { toast } from "react-toastify";
+} from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import forgetImg from '../../../../assets/forget-pass.png';
+import LogoImage from '../../../../assets/Logo.svg';
+import { axiosInstance, PORTALAUTHURLS } from '../../../../constants/URLS';
+import { EmailValidation } from '../../../../constants/validations';
 interface formData {
   email: string;
 }
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
-  textAlign: "left",
-  border: "none",
-  position: "relative",
-  overflow: "hidden",
+  textAlign: 'left',
+  border: 'none',
+  position: 'relative',
+  overflow: 'hidden',
 }));
 const OverlayText = styled(Typography)(({ theme }) => ({
-  position: "absolute",
-  bottom: "20%",
-  transform: "translateX(-50%)",
-  color: "white",
-  textAlign: "left",
-  padding: "10px",
-  borderRadius: "5px",
+  position: 'absolute',
+  bottom: '20%',
+  transform: 'translateX(-50%)',
+  color: 'white',
+  textAlign: 'left',
+  padding: '10px',
+  borderRadius: '5px',
 }));
 export default function ForgetPassword() {
+  const navigate = useNavigate();
   let {
     register,
     formState: { isSubmitting, errors },
@@ -46,60 +44,60 @@ export default function ForgetPassword() {
   const onSubmit = async (data: formData) => {
     try {
       const response = await axiosInstance.post(
-        ADMINAUTHURLS.forgetPassword,
-        data
+        // `https://upskilling-egypt.com:3000/api/v0/portal/users/forgot-password`,
+        PORTALAUTHURLS.forgetPassword,
+        data,
       );
       console.log(response);
-      toast.success(response.data.message||"check your mail")
+      toast.success(response.data.message || 'check your mail');
       navigate('/reset-password', { state: data.email });
     } catch (error) {
       console.log(error);
-      toast.error("failed")
+      toast.error('failed');
     }
   };
 
-  const navigate = useNavigate();
   return (
-    <Grid container sx={{ textAlign: "left" }}>
+    <Grid container sx={{ textAlign: 'left' }}>
       <Grid item xs={12} md={6}>
-        <Item sx={{ margin: "5%", boxShadow: "none" }}>
+        <Item sx={{ margin: '5%', boxShadow: 'none' }}>
           <img src={LogoImage} alt="Login" />
         </Item>
         <Item
           sx={{
             padding: {
-              xs: " 1.25rem",
-              sm: "3.125rem",
-              md: "6.25rem",
-              lg: "0.125rem 9.25rem",
+              xs: ' 1.25rem',
+              sm: '3.125rem',
+              md: '6.25rem',
+              lg: '0.125rem 9.25rem',
             },
-            boxShadow: "none",
+            boxShadow: 'none',
           }}
         >
           <Typography
             sx={{
-              fontSize: "30px",
-              fontWeight: "bolder",
-              marginBottom: "10px",
+              fontSize: '30px',
+              fontWeight: 'bolder',
+              marginBottom: '10px',
             }}
           >
             Forgot password
           </Typography>
           <Typography>If you don’t have an account register </Typography>
 
-          <Typography sx={{ marginBottom: "2rem" }}>
-            You can{" "}
+          <Typography sx={{ marginBottom: '2rem' }}>
+            You can{' '}
             <Link
-              onClick={() => navigate("/login")}
+              onClick={() => navigate('/login')}
               underline="none"
               sx={{
-                color: "#eb5149",
-                fontWeight: "bolder",
-                cursor: "pointer",
-                marginLeft: "10px",
+                color: '#eb5149',
+                fontWeight: 'bolder',
+                cursor: 'pointer',
+                marginLeft: '10px',
               }}
             >
-              {" "}
+              {' '}
               Login here!
             </Link>
           </Typography>
@@ -108,8 +106,8 @@ export default function ForgetPassword() {
             <Typography
               variant="subtitle1"
               sx={{
-                color: "#152C5B",
-                fontWeight: "bold",
+                color: '#152C5B',
+                fontWeight: 'bold',
               }}
             >
               Email
@@ -120,34 +118,34 @@ export default function ForgetPassword() {
               fullWidth
               margin="normal"
               sx={{
-                "& .MuiOutlinedInput-root": {
-                  backgroundColor: "#F5F6F8",
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: '#F5F6F8',
 
-                  "& fieldset": {
-                    borderColor: "#e0e0e0",
+                  '& fieldset': {
+                    borderColor: '#e0e0e0',
                   },
-                  "&:hover fieldset": {
-                    borderColor: "#bdbdbd",
+                  '&:hover fieldset': {
+                    borderColor: '#bdbdbd',
                   },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#3f51b5",
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#3f51b5',
                   },
                 },
               }}
-              {...register("email", EmailValidation)}
+              {...register('email', EmailValidation)}
               error={!!errors.email}
-              helperText={errors.email ? errors.email.message : ""}
+              helperText={errors.email ? errors.email.message : ''}
             />
 
             <Button
               disabled={isSubmitting}
-              sx={{ marginTop: "5%" }}
+              sx={{ marginTop: '5%' }}
               variant="contained"
               size="large"
               type="submit"
               fullWidth
             >
-              {isSubmitting ? "Sending..." : "Send mail"}
+              {isSubmitting ? 'Sending...' : 'Send mail'}
             </Button>
           </form>
         </Item>
@@ -157,7 +155,7 @@ export default function ForgetPassword() {
           <img
             src={forgetImg}
             alt="Login"
-            style={{ width: "100%", height: "97vh" }}
+            style={{ width: '100%', height: '97vh' }}
           />
         </Item>
       </Grid>
