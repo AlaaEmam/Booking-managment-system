@@ -11,12 +11,14 @@ import { PasswordValidation } from "../../../../constants/validations";
 import ChangePasswordImage from '../../../../assets/changePassword.jpg'; 
 import LogoImage  from '../../../../assets/logo.png';
 import IconButton from '@mui/material/IconButton';
+
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+
 import { ADMINAUTHURLS, axiosInstance, PORTALAUTHURLS } from '../../../../constants/URLS';
 import { toast } from 'react-toastify';
-import { AuthContext } from '../../../../context/AuthContext';
+
 
 
 interface ChangePassword {

@@ -1,68 +1,65 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
+* {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+:root {
+  --background-color: #ffffff; /* white */
+  --primary-color: #152C5B; /* Primary blue */
+  --secondary-color: #000000; /* Black */
+  --light-primary-color:  #0a00921a; /* Lighter blue */
+  --light-gray: #E2E5EB; /* White with 80% opacity */
+  --dark-gray: #1A1B1E; /* Dark gray */
+  --blue: #35C2FD; /* Light blue */
+  --green: #54D14D; /* Green */
+  --red: #7783BF; /* Soft blue */
+  --off-white: #FAFAFA; /* Very light gray */
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+[data-theme="dark"] {
+  --background-color: #121212; /* Dark background */
+  --primary-color: #152C5B; /* Keep primary blue */
+  --secondary-color: #FFFFFF; /* White text */
+  --light-gray: rgba(255, 255, 255, 0.2); /* White with 20% opacity */
+  --light-red: #FF6B6B; /* Lighter red for dark mode */
+  --red: #E74C3C;
+  --dark-gray: #FFFFFF; /* White for contrast */
+  --blue: #35C2FD; /* Keep light blue */
+  --green: #54D14D; /* Keep green */
+  --off-white: #FAFAFA; /* Keep very light gray */
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+
+.text-danger{
+    color:var(--red);
+}
+.profile-image-preview {
+    border: none;
+}
+
+
+/* ===================sidebar========================= */
+.sidebar-container .ps-sidebar-container {
+  background-color: var(--primary-color);
+  color: var(--off-white);
+  height: 100vh;
+  
+}
+.sidebar-container .ps-menu-button {
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    background-color: var(--light-primary-color) !important;
+    border-left: 5px solid #152C5B;
+  }
+}
+.css-1wvake5 {
+  border: 0 !important;
+}
+
+.bi-trash,.bi-pencil-square{
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
+
+  

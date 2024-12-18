@@ -9,39 +9,32 @@ import ResetPass from "./modules/Auth/Components/ResetPass/ResetPass";
 import Registration from "./modules/Auth/Components/Registration/Registration";
 import VerifyAccount from "./modules/Auth/Components/VerifyAccount/VerifyAccount";
 import ChangePassword from "./modules/Auth/Components/ChangePassword/ChangePassword";
-import MasterLayout from "./modules/Shared/Components/MasterLayout/MasterLayout";
-import DashBoard from "./modules/DashBoard/Components/DashBoard";
-import Rooms from "./modules/Rooms/Rooms";
-import Booking from "./modules/Booking/Booking";
-// import Ads from "./modules/Ads/Ads";
-import User from "./modules/User/User";
-import Favorite_rooms from "./modules/Favorite_rooms/Favorite_rooms";
-import Room_comments from "./modules/Room_comments/Room_comments";
-import Room_reviews from "./modules/Room_reviews/Room_reviews";
-import Room_facility from "./modules/Room_facility/Room_facility";
-import { useContext } from "react";
+import DashBoard from "./modules/Admin/Components/DashBoard/Components/DashBoard";
+import AdsList from "./modules/Admin/Components/Ads/AdsList/AdsList";
+import AdsForm from "./modules/Admin/Components/Ads/AdsForm/AdsForm";
+import BookingList from "./modules/Admin/Components/BookingList/BookingList";
+import RoomFacilitiesList from "./modules/Admin/Components/RoomFacilities/RoomFacilitiesList/RoomFacilitiesList";
+import RoomsList from "./modules/Admin/Components/Rooms/RoomsList/RoomsList";
+import UserList from "./modules/Admin/Components/UserList/UserList";
+import MasterAdminLayout from "./modules/Shared/Components/MasterAdminLayout/MasterAdminLayout";
+import MasterUserLayout from "./modules/Shared/Components/MasterUserLayout/MasterUserLayout";
+import HomePage from "./modules/User/Components/HomePage/HomePage";
+import RoomDetailsPage from "./modules/User/Components/RoomDetailsPage/RoomDetailsPage";
+import BookingPage from "./modules/User/Components/BookingPage/BookingPage";
+import ExploarePage from "./modules/User/Components/ExploarePage/ExploarePage";
+import FavoriteRoomPage from "./modules/User/Components/FavoriteRoomPage/FavoriteRoomPage";
 import ProtectedRoute from "./modules/Auth/Components/ProtectedRoute/ProtectedRoute";
+import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
-import Ads from "./modules/Ads/Ads";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-
-  const LoginData = useContext(AuthContext);
-
-
-  // const [loginData, setLoginData] = useState(null);
-  // const saveLoginData = () => {
-  //   const deCodedToken = localStorage.getItem("token");
-  //   if (deCodedToken) {
-  //     const enCodedToken = jwtDecode(deCodedToken);
-  //     setLoginData(enCodedToken);
-  //     console.log(enCodedToken);
-  //   }
-  // };
+  const loginData = useContext(AuthContext); // Get loginData from context
 
   const router = createBrowserRouter([
     {
-      path: "",
+      path: "login",
       element: <AuthLayout />,
       errorElement: <Notfound />,
       children: [
@@ -56,30 +49,65 @@ function App() {
     },
     {
       path: "dashboard",
-
       element: (
-        <ProtectedRoute loginData={LoginData}>
-          <MasterLayout />
+        <ProtectedRoute loginData={loginData}>
+          <MasterAdminLayout />
         </ProtectedRoute>
       ),
       errorElement: <Notfound />,
       children: [
         { index: true, element: <DashBoard /> },
-        { path: "rooms", element: <Rooms /> },
-        { path: "booking", element: <Booking /> },
-        { path: "ads", element: <Ads/>},
-        { path: "users", element: <User /> },
-        { path: "favorite-rooms", element: <Favorite_rooms /> },
-        { path: "room-comments", element: <Room_comments /> },
-        { path: "room-reviews", element: <Room_reviews /> },
-        { path: "room-facility", element: <Room_facility /> },
+
+        { path: "ads-list", element: <AdsList /> },
+        { path: "ads-list/ads-form", element: <AdsForm /> },
+        { path: "ads-list/:adsId", element: <AdsForm /> },
+
+        { path: "room-facility", element: <RoomFacilitiesList /> },
+        {
+          path: "room-facility/facility-form",
+          element: <RoomFacilitiesList />,
+        },
+        { path: "room-facility/:facilityId", element: <RoomFacilitiesList /> },
+
+        { path: "rooms-list", element: <RoomsList /> },
+        { path: "rooms-list/room-form", element: <RoomFacilitiesList /> },
+        { path: "rooms-list/:roomId", element: <RoomFacilitiesList /> },
+
+        { path: "booking-list", element: <BookingList /> },
+        { path: "users-list", element: <UserList /> },
+      ],
+    },
+  {
+      path: "",
+      element: <MasterUserLayout />,
+      errorElement: <Notfound />,
+      children: [
+        { index: true, element: <HomePage  /> },
+        { path: "homepage", element: <HomePage /> },
+        { path: "room-details", element: <RoomDetailsPage /> },
+        {
+          path: "payment",
+          element: (
+            <ProtectedRoute loginData={loginData}>
+              <BookingPage />
+            </ProtectedRoute>
+          ),
+        },
+        { path: "explore-rooms", element: <ExploarePage /> },
+        {
+          path: "your-favorite",
+          element: <FavoriteRoomPage />,
+        },
       ],
     },
   ]);
 
   return (
     <>
+      <ToastContainer />
       <RouterProvider router={router}></RouterProvider>
+      <ToastContainer />
+
     </>
   );
 }
