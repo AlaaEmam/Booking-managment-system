@@ -13,7 +13,7 @@ import MasterLayout from "./modules/Shared/Components/MasterLayout/MasterLayout"
 import DashBoard from "./modules/DashBoard/Components/DashBoard";
 import Rooms from "./modules/Rooms/Rooms";
 import Booking from "./modules/Booking/Booking";
-import Ads from "./modules/Ads/Ads";
+// import Ads from "./modules/Ads/Ads";
 import User from "./modules/User/User";
 import Favorite_rooms from "./modules/Favorite_rooms/Favorite_rooms";
 import Room_comments from "./modules/Room_comments/Room_comments";
@@ -22,6 +22,7 @@ import Room_facility from "./modules/Room_facility/Room_facility";
 import { useContext } from "react";
 import ProtectedRoute from "./modules/Auth/Components/ProtectedRoute/ProtectedRoute";
 import { AuthContext } from "./context/AuthContext";
+import Ads from "./modules/Ads/Ads";
 
 function App() {
 
@@ -66,7 +67,7 @@ function App() {
         { index: true, element: <DashBoard /> },
         { path: "rooms", element: <Rooms /> },
         { path: "booking", element: <Booking /> },
-        { path: "ads", element: <Ads /> },
+        { path: "ads", element: <Ads/>},
         { path: "users", element: <User /> },
         { path: "favorite-rooms", element: <Favorite_rooms /> },
         { path: "room-comments", element: <Room_comments /> },

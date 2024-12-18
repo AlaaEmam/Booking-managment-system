@@ -6,5 +6,5 @@ import AuthContextProvider from "./context/AuthContext.tsx";
 createRoot(document.getElementById("root")!).render(
   <AuthContextProvider>
     <App />
-  </AuthContextProvider>
+    </AuthContextProvider>
 );
