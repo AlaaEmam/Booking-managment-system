@@ -54,33 +54,33 @@ const rows = [
 export default function RoomFacilitiesList() {
   return (
   <>
-      <Box
-        sx={{
-          width: '100%',
-          height: '12vh',
-          display: 'flex',
-          justifyContent: 'space-between',
-          backgroundColor: '#ffffff',
-          alignItems: 'center',
-          padding: '0 2.25rem',
-          mb: '1.5rem',
-        }}
-      >
-        <Box>
-          <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-            Facilities Table Details
-          </Typography>
-          <Typography variant="body2">You can check all details</Typography>
+        <Box
+          sx={{
+            width: '100%',
+            height: '12vh',
+            display: 'flex',
+            justifyContent: 'space-between',
+            backgroundColor: '#ffffff',
+            alignItems: 'center',
+            padding: '0 2.25rem',
+            mb: '1.5rem',
+          }}
+        >
+          <Box>
+            <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+              Facilities Table Details
+            </Typography>
+            <Typography variant="body2">You can check all details</Typography>
+          </Box>
+          <Link to='/facility-form'>
+            <Button
+              sx={{borderRadius: 2 , px: 3, py: 1.3 , backgroundColor: 'var(--primary-color)' , color: 'var(--off-white)'}}
+              startIcon={<AddIcon/>}
+            >
+              Add New Facility
+            </Button>
+          </Link>
         </Box>
-        <Link to='/facility-form'>
-          <Button
-            sx={{borderRadius: 2 , px: 3, py: 1.3 , backgroundColor: 'var(--primary-color)' , color: 'var(--off-white)'}}
-            startIcon={<AddIcon/>}
-          >
-            Add New Facility
-          </Button>
-        </Link>
-      </Box>
 
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">

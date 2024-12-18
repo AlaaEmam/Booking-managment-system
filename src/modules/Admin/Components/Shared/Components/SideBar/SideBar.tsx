@@ -50,7 +50,7 @@ export default function SideBar() {
           </MenuItem>
           <MenuItem
             icon={<i className="bi bi-columns-gap"></i>}
-            component={<Link to="/ads-list" />}
+            component={<Link to="ads-list"/>}
           >
             Ads
           </MenuItem>
