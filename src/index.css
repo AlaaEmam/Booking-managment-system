@@ -1,14 +1,51 @@
 
 
-:root {
-    --red_clr: #E74C3C;
-    ;
 
-
-}
 .text-danger{color:var(--red_clr)}
 .profile-image-preview {
     border: none;
   }
 
-  
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+:root {
+  --darkBlue: #152c5b; /* dark blue */
+   --primary-color: #152C5B;
+  --light-color: #4D4D4D;
+  --red_clr: #E74C3C;
+
+}
+
+.css-1f1pqi-MuiTypography-root {
+  font-family: "Poppins", sans-serif !important;
+}
+
+/* ============================================ */
+
+
+.sidebar-container .ps-sidebar-container {
+  background-color:lightskyblue;
+  color: black;
+  height: 100vh;
+
+}
+.sidebar-container .ps-menu-button {
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    background-color: rgba(10, 0, 146, 0.1) !important;
+    border-left: 5px solid #152C5B;
+  }
+}
+.css-1wvake5 {
+  border: 0 !important;
+}
+
+.bi-trash,.bi-pencil-square{
+  cursor: pointer;
+}
