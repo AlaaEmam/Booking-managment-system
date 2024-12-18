@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Typography, Button, Box } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
@@ -11,8 +11,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 
+
+// STYLE
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor:  'var(--light-gray)',
@@ -52,6 +56,40 @@ const rows = [
 ];
 
 export default function RoomFacilitiesList() {
+
+  interface Facility {
+    id: any;
+    name: string;
+    userName: string;
+    createdAt: string;
+    updatedAt: string; 
+  }
+
+  // Get Facility
+  const [facilityList, setFacilityList] = useState<Facility[]>([]);
+
+  const getFacilityList = async (pageNo: number, pageSize: number, searchQuery: string = '') => {
+    try {
+      debugger;
+      const response = await axios.get(`https://upskilling-egypt.com:3000/api/v0/admin/room-facilities`, {
+        headers: { Authorization: localStorage.getItem("token") },
+        params: {
+          pageSize: pageSize,
+          pageNumber: pageNo,
+          search: searchQuery,
+        },
+      });
+      debugger;
+
+      console.log("getFacilityList : ", response.data.data);
+      setFacilityList(response.data.data);
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Failed to fetch Facility.");
+    }
+  };
+
+
   return (
   <>
       <Box
@@ -94,13 +132,17 @@ export default function RoomFacilitiesList() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.name}>
-              <StyledTableCell align="center">{row.name}</StyledTableCell>
-              <StyledTableCell align="center">{row.calories}</StyledTableCell>
-              <StyledTableCell align="center">{row.fat}</StyledTableCell>
-              <StyledTableCell align="center">{row.carbs}</StyledTableCell>
-              <StyledTableCell align="center">{row.protein}</StyledTableCell>
+          {facilityList.map((facility) => (
+            <StyledTableRow key={facility.id}>
+              <StyledTableCell align="center">{facility.name}</StyledTableCell>
+              <StyledTableCell align="center">
+                {facility.userName}
+                </StyledTableCell>
+              <StyledTableCell align="center">{facility.createdAt}</StyledTableCell>
+              <StyledTableCell align="center">{facility.updatedAt}</StyledTableCell>
+              <StyledTableCell align="center">
+                actions
+              </StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
