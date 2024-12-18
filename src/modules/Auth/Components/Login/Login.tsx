@@ -1,10 +1,9 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import { Button, Typography, Link } from "@mui/material";
+import { Button, Typography, Link, Box } from "@mui/material";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import {
@@ -12,28 +11,15 @@ import {
   PasswordValidation,
 } from "../../../../constants/validations";
 import { useEffect } from "react";
-import { useState } from "react";
-import LoginImage from "../../../../assets/LoginImage.png";
+import LogoinImage from "../../../../assets/LoginImage.png";
 import LogoImage from "../../../../assets/Logo.svg";
 import IconButton from "@mui/material/IconButton";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Input from "@mui/material/Input";
-import FilledInput from "@mui/material/FilledInput";
-import FormHelperText from "@mui/material/FormHelperText";
-import {
-  ADMINAUTHURLS,
-  axiosInstance,
-  PORTALAUTHURLS,
-} from "../../../../constants/URLS";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../../../context/AuthContext";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 
 interface LoginData {
   email: string;
@@ -137,11 +123,11 @@ export default function Login() {
   }, []);
 
   return (
-    <Grid container sx={{ textAlign: "left" }}>
+    <Grid
+      container
+      sx={{ textAlign: "left", display: "flex", alignItems: "center" }}
+    >
       <Grid item xs={12} md={6}>
-        <Item sx={{ margin: "5%", boxShadow: "none" }}>
-          <img src={LogoImage} alt="Login" />
-        </Item>
         <Item
           sx={{
             padding: {
@@ -153,6 +139,13 @@ export default function Login() {
             boxShadow: "none",
           }}
         >
+          <Item sx={{ marginY: 4, boxShadow: "none" }}>
+            <img
+              src="/public/Staycation.svg"
+              style={{ maxWidth: "100%", width: "80%" }}
+              alt="logo"
+            />
+          </Item>
           <Typography
             sx={{
               fontSize: "30px",
@@ -240,7 +233,7 @@ export default function Login() {
 
             <Button
               disabled={isSubmitting}
-              sx={{ marginTop: "20%" }}
+              sx={{ marginTop: 4 }}
               variant="contained"
               size="large"
               type="submit"
@@ -249,42 +242,76 @@ export default function Login() {
               {isSubmitting ? "Logging in..." : "Login"}
             </Button>
           </form>
-        </Item>
-        <Link
-          component="button"
-          onClick={() => navigate("/forget-password")}
-          sx={{
-            color: "var(--light-color)",
-            textDecorationColor: "var(--light-color)",
-            textAlign: "right",
-          }}
-        >
-          {" "}
-          Forgot Password ?
-        </Link>
-      </Grid>
-      <Grid item md={6} xs={12}>
-        <Item>
-          <img
-            src={LoginImage}
-            alt="Login"
-            style={{ width: "100%", height: "97vh" }}
-          />
-          <OverlayText
-            sx={{ left: "35%", fontSize: "40px", fontWeight: "bolder" }}
-          >
-            Sign in to Roamhome
-          </OverlayText>
-          <OverlayText
+          <Link
+            component="button"
+            onClick={() => navigate("/forget-password")}
             sx={{
-              left: "23%",
-              textAlign: "left",
-              fontSize: "20px",
-              bottom: "15%",
+              color: "var(--light-color)",
+              textDecorationColor: "var(--light-color)",
+              textAlign: "right",
+              mt: 2,
             }}
           >
-            Homes as unique as you.
-          </OverlayText>
+            Forgot Password ?
+          </Link>
+        </Item>
+      </Grid>
+      <Grid item md={6} xs={12}>
+        {/* Parent container with relative positioning */}
+        <Item
+          sx={{
+            position: "relative", // To position the background image and text correctly
+            height: "100vh", // Full height for this section
+            overflow: "hidden", // Prevent overflow issues
+          }}
+        >
+          {/* Background image styling */}
+          <Box
+            sx={{
+              backgroundImage: `url(${LogoinImage})`, // Set image as background
+              backgroundSize: "cover", // Cover the entire box without distortion
+              backgroundPosition: "center", // Center the image
+              width: "100%",
+              height: "100%",
+              position: "absolute", // Absolute to cover the entire parent
+              top: 0,
+              left: 0,
+            }}
+          ></Box>
+
+          {/* Centered text container */}
+          <Box
+            sx={{
+              position: "relative",
+              display: "flex",
+              flexDirection: "column", // Stack text vertically
+              justifyContent: "center", // Center text vertically
+              alignItems: "", // Center text horizontally
+              height: "100%", // Full height to match the parent container
+              color: "white", // White text for contrast
+              margin: 9,
+            }}
+          >
+            {/* Main heading */}
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: { xs: "30px", md: "40px" },
+                fontWeight: "bolder",
+              }}
+            >
+              Sign in to Roam Home
+            </Typography>
+            <Typography
+              variant="h4"
+              sx={{
+                fontSize: { xs: "16px", md: "20px" }, // Responsive font size for smaller screens
+                marginTop: 2, // Add spacing between the heading and sub-heading
+              }}
+            >
+              Homes as unique as you.
+            </Typography>
+          </Box>
         </Item>
       </Grid>
     </Grid>

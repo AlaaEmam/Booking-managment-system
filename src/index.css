@@ -4,30 +4,52 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
-
 :root {
-  --darkBlue: #152c5b; /* dark blue */
-   --primary-color: #152C5B; 
-  --light-color: #4D4D4D;
+  --background-color: #ffffff; /* white */
+  --primary-color: #152C5B; /* Primary blue */
+  --secondary-color: #000000; /* Black */
+  --light-primary-color:  #0a00921a; /* Lighter blue */
+  --light-gray: #E2E5EB; /* White with 80% opacity */
+  --dark-gray: #1A1B1E; /* Dark gray */
+  --blue: #35C2FD; /* Light blue */
+  --green: #54D14D; /* Green */
+  --red: #7783BF; /* Soft blue */
+  --off-white: #FAFAFA; /* Very light gray */
 }
 
-.css-1f1pqi-MuiTypography-root {
-  font-family: "Poppins", sans-serif !important;
+[data-theme="dark"] {
+  --background-color: #121212; /* Dark background */
+  --primary-color: #152C5B; /* Keep primary blue */
+  --secondary-color: #FFFFFF; /* White text */
+  --light-gray: rgba(255, 255, 255, 0.2); /* White with 20% opacity */
+  --light-red: #FF6B6B; /* Lighter red for dark mode */
+  --red: #E74C3C;
+  --dark-gray: #FFFFFF; /* White for contrast */
+  --blue: #35C2FD; /* Keep light blue */
+  --green: #54D14D; /* Keep green */
+  --off-white: #FAFAFA; /* Keep very light gray */
 }
 
-/* ============================================ */
+
+.text-danger{
+    color:var(--red);
+}
+.profile-image-preview {
+    border: none;
+}
 
 
+/* ===================sidebar========================= */
 .sidebar-container .ps-sidebar-container {
-  background-color:lightskyblue;
-  color: black;
+  background-color: var(--primary-color);
+  color: var(--off-white);
   height: 100vh;
   
 }
 .sidebar-container .ps-menu-button {
   transition: all 0.3s ease-in-out;
   &:hover {
-    background-color: rgba(10, 0, 146, 0.1) !important;
+    background-color: var(--light-primary-color) !important;
     border-left: 5px solid #152C5B;
   }
 }
@@ -38,3 +60,6 @@
 .bi-trash,.bi-pencil-square{
   cursor: pointer;
 }
+
+
+  

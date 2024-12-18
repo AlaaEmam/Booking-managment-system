@@ -106,6 +106,8 @@ function App() {
     <>
       <ToastContainer />
       <RouterProvider router={router}></RouterProvider>
+      <ToastContainer />
+
     </>
   );
 }

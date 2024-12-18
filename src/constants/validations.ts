@@ -19,7 +19,7 @@ export const EmailValidation = {
    const PhoneNumberwordRegEx = /^01[0-9]{9}$/;
   
   export const PhoneNumberValidation ={
-    required: "Phone Number is required Please enter your Phone Number.",
+    required: "Phone Number is required .",
       pattern: {
         value: PhoneNumberwordRegEx,
         message: 'Phone number must start with 01 and contain 11 digits.'
@@ -37,9 +37,9 @@ export const EmailValidation = {
       minLength: {
         value: 3,
         message: 'Your Name must be at least 3 characters long.',
-      },    
+      },
       maxLength:{
         value: 8,
-        message: 'The userName may not be greater than 8 characters.',                  
+        message: 'The userName may not be greater than 8 characters.',
     }
   }

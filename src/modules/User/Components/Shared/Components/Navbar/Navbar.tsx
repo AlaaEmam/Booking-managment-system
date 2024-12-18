@@ -12,15 +12,15 @@ import {
   IconButton,
 } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../../../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const authContext = useContext(AuthContext);
   const { loginData } = authContext || {};
   const token = localStorage.getItem("token") || null;
 
-  // const [loginData, setLoginData] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
