@@ -26,9 +26,8 @@ import FavoriteRoomPage from "./modules/User/Components/FavoriteRoomPage/Favorit
 import ProtectedRoute from "./modules/Auth/Components/ProtectedRoute/ProtectedRoute";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
-import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; 
 
 function App() {
   const  loginData  = useContext(AuthContext); // Get loginData from context
@@ -99,6 +98,8 @@ function App() {
     <>
     <ToastContainer/>
       <RouterProvider router={router}></RouterProvider>
+      <ToastContainer />
+
     </>
   );
 }

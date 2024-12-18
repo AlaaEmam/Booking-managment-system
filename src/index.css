@@ -9,10 +9,14 @@
   --darkBlue: #152c5b; /* dark blue */
    --primary-color: #152C5B; 
   --light-color: #4D4D4D;
+  --red_clr: #E74C3C;
 }
 
-.css-1f1pqi-MuiTypography-root {
-  font-family: "Poppins", sans-serif !important;
+.text-danger{
+    color:var(--red_clr)
+}
+.profile-image-preview {
+    border: none;
 }
 
 /* ============================================ */
@@ -38,3 +42,6 @@
 .bi-trash,.bi-pencil-square{
   cursor: pointer;
 }
+
+
+  
