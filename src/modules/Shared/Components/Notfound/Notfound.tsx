@@ -30,7 +30,7 @@ export default function Notfound() {
         <Button
           variant="contained"
           size="large"
-          href="/dashboard"
+          href="/"
           sx={{
             backgroundColor: "blue",
             paddingX: 6,

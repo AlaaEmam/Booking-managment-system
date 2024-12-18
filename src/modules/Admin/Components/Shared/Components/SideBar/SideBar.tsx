@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SideBar() {
+  let navigate = useNavigate();
   const [isCollapse, setIsCollapse] = useState(false);
   const toggleCollpase = () => {
     setIsCollapse(!isCollapse);
@@ -22,7 +23,7 @@ export default function SideBar() {
             }}
           >
             <img
-              src="/Staycation..png"
+              src="/logo-light.svg"
               style={{ maxWidth: "100%", width: "80%" }}
               alt="logo"
             />{" "}
@@ -61,7 +62,7 @@ export default function SideBar() {
           </MenuItem>
           <MenuItem
             icon={<i className="bi bi-columns-gap"></i>}
-            component={<Link to="/room-facility" />}
+            component={<Link to="room-facility" />}
           >
             Facilities
           </MenuItem>
@@ -74,6 +75,9 @@ export default function SideBar() {
           <MenuItem
             icon={<i className="bi bi-box-arrow-right"></i>}
             component={<Link to="/" />}
+            onClick={() => {
+              localStorage.removeItem("token");
+            }}
           >
             Logout
           </MenuItem>

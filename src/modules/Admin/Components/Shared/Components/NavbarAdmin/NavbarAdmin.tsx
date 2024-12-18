@@ -75,7 +75,7 @@ export default function NavbarAdmin() {
               display: "flex",
               alignItems: "center",
               cursor: "pointer",
-              color:"gray"
+              color: "gray",
             }}
           >
             {/* Circular Profile Image */}
@@ -129,7 +129,14 @@ export default function NavbarAdmin() {
             >
               <MenuItem onClick={handleClose}>Profile</MenuItem>
               <MenuItem onClick={handleClose}>Settings</MenuItem>
-              <MenuItem onClick={logout}>Logout</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  window.location.reload();
+                }}
+              >
+                Logout
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

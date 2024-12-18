@@ -12,10 +12,15 @@ import {
   IconButton,
 } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../../../../../context/AuthContext";
 
 export default function Navbar() {
-  const [loginData, setLoginData] = useState(true);
+  const authContext = useContext(AuthContext);
+  const { loginData } = authContext || {};
+  const token = localStorage.getItem("token") || null;
+
+  // const [loginData, setLoginData] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -73,7 +78,7 @@ export default function Navbar() {
               >
                 Explore
               </Link>
-              {loginData && (
+              {loginData && token && (
                 <>
                   <Link
                     href="#"
@@ -93,7 +98,7 @@ export default function Navbar() {
               )}
 
               {/* Buttons */}
-              {loginData ? (
+              {loginData && token ? (
                 <>
                   <Box
                     sx={{
@@ -156,7 +161,13 @@ export default function Navbar() {
                       <MenuItem href="/change-password">
                         Change Password
                       </MenuItem>
-                      <MenuItem onClick={handleClose}>Logout</MenuItem>
+                      <MenuItem
+                        onClick={() => {
+                          localStorage.removeItem("token");
+                        }}
+                      >
+                        Logout
+                      </MenuItem>
                     </Menu>
                   </Box>
                 </>
@@ -176,6 +187,7 @@ export default function Navbar() {
                   <Button
                     variant="outlined"
                     size="large"
+                    href="/login"
                     sx={{
                       borderRadius: 1,
                       textTransform: "none",
