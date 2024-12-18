@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function SideBar() {
-  let navigate = useNavigate();
+ 
   const [isCollapse, setIsCollapse] = useState(false);
   const toggleCollpase = () => {
     setIsCollapse(!isCollapse);

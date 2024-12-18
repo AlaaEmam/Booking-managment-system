@@ -69,7 +69,7 @@ export default function Login() {
       // Access token and role from the response
 
       const token = response?.data?.data?.token;
-      const role = response?.data?.data?.user?.role;
+      const role = response?.data?.data?.user;
 
       console.log("Role:", role);
       console.log("Token:", token);

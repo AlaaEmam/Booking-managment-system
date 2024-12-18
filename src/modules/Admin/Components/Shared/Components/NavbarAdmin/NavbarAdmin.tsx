@@ -15,10 +15,9 @@ import {
   Search as SearchIcon,
 } from "@mui/icons-material";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 export default function NavbarAdmin() {
-  const navigate = useNavigate();
+ 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -31,10 +30,7 @@ export default function NavbarAdmin() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const logout = () => {
-    localStorage.removeItem("token");
-    navigate("/")
-}
+  
   return (
     <>
       <AppBar
@@ -132,7 +128,7 @@ export default function NavbarAdmin() {
               <MenuItem
                 onClick={() => {
                   localStorage.removeItem("token");
-                  window.location.reload();
+                  
                 }}
               >
                 Logout
