@@ -22,7 +22,7 @@ export default function SideBar() {
             }}
           >
             <img
-              src="/Staycation..png"
+              src="/logo-light.svg"
               style={{ maxWidth: "100%", width: "80%" }}
               alt="logo"
             />{" "}
@@ -61,7 +61,7 @@ export default function SideBar() {
           </MenuItem>
           <MenuItem
             icon={<i className="bi bi-columns-gap"></i>}
-            component={<Link to="/room-facility" />}
+            component={<Link to="room-facility" />}
           >
             Facilities
           </MenuItem>
