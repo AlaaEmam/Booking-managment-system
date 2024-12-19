@@ -1,4 +1,4 @@
-import { Box,  Modal,  Stack,  styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { Box,  Modal,  Stack,  styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TableRow, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { ADMINBOOKING, axiosInstance } from '../../../../constants/URLS'
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -178,6 +178,7 @@ export default function BookingList() {
               )}
 
             </TableBody>
+            
           </Table>
         </TableContainer>
       :
