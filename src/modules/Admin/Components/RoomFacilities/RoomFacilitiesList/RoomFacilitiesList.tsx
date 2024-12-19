@@ -23,6 +23,7 @@ import Delete from '../../../../../assets/icons/delete.svg';
 import Edit from '../../../../../assets/icons/Edit.svg';
  
 import { red } from '@mui/material/colors';
+import DeleteConfirmation from '../../Shared/Components/DeleteConfirmation/DeleteConfirmation';
 // STYLE
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -219,6 +220,14 @@ export default function RoomFacilitiesList() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <DeleteConfirmation 
+      deleteItem={'Facility'}
+      handleCloseDelete={handleCloseDelete}
+      showDelete={showDelete}
+      deleteFunction={deleteFacility}
+      /> 
+      
     </>
   );
 }

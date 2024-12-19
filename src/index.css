@@ -61,7 +61,7 @@
 .bi-trash,.bi-pencil-square{
   cursor: pointer;
 }
-
+/* dropdown */
 .css-1tktgsa-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
   background-color: #ffffff !important;
   --shadow:0px 1px 1px -10px rgba(0,0,0,0.2),0px 0px 14px -27px rgba(0,0,0,-4.86),0px 1px 16px -3px rgba(0,0,0,0.12);
@@ -70,4 +70,10 @@
   border-radius: 11px !important;
   box-shadow: var(--shadow) !important;  
   background-image: none !important;
+}
+/* delete confirmation  */
+
+.css-78e6go-MuiImageList-root {
+  display: inherit !important; 
+
 }
