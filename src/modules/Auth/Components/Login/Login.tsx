@@ -3,7 +3,7 @@ import TextField from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import { Button, Typography, Link, Box } from "@mui/material";
+import { Button, Typography, Link, Box, Container } from "@mui/material";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import {
@@ -55,7 +55,7 @@ export default function Login() {
       // Access token and role from the response
 
       const token = response?.data?.data?.token;
-      const role = response?.data?.data?.user;
+      const role = response?.data?.data?.user?.role;
 
       console.log("Role:", role);
       console.log("Token:", token);
@@ -256,63 +256,78 @@ export default function Login() {
           </Link>
         </Item>
       </Grid>
-      <Grid item md={6} xs={12}>
+      <Grid
+        item
+        md={6}
+        xs={12}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh", // Full viewport height
+          overflow: "hidden", // Prevent scrolling
+          padding: "1rem", // Add padding for spacing around the edges
+          boxSizing: "border-box",
+        }}
+      >
         {/* Parent container with relative positioning */}
-        <Item
+        <Container
+          disableGutters
           sx={{
-            position: "relative", // To position the background image and text correctly
-            height: "100vh", // Full height for this section
-            overflow: "hidden", // Prevent overflow issues
+            position: "relative",
+            maxHeight: "100%", // Restrict height to prevent overflow
+            maxWidth: "100%", // Ensure it doesn't exceed parent width
+            borderRadius: "10px", // Optional: Add rounded corners
+            overflow: "hidden",
           }}
         >
-          {/* Background image styling */}
           <Box
             sx={{
+              position: "relative", // To position the background image and text correctly
+              height: "100vh", // Full height for this section
               backgroundImage: `url(${LogoinImage})`, // Set image as background
-              backgroundSize: "cover", // Cover the entire box without distortion
-              backgroundPosition: "center", // Center the image
-              width: "100%",
-              height: "100%",
-              position: "absolute", // Absolute to cover the entire parent
-              top: 0,
-              left: 0,
-            }}
-          ></Box>
-
-          {/* Centered text container */}
-          <Box
-            sx={{
-              position: "relative",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
               display: "flex",
-              flexDirection: "column", // Stack text vertically
-              justifyContent: "center", // Center text vertically
-              alignItems: "", // Center text horizontally
-              height: "100%", // Full height to match the parent container
-              color: "white", // White text for contrast
-              margin: 9,
+              maxHeight: "100vh",
+              padding: "2rem",
             }}
           >
-            {/* Main heading */}
-            <Typography
-              variant="h1"
+            <Box
               sx={{
-                fontSize: { xs: "30px", md: "40px" },
-                fontWeight: "bolder",
+                position: "relative",
+                display: "flex",
+                flexDirection: "column", // Stack text vertically
+                justifyContent: "center", // Center text vertically
+                alignItems: "", // Center text horizontally
+                height: "100%", // Full height to match the parent container
+                color: "white", // White text for contrast
+                margin: 9,
               }}
             >
-              Sign in to Roam Home
-            </Typography>
-            <Typography
-              variant="h4"
-              sx={{
-                fontSize: { xs: "16px", md: "20px" }, // Responsive font size for smaller screens
-                marginTop: 2, // Add spacing between the heading and sub-heading
-              }}
-            >
-              Homes as unique as you.
-            </Typography>
+              {/* Main heading */}
+              <Typography
+                variant="h1"
+                sx={{
+                  fontSize: { xs: "24px", md: "36px" },
+                  fontWeight: "bolder",
+                }}
+              >
+                Sign in to Roam Home
+              </Typography>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontSize: { xs: "16px", md: "20px" }, // Responsive font size for smaller screens
+                  marginTop: 2, // Add spacing between the heading and sub-heading
+                }}
+              >
+                Homes as unique as you.
+              </Typography>
+            </Box>
           </Box>
-        </Item>
+        </Container>
       </Grid>
     </Grid>
   );
