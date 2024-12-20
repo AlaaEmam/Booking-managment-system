@@ -2,7 +2,6 @@ import { Box, Grid, Paper, styled, Typography } from "@mui/material";
 import { ADMINADDS, ADMINBOOKING, ADMINROOMFACILITIES, ADMINROOMS, axiosInstance, PORTALROOMS } from "../../../../../constants/URLS";
 import { useEffect, useState } from "react";
 import BedIcon from '@mui/icons-material/Bed';
-import { PieChart } from "@mui/icons-material";
 export default function DashBoard() {
   
   const Item = styled(Paper)(({ theme }) => ({
@@ -87,7 +86,7 @@ export default function DashBoard() {
                 Rooms
               </Typography>
             </Typography>
-            <BedIcon sx={{color:'white', fontSize:40}}/>
+            <BedIcon sx={{color:'rgb(144, 191, 222)', fontSize:40}}/>
           </Item>
 
         </Grid>
@@ -99,7 +98,7 @@ export default function DashBoard() {
                 Facilities
               </Typography>
             </Typography>
-            <BedIcon sx={{color:'white', fontSize:40}}/>
+            <BedIcon sx={{color:'rgb(144, 191, 222)', fontSize:40}}/>
           </Item>
 
         </Grid>
@@ -111,15 +110,12 @@ export default function DashBoard() {
                 Ads
               </Typography>
             </Typography>
-            <BedIcon sx={{color:'white', fontSize:40}}/>
+            <BedIcon sx={{color:'rgb(144, 191, 222)', fontSize:40}}/>
           </Item>
 
         </Grid>
       </Grid>
-      <Box>
-
-        
-      </Box>
+      
       
     </Box>
   );
