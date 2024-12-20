@@ -11,6 +11,7 @@ import {
   InputAdornment,
   styled,
   Paper,
+  CardMedia,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -19,7 +20,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useAuth } from "../../../../context/AuthContext";
-import LogoinImage from "../../../../assets/LoginImage.png";
+import LoginImage from "../../../../assets/LoginImage.png";
+import Logo from "../../../../assets/Logo.svg";
 import {
   EmailValidation,
   PasswordValidation,
@@ -94,7 +96,7 @@ export default function Login() {
       container
       sx={{ textAlign: "left", display: "flex", alignItems: "center" }}
     >
-      <Grid Item xs={12} md={6}>
+      <Grid xs={12} md={6}>
         <Item
           sx={{
             padding: {
@@ -106,14 +108,18 @@ export default function Login() {
             boxShadow: "none",
           }}
         >
-          <Item sx={{ marginY: 4, boxShadow: "none" }}>
-            <img
-              src={LogoinImage}
-              style={{ maxWidth: "100%", width: "80%" }}
-              alt="logo"
-            />
-          </Item>
-          <Typography
+        <CardMedia
+          component="img"
+          style={{
+            width: "auto",
+            position: "absolute",
+            top: "35px",
+            left: "35px",
+          }}
+          image={Logo}
+          alt="Example Image"
+        />
+        <Typography
             sx={{
               fontSize: "30px",
               fontWeight: "bolder",
@@ -251,7 +257,7 @@ export default function Login() {
             sx={{
               position: "relative", // To position the background image and text correctly
               height: "100vh", // Full height for this section
-              backgroundImage: `url(${LogoinImage})`, // Set image as background
+              backgroundImage: `url(${LoginImage})`, // Set image as background
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
               backgroundPosition: "center",
