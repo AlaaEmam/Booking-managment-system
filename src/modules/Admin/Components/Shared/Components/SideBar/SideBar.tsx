@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
+import {  useAuth } from "../../../../../../context/AuthContext";
 
 export default function SideBar() {
+  const { clearLoginData } = useAuth();
   const [isCollapse, setIsCollapse] = useState(false);
   const toggleCollpase = () => {
     setIsCollapse(!isCollapse);
@@ -36,26 +38,26 @@ export default function SideBar() {
           </MenuItem>
           <MenuItem
             icon={<i className="bi bi-people"></i>}
-            component={<Link to="/users-list" />}
+            component={<Link to="users-list" />}
           >
             Users
           </MenuItem>
 
           <MenuItem
             icon={<i className="bi bi-columns-gap"></i>}
-            component={<Link to="/rooms-list" />}
+            component={<Link to="rooms-list" />}
           >
             Rooms
           </MenuItem>
           <MenuItem
             icon={<i className="bi bi-columns-gap"></i>}
-            component={<Link to="/ads-list" />}
+            component={<Link to="ads-list" />}
           >
             Ads
           </MenuItem>
           <MenuItem
             icon={<i className="bi bi-columns-gap"></i>}
-            component={<Link to="/booking-list" />}
+            component={<Link to="booking-list" />}
           >
             Bookings
           </MenuItem>
@@ -74,6 +76,9 @@ export default function SideBar() {
           <MenuItem
             icon={<i className="bi bi-box-arrow-right"></i>}
             component={<Link to="/" />}
+            onClick={() => {
+              clearLoginData();
+            }}
           >
             Logout
           </MenuItem>
