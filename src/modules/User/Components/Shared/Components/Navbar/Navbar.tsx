@@ -180,9 +180,9 @@ export default function Navbar() {
                     textTransform: "none",
                     fontFamily: "Poppins",
                   }}
-                  onClick={() => navigate("/register")}
+                  onClick={() => navigate("login/registration")}
                 >
-                  Register
+                  Registration
                 </Button>
                 <Button
                   variant="outlined"

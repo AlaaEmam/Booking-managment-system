@@ -210,7 +210,7 @@ export default function Login() {
           </form>
           <Link
             component="button"
-            onClick={() => navigate("/forget-password")}
+            onClick={() => navigate("forget-password")}
             sx={{
               color: "var(--light-color)",
               textDecorationColor: "var(--light-color)",
