@@ -23,6 +23,7 @@ import DeleteConfirmation from '../../Shared/Components/DeleteConfirmation/Delet
 import  CloseIcon  from '@mui/icons-material/Close';
 import  TextField  from '@mui/material/TextField';
 import { useForm } from 'react-hook-form';
+import FacilityDialog from '../FacilityDialog/FacilityDialog';
 // STYLE
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -45,17 +46,15 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 export default function RoomFacilitiesList() {
-  interface CreatedBy {
-    _id: string;
-    userName: string;
-  }
-  
-  interface Facility {
+   interface Facility {
     id: string;
     name: string;
-    createdBy: CreatedBy; 
+    createdBy: {
+      _id: string;
+      userName: string;
+    };
     createdAt: string;
-    updatedAt: string; 
+    updatedAt: string;
   }
   const [facilityList, setFacilityList] = useState<Facility[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -64,13 +63,6 @@ export default function RoomFacilitiesList() {
   const [selectedFacility, setSelectedFacility] = useState<Facility | null>(null);
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const {
-    register,
-    handleSubmit,
-    formState: { isSubmitting, errors },
-    setValue,
-} = useForm<Facility>({ mode: "onChange" });
-
   // Fetch Facilities on component mount
   // useEffect(() => {
   //   const fetchFacilities = async () => {
@@ -137,33 +129,19 @@ export default function RoomFacilitiesList() {
     setShowView(true);
   };
 
-  //handle add & edit dialog
-  const handleOpenDialog = (facility?: Facility) => {
-    if (facility) {
-      setSelectedFacility(facility);
-      setValue("name", facility.name);  // Set the value for editing
-      setIsEditing(true);
-    } else {
-      setSelectedFacility(null);
-      setValue("name", "");  // Clear the field for adding
-      setIsEditing(false);
-    }
-    setShowDialog(true);
-  };
 
-  const handleCloseDialog = () => {
-    setShowDialog(false);
-    setSelectedFacility(null);
-  };
-
-  const handleSave = async (data: Facility) => {
-    if (!selectedFacility) {
-      toast.error("No facility selected for editing.");
-      return;
-    }
-
+// Open dialog for adding/editing
+const handleOpenDialog = (facility?: Facility) => {
+  setSelectedFacility(facility || null); // Ensure facility is set correctly
+  setShowDialog(true);
+};
+// Handle saving the facility
+const handleSave = async (data: Facility) => {
   try {
-    if (isEditing) {
+    // Debugging statement
+    console.log("Selected Facility:", selectedFacility);
+    
+    if (selectedFacility && selectedFacility.id) {
       // Update existing Facility
       await axios.put(`https://upskilling-egypt.com:3000/api/v0/admin/room-facilities/${selectedFacility.id}`, data, {
         headers: { Authorization: localStorage.getItem("token") },
@@ -179,10 +157,21 @@ export default function RoomFacilitiesList() {
     handleCloseDialog();
     await getFacilityList(1, 5);
   } catch (error) {
-    console.error(error);
+    console.error("Error saving facility:", error);
     toast.error("An error occurred. Please try again.");
   }
-  };
+};   
+
+// Close dialog
+const handleCloseDialog = () => {
+  setShowDialog(false);
+  setSelectedFacility(null); // Reset the selected facility
+};
+
+// Example usage of handleOpenDialog when editing a facility
+const handleShowEdit = (facility: Facility) => {
+  handleOpenDialog(facility); // Ensure you're passing the entire facility object
+};
   return (
     <>
       <Box
@@ -252,7 +241,7 @@ export default function RoomFacilitiesList() {
                       <Typography sx={{ paddingInline: 1 }}>View</Typography>
                     </MenuItem>
 
-                    <MenuItem onClick={() => { handleOpenDialog(facility); handleClose(); }}>
+                    <MenuItem onClick={() => { handleShowEdit(facility); handleClose(); }}>
                       <img src={Edit} alt="Edit" /> 
                       <Typography sx={{ paddingInline: 1 }}>Edit</Typography>
                     </MenuItem>
@@ -275,38 +264,13 @@ export default function RoomFacilitiesList() {
       showDelete={showDelete}
       deleteFunction={deleteFacility}
       /> 
-      
-      <Dialog open={showDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>
-           Edit Facility 
-          <IconButton
-            aria-label="close"
-            onClick={handleCloseDialog}
-            sx={{ position: 'absolute', right: 8, top: 8 }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <form onSubmit={handleSubmit(handleSave)}>
-            <TextField
-              {...register("name")}
-              autoFocus
-              margin="dense"
-              label="Facility Name"
-              type="text"
-              fullWidth
-              variant="outlined"
-              error={!!errors.name}
-              helperText={errors.name ? "Facility name is required." : ""}
-            />
-            <Button type="submit" color="primary" variant="contained" sx={{ mt: 2 }}>
-              Save
-            </Button>
-          </form>
-        </DialogContent>
-      </Dialog>
 
+    <FacilityDialog
+      open={showDialog}
+      onClose={handleCloseDialog}
+      onSave={handleSave}
+      facility={selectedFacility}
+    />
     </>
   );
 }
