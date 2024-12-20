@@ -43,59 +43,53 @@ export default function Login() {
 
   
   //Handel Login data
-  const [isAdmin, setIsAdmin] = React.useState(false); // Default to user login
 
   const onSubmit: SubmitHandler<LoginData> = async (data) => {
     try {
-      const loginUrl = isAdmin
-        ? `https://upskilling-egypt.com:3000/api/v0/admin/users/login`
-        : `https://upskilling-egypt.com:3000/api/v0/portal/users/login`;
-  
-      // Send data directly
-      const response = await axios.post<{ data: { token: string; role: string } }>(loginUrl, {
+      const loginUrl = `https://upskilling-egypt.com:3000/api/v0/portal/users/login`;
+      const response = await axios.post(loginUrl, {
         email: data.email,
         password: data.password,
+        
       });
+
+      const token = response?.data?.data?.token;
+      const role = response?.data?.data?.user;
   
-      console.log("Login response:", response); // Log the response
-  
-      // Access token and role from the response
-      const token = response.data.data.token;
-      const role = response.data.data.role;
-  
-      // Check if the response is valid
-      if (token) {
+      if (token && role) {
         toast.success("Login Succeeded");
         localStorage.setItem("token", token);
         saveLoginData();
-  
-        // Navigate based on role
+
         if (role === "admin") {
           navigate("/dashboard");
-        } else {
+        } else if (role === "user") {
           navigate("/homepage");
+        } else {
+          toast.error("Unknown role. Please contact support.");
         }
       } else {
-        toast.error("Invalid login response");
+        toast.error("Invalid login response.");
       }
     } catch (error: any) {
-      console.error("Login error:", error); // Log the error
-      toast.error(error.response?.data.message || "Login failed");
+      console.error("Login error:", error.response); // Log the full error response
+      toast.error(error.response?.data?.message || "Login failed");
     }
   };
+
   
   //Handel show password
-  const [showPassword, setShowPassword] = React.useState(false);
+  // const [showPassword, setShowPassword] = React.useState(false);
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  // const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
+  // const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+  //   event.preventDefault();
+  // };
 
-  const handleMouseUpPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
+  // const handleMouseUpPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+  //   event.preventDefault();
+  // };
 
  
 const Item = styled(Paper)(({ theme }) => ({
@@ -166,25 +160,25 @@ const OverlayText = styled(Typography)(({ theme }) => ({
               <TextField
                 placeholder="Please type here"
                 variant="outlined"
-                type={showPassword ? 'text' : 'password'}
+                // type={showPassword ? 'text' : 'password'}
                 fullWidth
                 {...register("password", PasswordValidation)}
                 error={!!errors.password}
                 helperText={errors.password ? errors.password.message : ""}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label={showPassword ? 'Hide password' : 'Show password'}
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
+                // InputProps={{
+                //   endAdornment: (
+                //     <InputAdornment position="end">
+                //       <IconButton
+                //         aria-label={showPassword ? 'Hide password' : 'Show password'}
+                //         onClick={handleClickShowPassword}
+                //         onMouseDown={handleMouseDownPassword}
+                //         edge="end"
+                //       >
+                //         {showPassword ? <VisibilityOff /> : <Visibility />}
+                //       </IconButton>
+                //     </InputAdornment>
+                //   ),
+                // }}
               />
 
 
