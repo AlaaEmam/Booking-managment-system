@@ -28,8 +28,59 @@ import { useContext } from "react";
 import { AuthContext, useAuth } from "./context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
+import React from "react";
+
+
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#152C5B', // Primary blue
+    },
+    secondary: {
+      main: '#000000', // Black
+    },
+    background: {
+      default: '#ffffff', // White background
+      paper: '#FAFAFA', // Off-white
+    },
+    text: {
+      primary: '#000000', // Black text
+      secondary: '#ffffff', // White text for contrast
+    },
+  },
+});
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#152C5B', // Keep primary blue
+    },
+    secondary: {
+      main: '#ffffff', // White text
+    },
+    background: {
+      default: '#121212', // Dark background
+      paper: '#1A1B1E', // Dark gray
+    },
+    text: {
+      primary: '#FFFFFF', // White text
+      secondary: '#000000', // Black for contrast
+    },
+  },
+});
 
 function App() {
+
+  const [theme, setTheme] = React.useState(lightTheme);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev.palette.mode === 'light' ? darkTheme : lightTheme));
+  };
+
   const authContext = useContext(AuthContext);
   const { loginData } = useAuth();
   if (!authContext) {
@@ -111,8 +162,15 @@ function App() {
 
   return (
     <>
+       <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <button onClick={toggleTheme}>Toggle Theme</button>
+
       <ToastContainer />
-      <RouterProvider router={router}></RouterProvider>
+      <RouterProvider router={router}></RouterProvider>    
+      
+      </ThemeProvider>
+      
     </>
   );
 }
