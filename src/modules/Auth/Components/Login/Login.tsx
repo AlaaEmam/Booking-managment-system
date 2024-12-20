@@ -108,7 +108,7 @@ export default function Login() {
         >
           <Item sx={{ marginY: 4, boxShadow: "none" }}>
             <img
-              src="/public/Staycation.svg"
+              src={LogoinImage}
               style={{ maxWidth: "100%", width: "80%" }}
               alt="logo"
             />
