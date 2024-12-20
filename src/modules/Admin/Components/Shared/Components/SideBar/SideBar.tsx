@@ -38,26 +38,26 @@ export default function SideBar() {
           </MenuItem>
           <MenuItem
             icon={<i className="bi bi-people"></i>}
-            component={<Link to="/users-list" />}
+            component={<Link to="users-list" />}
           >
             Users
           </MenuItem>
 
           <MenuItem
             icon={<i className="bi bi-columns-gap"></i>}
-            component={<Link to="/rooms-list" />}
+            component={<Link to="rooms-list" />}
           >
             Rooms
           </MenuItem>
           <MenuItem
             icon={<i className="bi bi-columns-gap"></i>}
-            component={<Link to="/ads-list" />}
+            component={<Link to="ads-list" />}
           >
             Ads
           </MenuItem>
           <MenuItem
             icon={<i className="bi bi-columns-gap"></i>}
-            component={<Link to="/booking-list" />}
+            component={<Link to="booking-list" />}
           >
             Bookings
           </MenuItem>
