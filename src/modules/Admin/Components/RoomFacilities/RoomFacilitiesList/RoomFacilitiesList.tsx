@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Container, Typography, Button, Box, ImageList } from '@mui/material';
+import { Container, Typography, Button, Box, ImageList, Dialog, DialogTitle, DialogContent } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import './RoomFacilitiesList.css';
 import { styled } from '@mui/material/styles';
@@ -15,15 +15,14 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Menu, MenuItem, IconButton } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-// import ViewIcon from '@mui/icons-material/Visibility';
-// import EditIcon from '@mui/icons-material/Edit';
-// import DeleteIcon from '@mui/icons-material/Delete';
 import View from '../../../../../assets/icons/View.svg';
 import Delete from '../../../../../assets/icons/delete.svg';
 import Edit from '../../../../../assets/icons/Edit.svg';
- 
 import { red } from '@mui/material/colors';
 import DeleteConfirmation from '../../Shared/Components/DeleteConfirmation/DeleteConfirmation';
+import  CloseIcon  from '@mui/icons-material/Close';
+import  TextField  from '@mui/material/TextField';
+import { useForm } from 'react-hook-form';
 // STYLE
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -44,6 +43,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+
 export default function RoomFacilitiesList() {
   interface CreatedBy {
     _id: string;
@@ -51,41 +51,45 @@ export default function RoomFacilitiesList() {
   }
   
   interface Facility {
-    id: string; // Adjust this if necessary
+    id: string;
     name: string;
-    createdBy: CreatedBy; // Update to include the nested createdBy object
+    createdBy: CreatedBy; 
     createdAt: string;
     updatedAt: string; 
   }
-
   const [facilityList, setFacilityList] = useState<Facility[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showDelete, setShowDelete] = useState<boolean>(false);
   const [showView, setShowView] = useState<boolean>(false);
   const [selectedFacility, setSelectedFacility] = useState<Facility | null>(null);
+  const [showDialog, setShowDialog] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting, errors },
+    setValue,
+} = useForm<Facility>({ mode: "onChange" });
 
   // Fetch Facilities on component mount
+  // useEffect(() => {
+  //   const fetchFacilities = async () => {
+  //     await getFacilityList(1, 5); // Fetch with default pagination
+  //   };
+  //   fetchFacilities();
+  // }, []);
   useEffect(() => {
-    const fetchFacilities = async () => {
-      await getFacilityList(1, 5); // Fetch with default pagination
-    };
-    fetchFacilities();
+    getFacilityList(1, 5);
   }, []);
 
   const getFacilityList = async (pageNo: number, pageSize: number, searchQuery: string = '') => {
     try {
       const response = await axios.get(`https://upskilling-egypt.com:3000/api/v0/admin/room-facilities`, {
         headers: { Authorization: localStorage.getItem("token") || '' },
-        params: {
-          pageSize: pageSize,
-          pageNumber: pageNo,
-          search: searchQuery,
-        },
+        params: { pageSize, pageNumber: pageNo, search: searchQuery },
       });
-  
-      console.log("getFacilityList : ", response.data.data);
-      setFacilityList(response.data.data.facilities); // Set facilityList to the facilities array
-    } catch (error: any) {
+      setFacilityList(response.data.data.facilities);
+    } catch (error) {
       console.error(error);
       toast.error("Failed to fetch Facility.");
     }
@@ -93,12 +97,12 @@ export default function RoomFacilitiesList() {
 
   // Handle delete 
   const deleteFacility = async () => {
-    if (selectedId !== null) {
+    if (selectedId) {
       try {
         await axios.delete(`https://upskilling-egypt.com:3000/api/v0/admin/room-facilities/${selectedId}`, {
           headers: { Authorization: localStorage.getItem("token") || '' },
         });
-        getFacilityList(1, 5); // Refresh the list after deletion
+        getFacilityList(1, 5);
         toast.success("Operation completed successfully!");
       } catch (error) {
         toast.error("An error occurred. Please try again.");
@@ -133,6 +137,52 @@ export default function RoomFacilitiesList() {
     setShowView(true);
   };
 
+  //handle add & edit dialog
+  const handleOpenDialog = (facility?: Facility) => {
+    if (facility) {
+      setSelectedFacility(facility);
+      setValue("name", facility.name);  // Set the value for editing
+      setIsEditing(true);
+    } else {
+      setSelectedFacility(null);
+      setValue("name", "");  // Clear the field for adding
+      setIsEditing(false);
+    }
+    setShowDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setShowDialog(false);
+    setSelectedFacility(null);
+  };
+
+  const handleSave = async (data: Facility) => {
+    if (!selectedFacility) {
+      toast.error("No facility selected for editing.");
+      return;
+    }
+
+  try {
+    if (isEditing) {
+      // Update existing Facility
+      await axios.put(`https://upskilling-egypt.com:3000/api/v0/admin/room-facilities/${selectedFacility.id}`, data, {
+        headers: { Authorization: localStorage.getItem("token") },
+      });
+      toast.success("Facility updated successfully!");
+    } else {
+      // Create new Facility
+      await axios.post(`https://upskilling-egypt.com:3000/api/v0/admin/room-facilities`, data, {
+        headers: { Authorization: localStorage.getItem("token") },
+      });
+      toast.success("Facility created successfully!");
+    }
+    handleCloseDialog();
+    await getFacilityList(1, 5);
+  } catch (error) {
+    console.error(error);
+    toast.error("An error occurred. Please try again.");
+  }
+  };
   return (
     <>
       <Box
@@ -153,14 +203,13 @@ export default function RoomFacilitiesList() {
           </Typography>
           <Typography variant="body2">You can check all details</Typography>
         </Box>
-        <Link to='/facility-form'>
-          <Button
-            sx={{ borderRadius: 2, px: 3, py: 1.3, backgroundColor: 'var(--primary-color)', color: 'var(--off-white)' }}
-            startIcon={<AddIcon />}
-          >
+        <Button
+          onClick={() => handleOpenDialog()}
+          sx={{ borderRadius: 2, px: 3, py: 1.3, backgroundColor: 'var(--primary-color)', color: 'var(--off-white)' }}
+          startIcon={<AddIcon />}
+        >
             Add New Facility
           </Button>
-        </Link>
       </Box>
 
       <TableContainer component={Paper}>
@@ -181,9 +230,9 @@ export default function RoomFacilitiesList() {
                 <StyledTableCell align="center">{facility.createdBy.userName}</StyledTableCell>
                 <StyledTableCell align="center">{new Date(facility.createdAt).toLocaleString()}</StyledTableCell>
                 <StyledTableCell align="center">{new Date(facility.updatedAt).toLocaleString()}</StyledTableCell>
+                {/* Actions */}
                 <StyledTableCell align="center">
-                  {/* dropdown */}
-                <IconButton
+                  <IconButton
                     aria-controls={anchorEl ? 'simple-menu' : undefined}
                     aria-haspopup="true"
                     onClick={handleClick}
@@ -191,6 +240,7 @@ export default function RoomFacilitiesList() {
                   >
                     <MoreVertIcon />
                   </IconButton>
+
                   <Menu
                     id="simple-menu"
                     anchorEl={anchorEl}
@@ -198,20 +248,18 @@ export default function RoomFacilitiesList() {
                     onClose={handleClose}
                   >
                     <MenuItem onClick={() => { handleShowView(facility); handleClose(); }}>
-                    <img src={View} alt="View" /> 
-                    <Typography sx={{paddingInline: 1}}>View</Typography>
-
+                      <img src={View} alt="View" /> 
+                      <Typography sx={{ paddingInline: 1 }}>View</Typography>
                     </MenuItem>
-                    <MenuItem component={Link} to={`/${facility?.id}`} onClick={handleClose}>
-                      {/* <EditIcon /> */}
+
+                    <MenuItem onClick={() => { handleOpenDialog(facility); handleClose(); }}>
                       <img src={Edit} alt="Edit" /> 
-                      <Typography sx={{paddingInline: 1}}>Edit</Typography>
+                      <Typography sx={{ paddingInline: 1 }}>Edit</Typography>
                     </MenuItem>
+                    
                     <MenuItem onClick={() => { handleShowDelete(facility.id); handleClose(); }}>
-                      {/* <DeleteIcon /> */}
-                        <img src={Delete} alt="Delete" /> 
-
-                       <Typography sx={{paddingInline: 1}}>Delete</Typography>
+                      <img src={Delete} alt="Delete" /> 
+                      <Typography sx={{ paddingInline: 1 }}>Delete</Typography>
                     </MenuItem>
                   </Menu>
                 </StyledTableCell>
@@ -228,6 +276,37 @@ export default function RoomFacilitiesList() {
       deleteFunction={deleteFacility}
       /> 
       
+      <Dialog open={showDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+        <DialogTitle>
+           Edit Facility 
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseDialog}
+            sx={{ position: 'absolute', right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <form onSubmit={handleSubmit(handleSave)}>
+            <TextField
+              {...register("name")}
+              autoFocus
+              margin="dense"
+              label="Facility Name"
+              type="text"
+              fullWidth
+              variant="outlined"
+              error={!!errors.name}
+              helperText={errors.name ? "Facility name is required." : ""}
+            />
+            <Button type="submit" color="primary" variant="contained" sx={{ mt: 2 }}>
+              Save
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+
     </>
   );
 }
