@@ -25,12 +25,19 @@ import ExploarePage from "./modules/User/Components/ExploarePage/ExploarePage";
 import FavoriteRoomPage from "./modules/User/Components/FavoriteRoomPage/FavoriteRoomPage";
 import ProtectedRoute from "./modules/Auth/Components/ProtectedRoute/ProtectedRoute";
 import { useContext } from "react";
-import { AuthContext } from "./context/AuthContext";
+import { AuthContext, useAuth } from "./context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const loginData = useContext(AuthContext); // Get loginData from context
+  const authContext = useContext(AuthContext);
+  const { loginData } = useAuth();
+  if (!authContext) {
+    console.error(
+      "AuthContext not found. Make sure it's wrapped in AuthContextProvider."
+    );
+    return null;
+  }
 
   const router = createBrowserRouter([
     {
@@ -38,7 +45,7 @@ function App() {
       element: <AuthLayout />,
       errorElement: <Notfound />,
       children: [
-        
+      {index:true,element:<Login/>},
         { path: "login", element: <Login /> },
         { path: "forget-password", element: <ForgetPassword /> },
         { path: "reset-password", element: <ResetPass /> },
@@ -77,12 +84,12 @@ function App() {
         { path: "users-list", element: <UserList /> },
       ],
     },
-  {
+    {
       path: "",
       element: <MasterUserLayout />,
       errorElement: <Notfound />,
       children: [
-        { index: true, element: <HomePage  /> },
+        { index: true, element: <HomePage /> },
         { path: "homepage", element: <HomePage /> },
         { path: "room-details", element: <RoomDetailsPage /> },
         {
@@ -106,8 +113,6 @@ function App() {
     <>
       <ToastContainer />
       <RouterProvider router={router}></RouterProvider>
-      <ToastContainer />
-
     </>
   );
 }

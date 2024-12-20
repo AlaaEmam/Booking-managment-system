@@ -1,55 +1,65 @@
-import * as React from "react";
-import TextField from "@mui/material/TextField";
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
-import { Button, Typography, Link, Box, Container } from "@mui/material";
+import { useState } from "react";
+import {
+  TextField,
+  Button,
+  Typography,
+  Link,
+  Box,
+  Container,
+  Grid,
+  IconButton,
+  InputAdornment,
+  styled,
+  Paper,
+} from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { useAuth } from "../../../../context/AuthContext";
+import LogoinImage from "../../../../assets/LoginImage.png";
 import {
   EmailValidation,
   PasswordValidation,
 } from "../../../../constants/validations";
-import { useEffect } from "react";
-import LogoinImage from "../../../../assets/LoginImage.png";
-import LogoImage from "../../../../assets/Logo.svg";
-import IconButton from "@mui/material/IconButton";
-import InputAdornment from "@mui/material/InputAdornment";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { toast } from "react-toastify";
-import { AuthContext } from "../../../../context/AuthContext";
-import axios from "axios";
-
 interface LoginData {
   email: string;
   password: string;
-  isAdmin: boolean; // Add this field
 }
+
+// Styled component
+const Item = styled(Paper)(({ theme }) => ({
+  ...theme.typography.body2,
+  textAlign: "left",
+  border: "none",
+  boxShadow: "none",
+  padding: "1.5rem",
+}));
 
 export default function Login() {
   const navigate = useNavigate();
+  const { saveLoginData } = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginData>();
-  const { saveLoginData }: any = React.useContext(AuthContext);
 
-  //Handel Login data
-  const [isAdmin, setIsAdmin] = React.useState(false); // Default to user login
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const onSubmit: SubmitHandler<LoginData> = async (data) => {
     try {
-      const loginUrl = isAdmin
-        ? `https://upskilling-egypt.com:3000/api/v0/admin/users/login`
-        : `https://upskilling-egypt.com:3000/api/v0/portal/users/login`;
+      const loginUrl = `https://upskilling-egypt.com:3000/api/v0/portal/users/login`;
 
       // Send data directly
       const response = await axios.post(loginUrl, {
         email: data.email,
         password: data.password,
       });
+
       console.log("Login response:", response); // Log the response
 
       // Access token and role from the response
@@ -59,75 +69,32 @@ export default function Login() {
 
       console.log("Role:", role);
       console.log("Token:", token);
+      // console.log(response.data.data.user.userName);
 
+      // Navigate based on role
+      let userData: any = response;
       if (token && role) {
         toast.success("Login Succeeded");
-        localStorage.setItem("token", token); // Store the token
-        saveLoginData(); // Update login data in context
+        localStorage.setItem("token", token);
+        saveLoginData(userData);
 
-        // Navigate based on role
-        if (role === "admin") {
-          navigate("/dashboard");
-        } else if (role === "user") {
-          navigate("/homepage");
-        } else {
-          toast.error("Unknown role. Please contact support.");
-        }
+        navigate(role === "admin" ? "/dashboard" : "/homepage");
       } else {
-        toast.error("Invalid login response.");
+        throw new Error("Invalid login response.");
       }
-    } catch (error: any) {
-      console.error("Login error:", error);
-      toast.error(error.response?.data?.message || "Login failed");
+    } catch (error) {
+      const err = error as any;
+      console.error("Login error:", err.response?.data || err.message);
+      toast.error(err.response?.data?.message || "Login failed");
     }
   };
-
-  //Handel show password
-  const [showPassword, setShowPassword] = React.useState(false);
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
-  };
-
-  const handleMouseUpPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
-  };
-
-  const Item = styled(Paper)(({ theme }) => ({
-    ...theme.typography.body2,
-    textAlign: "left",
-    border: "none",
-    position: "relative",
-    overflow: "hidden",
-  }));
-
-  const OverlayText = styled(Typography)(({ theme }) => ({
-    position: "absolute",
-    bottom: "20%",
-    transform: "translateX(-50%)",
-    color: "white",
-    textAlign: "left",
-    padding: "10px",
-    borderRadius: "5px",
-  }));
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    console.log("Token in storage:", token);
-  }, []);
 
   return (
     <Grid
       container
       sx={{ textAlign: "left", display: "flex", alignItems: "center" }}
     >
-      <Grid item xs={12} md={6}>
+      <Grid Item xs={12} md={6}>
         <Item
           sx={{
             padding: {
@@ -220,8 +187,7 @@ export default function Login() {
                       aria-label={
                         showPassword ? "Hide password" : "Show password"
                       }
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
+                      onClick={togglePasswordVisibility}
                       edge="end"
                     >
                       {showPassword ? <VisibilityOff /> : <Visibility />}

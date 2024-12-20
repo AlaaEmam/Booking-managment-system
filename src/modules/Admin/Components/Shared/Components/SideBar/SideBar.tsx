@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
+import {  useAuth } from "../../../../../../context/AuthContext";
 
 export default function SideBar() {
- 
+  const { clearLoginData } = useAuth();
   const [isCollapse, setIsCollapse] = useState(false);
   const toggleCollpase = () => {
     setIsCollapse(!isCollapse);
@@ -76,7 +77,7 @@ export default function SideBar() {
             icon={<i className="bi bi-box-arrow-right"></i>}
             component={<Link to="/" />}
             onClick={() => {
-              localStorage.removeItem("token");
+              clearLoginData();
             }}
           >
             Logout

@@ -1,54 +1,70 @@
-import { jwtDecode } from "jwt-decode";
-import { createContext, useEffect, useState, ReactNode } from "react";
 
+import React, { createContext, useContext, useState, ReactNode } from "react";
+
+// Define the structure of the LoginData
 interface LoginData {
-  [key: string]: any; // يمكن استبداله بحقول محددة إذا كنت تعرف محتويات الـ token
+  token?: string;
+  role?: string;
+  userName?: string;
+  id?: string;
+  [key: string]: any;
 }
 
+// Define the context properties
 interface AuthContextProps {
   loginData: LoginData | null;
-  saveLoginData: () => void;
+  saveLoginData: (token: string) => void;
+  clearLoginData: () => void;
 }
 
-// توفير نوع افتراضي للـ Context
-export let AuthContext = createContext<AuthContextProps | null>(null);
+// Create the AuthContext
+const AuthContext = createContext<AuthContextProps | null>(null);
 
 interface AuthContextProviderProps {
   children: ReactNode;
 }
 
-export default function AuthContextProvider({ children }: AuthContextProviderProps) {
+// AuthContext Provider Component
+export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
+  children,
+}) => {
   const [loginData, setLoginData] = useState<LoginData | null>(null);
 
-  const saveLoginData = () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const parts = token.split('.');
-      if (parts.length === 3) {
-        try {
-          const decodedToken = jwtDecode<LoginData>(token); // Specify the type here
-          setLoginData(decodedToken);
-          console.log(decodedToken);
-        } catch (error) {
-          console.error("Failed to decode token:", error);
-        }
-      } else {
-        console.error("Invalid token format:", token);
-        // Handle invalid token format case, e.g., by clearing the token
-        localStorage.removeItem("token");
-      }
+  const saveLoginData = (userData: any) => {
+    try {
+      console.log(userData);
+
+      setLoginData({
+        token: userData?.data?.data?.token,
+        role: userData?.data?.data?.user?.role,
+        userName: userData.data.data.user.userName,
+      });
+      console.log("Login data saved:", userData);
+    } catch (error) {
+      console.error("Failed to save login data:", error);
+      clearLoginData();
     }
   };
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      saveLoginData();
-    }
-  }, []);
+  const clearLoginData = () => {
+    localStorage.removeItem("token");
+    setLoginData(null);
+  };
 
   return (
-    <AuthContext.Provider value={{ loginData, saveLoginData }}>
+    <AuthContext.Provider value={{ loginData, saveLoginData, clearLoginData }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
+
+// Custom Hook for AuthContext
+const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthContextProvider");
+  }
+  return context;
+};
+
+// Export AuthContext and useAuth
+export { AuthContext, useAuth };
