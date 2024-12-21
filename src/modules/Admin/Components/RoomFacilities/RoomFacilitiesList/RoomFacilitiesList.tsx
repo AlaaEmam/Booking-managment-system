@@ -63,13 +63,9 @@ export default function RoomFacilitiesList() {
   const [selectedFacility, setSelectedFacility] = useState<Facility | null>(null);
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+
+  
   // Fetch Facilities on component mount
-  // useEffect(() => {
-  //   const fetchFacilities = async () => {
-  //     await getFacilityList(1, 5); // Fetch with default pagination
-  //   };
-  //   fetchFacilities();
-  // }, []);
   useEffect(() => {
     getFacilityList(1, 5);
   }, []);
@@ -123,11 +119,11 @@ export default function RoomFacilitiesList() {
   };
 
   // Modal View
-  const handleCloseView = () => setShowView(false);
-  const handleShowView = (facility: Facility) => {
-    setSelectedFacility(facility);
-    setShowView(true);
-  };
+  // const handleCloseView = () => setShowView(false);
+  // const handleShowView = (facility: Facility) => {
+  //   setSelectedFacility(facility);
+  //   setShowView(true);
+  // };
 
 
 // Open dialog for adding/editing
@@ -138,29 +134,37 @@ const handleOpenDialog = (facility?: Facility) => {
 // Handle saving the facility
 const handleSave = async (data: Facility) => {
   try {
-    // Debugging statement
-    console.log("Selected Facility:", selectedFacility);
-    
-    if (selectedFacility && selectedFacility.id) {
-      // Update existing Facility
+    if (selectedFacility) {
+      // Update existing facility
       await axios.put(`https://upskilling-egypt.com:3000/api/v0/admin/room-facilities/${selectedFacility.id}`, data, {
         headers: { Authorization: localStorage.getItem("token") },
       });
       toast.success("Facility updated successfully!");
     } else {
-      // Create new Facility
+      // Create new facility
       await axios.post(`https://upskilling-egypt.com:3000/api/v0/admin/room-facilities`, data, {
         headers: { Authorization: localStorage.getItem("token") },
       });
       toast.success("Facility created successfully!");
     }
     handleCloseDialog();
-    await getFacilityList(1, 5);
+    // Optionally refresh the facility list here
   } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      // Check for specific status code or message
+      if (error.response.status === 400) {
+        // Display the error message from the response
+        const errorMessage = error.response.data.message || "An error occurred. Please try again.";
+        toast.error(errorMessage);
+      } else {
+        toast.error("An error occurred. Please try again.");
+      }
+    } else {
+      toast.error("An unexpected error occurred.");
+    }
     console.error("Error saving facility:", error);
-    toast.error("An error occurred. Please try again.");
   }
-};   
+};
 
 // Close dialog
 const handleCloseDialog = () => {
@@ -236,17 +240,17 @@ const handleShowEdit = (facility: Facility) => {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                   >
-                    <MenuItem onClick={() => { handleShowView(facility); handleClose(); }}>
+                    {/* <MenuItem onClick={() => { handleShowView(facility); handleClose(); }}>
                       <img src={View} alt="View" /> 
                       <Typography sx={{ paddingInline: 1 }}>View</Typography>
-                    </MenuItem>
+                    </MenuItem> */}
 
-                    <MenuItem onClick={() => { handleShowEdit(facility); handleClose(); }}>
+                    <MenuItem onClick={() => { handleShowEdit(facility); }}>
                       <img src={Edit} alt="Edit" /> 
                       <Typography sx={{ paddingInline: 1 }}>Edit</Typography>
                     </MenuItem>
                     
-                    <MenuItem onClick={() => { handleShowDelete(facility.id); handleClose(); }}>
+                    <MenuItem onClick={() => { handleShowDelete(facility.id); }}>
                       <img src={Delete} alt="Delete" /> 
                       <Typography sx={{ paddingInline: 1 }}>Delete</Typography>
                     </MenuItem>

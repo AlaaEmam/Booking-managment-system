@@ -121,11 +121,6 @@ function App() {
         { path: "ads-list/:adsId", element: <AdsForm /> },
 
         { path: "room-facility", element: <RoomFacilitiesList /> },
-        {
-          path: "room-facility/facility-form",
-          element: <RoomFacilitiesList />,
-        },
-        { path: "room-facility/:facilityId", element: <RoomFacilitiesList /> },
 
         { path: "rooms-list", element: <RoomsList /> },
         { path: "rooms-list/room-form", element: <RoomFacilitiesList /> },
