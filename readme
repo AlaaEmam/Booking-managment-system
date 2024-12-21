@@ -1,0 +1,109 @@
+// You're right! Using Material-UI’s (MUI) theme capabilities can greatly simplify managing light and dark modes in your application. By leveraging MUI's built-in theming, you can ensure that colors adapt automatically based on the selected theme without needing to manually handle CSS variables.
+
+// Steps to Implement MUI Theme for Light/Dark Mode
+// Create a Theme:
+// Define a theme using MUI’s createTheme function, specifying colors for both light and dark modes.
+// Use ThemeProvider:
+// Wrap your application in a ThemeProvider, passing the created theme. This makes the theme accessible throughout your components.
+// Access Theme Colors:
+// Use the theme colors in your components via the useTheme hook or with the styled API.
+// Example Implementation
+// Here’s how you can implement this:
+
+// Step 1: Define Your Theme
+// Create a theme in your main application file (e.g., App.tsx):
+
+// javascript
+
+// Copy
+// import React from 'react';
+// import { createTheme, ThemeProvider } from '@mui/material/styles';
+// import { CssBaseline } from '@mui/material';
+
+// const lightTheme = createTheme({
+//   palette: {
+//     mode: 'light',
+//     primary: {
+//       main: '#152C5B', // Primary blue
+//     },
+//     secondary: {
+//       main: '#000000', // Black
+//     },
+//     background: {
+//       default: '#ffffff', // White background
+//       paper: '#FAFAFA', // Off-white
+//     },
+//     text: {
+//       primary: '#000000', // Black text
+//       secondary: '#ffffff', // White text for contrast
+//     },
+//   },
+// });
+
+// const darkTheme = createTheme({
+//   palette: {
+//     mode: 'dark',
+//     primary: {
+//       main: '#152C5B', // Keep primary blue
+//     },
+//     secondary: {
+//       main: '#ffffff', // White text
+//     },
+//     background: {
+//       default: '#121212', // Dark background
+//       paper: '#1A1B1E', // Dark gray
+//     },
+//     text: {
+//       primary: '#FFFFFF', // White text
+//       secondary: '#000000', // Black for contrast
+//     },
+//   },
+// });
+
+// const App = () => {
+//   const [theme, setTheme] = React.useState(lightTheme);
+
+//   const toggleTheme = () => {
+//     setTheme((prev) => (prev.palette.mode === 'light' ? darkTheme : lightTheme));
+//   };
+
+//   return (
+//     <ThemeProvider theme={theme}>
+//       <CssBaseline />
+//       <button onClick={toggleTheme}>Toggle Theme</button>
+//       {/* Your components go here */}
+//     </ThemeProvider>
+//   );
+// };
+
+// export default App;
+// Step 2: Use Theme Colors in Your Components
+// Now, in your components, you can use the theme colors like this:
+
+// javascript
+
+// Copy
+// import React from 'react';
+// import { useTheme } from '@mui/material/styles';
+// import { Button, Typography } from '@mui/material';
+
+// const MyComponent = () => {
+//   const theme = useTheme();
+
+//   return (
+//     <div style={{ backgroundColor: theme.palette.background.default, color: theme.palette.text.primary }}>
+//       <Typography variant="h4">Welcome!</Typography>
+//       <Button variant="contained" color="primary">
+//         Click Me
+//       </Button>
+//     </div>
+//   );
+// };
+
+// export default MyComponent;
+// Advantages of Using MUI Theme
+// Automatic Adaptation: Colors automatically adjust based on the current theme without needing to manage CSS variables.
+// Consistency: Ensures consistent color usage across your application.
+// Customization: Easily extendable to include additional custom properties in the theme.
+// Conclusion
+// By adopting MUI’s theming approach, you simplify the management of light and dark modes while leveraging a standardized color palette. This not only enhances maintainability but also improves the overall design consistency of your application.

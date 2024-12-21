@@ -7,16 +7,17 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ loginData, children }: ProtectedRouteProps) => {
-  // التحقق من أن loginData موجود وصالح أو أن الـ token موجود وغير فارغ
   const token = localStorage.getItem("token");
-  const isLoggedIn = token && loginData; // تحقق مزدوج من أن loginData موجود و token غير فارغ
+  const isLoggedIn = token && loginData;
 
   if (isLoggedIn) {
-    return <>{children}</>; // عرض الـ children إذا كان المستخدم مسجل الدخول
+    return <>{children}</>; // Render children if user is logged in
   } else {
-    return <Navigate to="/login" />; // إعادة التوجيه إلى صفحة تسجيل الدخول إذا لم يكن مسجل الدخول
+    console.warn("Unauthorized access attempt detected."); // Log unauthorized access
+    return <Navigate to="/login" replace />; // Redirect to login, replace history
   }
 };
+
 
 export default ProtectedRoute;
 

@@ -5,16 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@fortawesome/fontawesome-free": "^6.7.1",
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "@mui/icons-material": "^6.2.0",
     "@mui/material": "^6.2.0",
+    "@mui/styled-engine-sc": "^6.2.0",
+    "@mui/x-charts": "^7.23.2",
     "axios": "^1.7.9",
     "bootstrap-icons": "^1.11.3",
     "jwt-decode": "^4.0.0",
@@ -23,7 +25,8 @@
     "react-hook-form": "^7.54.1",
     "react-pro-sidebar": "^1.1.0",
     "react-router-dom": "^7.0.2",
-    "react-toastify": "^10.0.6"
+    "react-toastify": "^10.0.6",
+    "styled-components": "^6.1.13"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
