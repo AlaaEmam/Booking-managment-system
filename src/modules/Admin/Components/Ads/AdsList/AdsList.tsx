@@ -11,6 +11,19 @@ import axios from 'axios';
 // تعريف التوكين
 const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWExNGIxYTI4M2I1NmY1NjgyMTMyNGYiLCJyb2xlIjoiYWRtaW4iLCJ2ZXJpZmllZCI6ZmFsc2UsImlhdCI6MTczNDc4OTIxOSwiZXhwIjoxNzM1OTk4ODE5fQ.9_0Tmcv50I7q7456hyy-h_oF3lT4BNsPUPgaC_vKatw';
 
+interface Room {
+  roomNumber: string;
+  price: number;
+  discount: number;
+  capacity: number;
+}
+
+interface Ad {
+  _id: string;
+  room: Room;
+  isActive: boolean;
+}
+
 // إعداد axios instance مع التوكين
 const axiosInstance = axios.create({
   baseURL: 'https://upskilling-egypt.com:3000',
@@ -46,9 +59,9 @@ export const ADMINADDS = {
 };
 
 const AdList = () => {
-  const [ads, setAds] = useState([]);
+  const [ads, setAds] = useState<Ad[]>([]); // تحديد النوع هنا
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedAd, setSelectedAd] = useState<null | any>(null);
+  const [selectedAd, setSelectedAd] = useState<Ad | null>(null); // تحديد النوع هنا
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openView, setOpenView] = useState(false);
@@ -75,7 +88,7 @@ const AdList = () => {
       });
   }, []);
 
-  const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>, ad: any) => {
+  const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>, ad: Ad) => { // تحديد النوع هنا
     setAnchorEl(event.currentTarget);
     setSelectedAd(ad);
   };
@@ -130,11 +143,8 @@ const AdList = () => {
       // إرسال التحديث إلى الـ API باستخدام axios
       axiosInstance
         .put(ADMINADDS.updateAdd(selectedAd._id), {
-          roomNumber: formData.roomName,
-          price: formData.price,
-          discount: formData.discount,
-          capacity: formData.capacity,
           isActive: formData.active === 'Active',
+          discount: formData.discount,
         })
         .then((response) => {
           if (response.data.success) {
@@ -247,7 +257,6 @@ const AdList = () => {
             value={formData.roomName}
             InputProps={{ readOnly: true }} // جعل الاسم ثابت
           />
-     
           <TextField
             margin="dense"
             label="Discount"
@@ -256,7 +265,6 @@ const AdList = () => {
             value={formData.discount}
             onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
           />
-         
           <FormControl fullWidth margin="dense">
             <InputLabel>Active</InputLabel>
             <Select
@@ -280,19 +288,25 @@ const AdList = () => {
         </DialogActions>
       </Dialog>
 
+      {/* Delete Dialog */}
+      <Dialog open={openDelete} onClose={handleDialogClose}>
+        <DialogTitle>Delete Ads</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">Are you sure you want to delete this ad?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" color="secondary" onClick={handleDialogClose}>
+            Cancel
+          </Button>
+          <Button variant="outlined" color="error" onClick={handleDialogClose}>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {/* View Dialog */}
       <Dialog open={openView} onClose={handleDialogClose}>
-        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          View Ads
-          <IconButton
-            edge="end"
-            color="inherit"
-            onClick={handleDialogClose}
-            sx={{ position: 'absolute', top: '8px', right: '8px' }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
+        <DialogTitle>View Ad</DialogTitle>
         <DialogContent>
           <TextField
             margin="dense"
@@ -302,7 +316,14 @@ const AdList = () => {
             value={formData.roomName}
             InputProps={{ readOnly: true }}
           />
-      
+          <TextField
+            margin="dense"
+            label="Price"
+            type="number"
+            fullWidth
+            value={formData.price}
+            InputProps={{ readOnly: true }}
+          />
           <TextField
             margin="dense"
             label="Discount"
@@ -321,38 +342,15 @@ const AdList = () => {
           />
           <TextField
             margin="dense"
-            label="Active"
+            label="Status"
             type="text"
             fullWidth
             value={formData.active}
             InputProps={{ readOnly: true }}
           />
         </DialogContent>
-      </Dialog>
-
-      {/* Delete Dialog */}
-      <Dialog open={openDelete} onClose={handleDialogClose}>
-        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          Delete Ads
-          <IconButton
-            edge="end"
-            color="inherit"
-            onClick={handleDialogClose}
-            sx={{ position: 'absolute', top: '8px', right: '8px' }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <Typography>Are you sure you want to delete this ad?</Typography>
-        </DialogContent>
         <DialogActions>
-          <Button variant="contained" onClick={handleDialogClose} color="error">
-            Delete
-          </Button>
-          <Button variant="outlined" onClick={handleDialogClose}>
-            Cancel
-          </Button>
+          <Button onClick={handleDialogClose}>Close</Button>
         </DialogActions>
       </Dialog>
     </>
