@@ -34,7 +34,7 @@ export default function DashBoard() {
     let response=await axiosInstance.get(ADMINBOOKING.getAllBooking);
     console.log(response.data.data);
 
-    setBookingList(response.data.data);
+    setBookingList(response.data.data.totalCount);
     
   }
 
@@ -42,7 +42,7 @@ export default function DashBoard() {
     let response=await axiosInstance.get(ADMINROOMFACILITIES.getRoomFacilities);
     console.log(response.data.data);
 
-    setRoomFacilitiesList(response.data.data);
+    setRoomFacilitiesList(response.data.data.totalCount);
 
   }
 
@@ -50,14 +50,14 @@ export default function DashBoard() {
     let response=await axiosInstance.get(ADMINADDS.getAdds);
     console.log(response.data.data);
 
-    setAdsList(response.data.data);
+    setAdsList(response.data.data.totalCount);
 
   }
 
 
-  const totalRoomCount=getRoomslist?.totalCount;
-  const totalFacilities=getRoomFacilitieslist?.totalCount;
-  const totalAds=getAdslist?.totalCount;
+  const totalRoomCount=getRoomslist;
+  const totalFacilities=getRoomFacilitieslist;
+  const totalAds=getAdslist;
   useEffect(()=>{
     getRooms();
     getFacilities();
