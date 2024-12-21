@@ -1,4 +1,4 @@
-import { Box,  Modal,  Stack,  styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TableRow, Typography } from '@mui/material'
+import { Box,  Modal,  Stack,  styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TablePagination, TableRow, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { ADMINBOOKING, axiosInstance } from '../../../../constants/URLS'
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -24,16 +24,7 @@ export default function BookingList() {
   
 
   
-  const getBookingList= async()=>{
-    try{
-      let response= await axiosInstance.get(ADMINBOOKING.getAllBooking);
-      console.log(response.data.data.booking);
-      setBookingList(response?.data?.data?.booking)
-    }catch(error){
-      console.log(error)
-    }
-  }
-
+  
   
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -45,7 +36,7 @@ export default function BookingList() {
       fontSize: 14,
     },
   }));
-
+  
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
       backgroundColor: theme.palette.action.hover,
@@ -56,11 +47,13 @@ export default function BookingList() {
       
     },
   }));
-
+  
+  
+  
   //Modal View
   const [showView, setShowView] = useState<boolean>(false);
   const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
-
+  
   const handleCloseView = () => setShowView(false);
   const handleShowView = (booking: any) => {
     setSelectedBooking(booking);
@@ -78,8 +71,22 @@ export default function BookingList() {
     px: 4,
     pb: 3,
   };
+  const getBookingList= async(pageNo: number, pageSize: number)=>{
+    try{
+      let response= await axiosInstance.get(ADMINBOOKING.getAllBooking,
+        {params: {
+          pageSize: pageSize,
+          pageNumber: pageNo,
+        }}
+      );
+      console.log(response.data.data.booking);
+      setBookingList(response?.data?.data?.booking)
+    }catch(error){
+      console.log(error)
+    }
+  }
   useEffect(()=>{
-    getBookingList();
+    getBookingList(2,2);
   },[]) 
   
   return (
@@ -196,7 +203,12 @@ export default function BookingList() {
           </TableHead>
           <TableBody>
 
-            <Typography sx={{textAlign:'center'}} variant='h1'>No Data</Typography>
+            <TableRow>
+              <TableCell sx={{textAlign:'center', fontSize:60}}>
+              No Data
+
+              </TableCell>
+              </TableRow>
 
           </TableBody>
         </Table>
