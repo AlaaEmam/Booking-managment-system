@@ -42,7 +42,8 @@ export default function BookingList() {
     try{
       let response= await axiosInstance.get(ADMINBOOKING.getAllBooking,
         {params: {
-          pageSize: pageSize, pageNumber: pageNo
+          pageNumber: pageNo,
+          pageSize: pageSize
         }});
       setTotalCount(response.data.data.totalCount)
       console.log(response.data.data.booking);
