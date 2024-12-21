@@ -131,7 +131,7 @@ export default function NavbarAdmin() {
               <MenuItem
                 onClick={() => {
                   clearLoginData();
-                  navigate("/login");
+                  navigate("/auth/login");
                 }}
               >
                 Logout

@@ -92,11 +92,11 @@ function App() {
 
   const router = createBrowserRouter([
     {
-      path: "login",
+      path: "auth",
       element: <AuthLayout />,
       errorElement: <Notfound />,
       children: [
-      {index:true,element:<Login/>},
+        { index: true, element: <Login /> },
         { path: "login", element: <Login /> },
         { path: "forget-password", element: <ForgetPassword /> },
         { path: "reset-password", element: <ResetPass /> },

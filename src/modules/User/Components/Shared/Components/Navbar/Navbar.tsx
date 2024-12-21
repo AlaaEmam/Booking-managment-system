@@ -187,7 +187,7 @@ export default function Navbar() {
                 <Button
                   variant="outlined"
                   size="large"
-                  onClick={() => navigate("/login")}
+                  onClick={() => navigate("/auth/login")}
                   sx={{
                     borderRadius: 1,
                     textTransform: "none",
