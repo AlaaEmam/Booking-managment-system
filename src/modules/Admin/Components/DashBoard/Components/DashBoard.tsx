@@ -14,9 +14,9 @@ export default function DashBoard() {
   }));
   
   
-  let [getRoomslist, setRoomsList]=useState([]);
-  let [getRoomFacilitieslist, setRoomFacilitiesList]=useState([]);
-  let [getAdslist, setAdsList]=useState([]);
+  let [getRoomsTotalCount, setRoomsTotalCount]=useState(0);
+  let [getRoomFacilitiesTotalCount, setRoomFacilitiesTotalCount]=useState(0);
+  let [getAdsTotalCount, setAdsList]=useState(0);
 
   const [getBookinglist, setBookingList]=useState([]);
   
@@ -27,14 +27,14 @@ export default function DashBoard() {
 
     console.log(response.data.data);
     console.log(responsePortal.data.data)
-    setRoomsList(response.data.data);
+    setRoomsTotalCount(response.data.data?.totalCount);
     
   }
   let getBooking=async()=>{
     let response=await axiosInstance.get(ADMINBOOKING.getAllBooking);
     console.log(response.data.data);
 
-    setBookingList(response.data.data.totalCount);
+   
     
   }
 
@@ -42,7 +42,7 @@ export default function DashBoard() {
     let response=await axiosInstance.get(ADMINROOMFACILITIES.getRoomFacilities);
     console.log(response.data.data);
 
-    setRoomFacilitiesList(response.data.data.totalCount);
+    setRoomFacilitiesTotalCount(response.data.data?.totalCount);
 
   }
 
@@ -55,9 +55,9 @@ export default function DashBoard() {
   }
 
 
-  const totalRoomCount=getRoomslist;
-  const totalFacilities=getRoomFacilitieslist;
-  const totalAds=getAdslist;
+  const totalRoomCount=getRoomsTotalCount;
+  const totalFacilities=getRoomFacilitiesTotalCount;
+  const totalAds=getAdsTotalCount;
   useEffect(()=>{
     getRooms();
     getFacilities();
