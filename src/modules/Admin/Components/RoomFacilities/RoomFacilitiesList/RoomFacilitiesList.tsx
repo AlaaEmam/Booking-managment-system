@@ -136,7 +136,7 @@ const handleSave = async (data: Facility) => {
   try {
     if (selectedFacility) {
       // Update existing facility
-      await axios.put(`https://upskilling-egypt.com:3000/api/v0/admin/room-facilities/${selectedFacility.id}`, data, {
+      await axios.put(`https://upskilling-egypt.com:3000/api/v0/admin/room-facilities/${selectedId}`, data, {
         headers: { Authorization: localStorage.getItem("token") },
       });
       toast.success("Facility updated successfully!");
