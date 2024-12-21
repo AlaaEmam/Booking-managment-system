@@ -1,0 +1,8 @@
+:root {
+    --blue: #F5F6F8
+}
+
+.custom-textfield {
+    border:1px solid  var(--blue) !important;
+    background-color: var(--blue);
+}
