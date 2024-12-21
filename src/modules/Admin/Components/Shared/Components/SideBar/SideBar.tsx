@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
-import {  useAuth } from "../../../../../../context/AuthContext";
+import { useAuth } from "../../../../../../context/AuthContext";
 
 export default function SideBar() {
   const { clearLoginData } = useAuth();
@@ -75,7 +75,7 @@ export default function SideBar() {
           </MenuItem>
           <MenuItem
             icon={<i className="bi bi-box-arrow-right"></i>}
-            component={<Link to="/" />}
+            component={<Link to="/auth/login" />}
             onClick={() => {
               clearLoginData();
             }}
