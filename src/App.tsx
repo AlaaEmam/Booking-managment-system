@@ -131,7 +131,7 @@ function App() {
       ],
     },
     {
-      path: "",
+      path: "/",
       element: <MasterUserLayout />,
       errorElement: <Notfound />,
       children: [

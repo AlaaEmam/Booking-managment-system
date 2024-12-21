@@ -77,7 +77,7 @@ export default function Registration() {
       //formata
       // );
       toast.success(res.data.message);
-      navigate('/login')
+      navigate('/auth/login')
       console.log(res);
     } catch (error) {
       console.log(error);
@@ -126,7 +126,7 @@ export default function Registration() {
               If you already have an account register You can
               <Link
                 onClick={() => {
-                  navigate("/login");
+                  navigate("/auth/login");
                 }}
                 className="text-danger"
                 underline="none"

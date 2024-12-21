@@ -128,7 +128,7 @@ export default function Login() {
           <Typography sx={{ marginBottom: "2rem" }}>
             You can{" "}
             <Link
-              onClick={() => navigate("/registration")}
+              onClick={() => navigate("/auth/registration")}
               underline="none"
               sx={{
                 color: "var(--primary-color)",
@@ -211,7 +211,7 @@ export default function Login() {
           </form>
           <Link
             component="button"
-            onClick={() => navigate("forget-password")}
+            onClick={() => navigate("/auth/forget-password")}
             sx={{
               color: "var(--light-color)",
               textDecorationColor: "var(--light-color)",

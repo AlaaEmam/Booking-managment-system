@@ -69,7 +69,7 @@ export default function SideBar() {
           </MenuItem>
           <MenuItem
             icon={<i className="bi bi-lock"></i>}
-            component={<Link to="/change-password" />}
+            component={<Link to="/auth/change-password" />}
           >
             Change Password
           </MenuItem>

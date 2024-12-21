@@ -140,7 +140,7 @@ export default function ChangePassword() {
           <Typography sx={{ marginBottom: "2rem" }}>
             If you already have an account registered{" "}
             <Link
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/auth/login")}
               underline="none"
               sx={{
                 color: "var(--primary-color)",

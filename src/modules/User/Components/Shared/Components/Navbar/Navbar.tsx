@@ -157,13 +157,13 @@ export default function Navbar() {
                   <MenuItem onClick={() => navigate("/settings")}>
                     Settings
                   </MenuItem>
-                  <MenuItem onClick={() => navigate("/change-password")}>
+                  <MenuItem onClick={() => navigate("/auth/change-password")}>
                     Change Password
                   </MenuItem>
                   <MenuItem
                     onClick={() => {
                       clearLoginData();
-                      navigate("/login");
+                      navigate("/auth/login");
                     }}
                   >
                     Logout
@@ -180,7 +180,7 @@ export default function Navbar() {
                     textTransform: "none",
                     fontFamily: "Poppins",
                   }}
-                  onClick={() => navigate("login/registration")}
+                  onClick={() => navigate("auth/registration")}
                 >
                   Registration
                 </Button>

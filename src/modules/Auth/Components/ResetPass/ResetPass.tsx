@@ -45,7 +45,7 @@ export default function ResetPass() {
       );
       console.log(response);
       toast.success(response.data.message || 'password Updated Successfully');
-      navigate('/login');
+      navigate('/auth/login');
     } catch (error) {
       console.log(error);
       toast.error('failed');
@@ -112,7 +112,7 @@ export default function ResetPass() {
           <Typography sx={{ marginBottom: '2rem' }}>
             Already have an account?{' '}
             <Link
-              onClick={() => navigate('/login')}
+              onClick={() => navigate('/auth/login')}
               underline="none"
               sx={{
                 color: 'var(--primary-color)',
