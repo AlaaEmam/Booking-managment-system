@@ -1,8 +1,9 @@
-import { Box,  Modal,  Stack,  styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TableRow, Typography } from '@mui/material'
+import { Box,  Modal,  Stack,  styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TablePagination, TableRow, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { ADMINBOOKING, axiosInstance } from '../../../../constants/URLS'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ClearIcon from '@mui/icons-material/Clear';
+import { set } from 'react-hook-form';
 interface BookingListProps{
   _id:string;
   room:object;
@@ -20,13 +21,30 @@ export default function BookingList() {
   
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+  let [totalCount, setTotalCount]=useState(0);
   
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
+  ) => {
+    setPage(newPage);
+  };
 
-  
-  const getBookingList= async()=>{
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  // get Booking list
+  const getBookingList= async(pageNo: number, pageSize: number)=>{
     try{
-      let response= await axiosInstance.get(ADMINBOOKING.getAllBooking);
+      let response= await axiosInstance.get(ADMINBOOKING.getAllBooking,
+        {params: {
+          pageSize: pageSize, pageNumber: pageNo
+        }});
+      setTotalCount(response.data.data.totalCount)
       console.log(response.data.data.booking);
       setBookingList(response?.data?.data?.booking)
     }catch(error){
@@ -79,7 +97,7 @@ export default function BookingList() {
     pb: 3,
   };
   useEffect(()=>{
-    getBookingList();
+    getBookingList(1,2);
   },[]) 
   
   return (
@@ -178,7 +196,28 @@ export default function BookingList() {
               )}
 
             </TableBody>
-            
+            <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+              colSpan={3}
+              count={totalCount}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              slotProps={{
+                select: {
+                  inputProps: {
+                    'aria-label': 'rows per page',
+                  },
+                  native: true,
+                },
+              }}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              // ActionsComponent={TablePaginationActions}
+            />
+          </TableRow>
+        </TableFooter>
           </Table>
         </TableContainer>
       :
@@ -196,7 +235,7 @@ export default function BookingList() {
           </TableHead>
           <TableBody>
 
-            <Typography sx={{textAlign:'center'}} variant='h1'>No Data</Typography>
+            {/* <Typography sx={{textAlign:'center'}} component='h1'>No Data</Typography> */}
 
           </TableBody>
         </Table>
