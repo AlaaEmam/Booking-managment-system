@@ -1,9 +1,29 @@
-import { Box,  Modal,  Stack,  styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TableRow, Typography } from '@mui/material'
+import { Box,  Modal,  Paper,  Stack,  styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TableRow, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { ADMINBOOKING, axiosInstance } from '../../../../constants/URLS'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ClearIcon from '@mui/icons-material/Clear';
+import View from "../../../../assets/icons/View.svg";
 
+// STYLE
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "var(--light-gray)",
+    color: "var(--secondary-color)",
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
 
 export default function BookingList() {
 
@@ -94,9 +114,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },[]) 
   
   return (
-    
-    <Box>
-      <Modal
+  <>
+    <Modal
         open={showView}
         onClose={handleCloseView}
         aria-labelledby="modal-modal-title"
@@ -153,67 +172,79 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
               </Typography>
             </Stack>
         </Box>
-      </Modal>
-      <Box sx={{marginBottom:"5rem"}}>
+    </Modal>
 
-        <Typography variant='h5'>Booking Table Details</Typography>
-        <Typography variant='subtitle1'>You can check all details</Typography>
+      <Box
+        sx={{
+          width: "100%",
+          height: "12vh",
+          display: "flex",
+          justifyContent: "space-between",
+          backgroundColor: "#ffffff",
+          alignItems: "center",
+          padding: "2rem 2.25rem",
+          mb: "1.5rem",
+        }}
+      >        
+      <Box>
+          <Typography variant="h5" sx={{ fontWeight: "bold" }}>Booking Table Details</Typography>
+          <Typography variant="body2">You can check all details</Typography>
+        </Box>
       </Box>
 
-      {bookingList.length>0 ?
+      {bookingList.length > 0 ? (
+        <TableContainer component={Paper} sx={{ maxHeight: 700, overflow: 'auto' }}>
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">Room Number</StyledTableCell>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">Price</StyledTableCell>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">Start Date</StyledTableCell>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">End Date</StyledTableCell>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">User </StyledTableCell>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">Action</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {bookingList.map((booking: BookingListProps) => (
+                <StyledTableRow key={booking._id}>
+                  <StyledTableCell align="center">{booking.room.roomNumber}</StyledTableCell>
+                  <StyledTableCell align="center">{booking.totalPrice}</StyledTableCell>
+                  <StyledTableCell align="center">{booking.startDate}</StyledTableCell>
+                  <StyledTableCell align="center">{booking.endDate}</StyledTableCell>
+                  <StyledTableCell align="center">{booking.user.userName}</StyledTableCell>
+                  <StyledTableCell align="center" onClick={() => handleShowView(booking)} sx={{ cursor: "pointer" }}>
+                    <img src={View} alt="View" />
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
         <TableContainer>
           <Table>
-            <TableHead >
-              <TableRow sx={{"& th":{backgroundColor:"lightgray"}}}>
-                <StyledTableCell>room number</StyledTableCell>
-                <StyledTableCell>price</StyledTableCell>
-                <StyledTableCell>start date</StyledTableCell>
-                <StyledTableCell>end date</StyledTableCell>
+            <TableHead>
+              <TableRow sx={{ "& th": { backgroundColor: "lightgray" } }}>
+                <StyledTableCell>Room Number</StyledTableCell>
+                <StyledTableCell>Price</StyledTableCell>
+                <StyledTableCell>Start Date</StyledTableCell>
+                <StyledTableCell>End Date</StyledTableCell>
                 <StyledTableCell>User</StyledTableCell>
                 <StyledTableCell>Action</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-
-              {bookingList?.map((booking:BookingListProps)=>
-                <StyledTableRow key={booking._id}>
-                  <StyledTableCell>{booking.room.roomNumber}</StyledTableCell>
-                  <StyledTableCell>{booking?.totalPrice}</StyledTableCell>
-                  <StyledTableCell>{booking?.startDate}</StyledTableCell>
-                  <StyledTableCell>{booking?.endDate}</StyledTableCell>
-                  <StyledTableCell>{booking?.user.userName}</StyledTableCell>
-                  <StyledTableCell>
-                    <VisibilityIcon onClick={() => handleShowView(booking)} sx={{color:"rgb(0, 132, 220)"}}/>
-                  </StyledTableCell>
-                </StyledTableRow>
-              )}
-
+              <TableRow>
+                <TableCell colSpan={6} sx={{ textAlign: 'center' }}>
+                  <Typography variant='h6'>No Data</Typography>
+                </TableCell>
+              </TableRow>
             </TableBody>
-            
           </Table>
         </TableContainer>
-      :
-      <TableContainer>
-        <Table>
-          <TableHead >
-            <TableRow sx={{"& th":{backgroundColor:"lightgray"}}}>
-              <StyledTableCell>room number</StyledTableCell>
-              <StyledTableCell>price</StyledTableCell>
-              <StyledTableCell>start date</StyledTableCell>
-              <StyledTableCell>end date</StyledTableCell>
-              <StyledTableCell>User</StyledTableCell>
-              <StyledTableCell>Action</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-
-            <Typography sx={{textAlign:'center'}} variant='h1'>No Data</Typography>
-
-          </TableBody>
-        </Table>
-      </TableContainer>}
-    </Box>
-
+      )}
+  </>
     
   )
 }
