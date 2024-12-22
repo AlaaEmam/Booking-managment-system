@@ -41,7 +41,7 @@ export default function UserList() {
     profileImage: string;
   }
 
-  const [userList, setUserList] = useState<UserListProps[]>([]); 
+  const [userList, setUserList] = useState<UserListProps[]>([]);
   const imageBaseURL = 'https://upskilling-egypt.com:3000/'; // Set the base URL
 
 const getUserList = async () => {
@@ -112,11 +112,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   };
   useEffect(()=>{
     getUserList();
-  },[]) 
-  
+  },[])
+
   return (
   <>
-      <Box 
+      <Box
           sx={{
             width: "100%",
             height: "12vh",
@@ -127,7 +127,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
             padding: "2rem 2.25rem",
             mb: "1.5rem",
           }}
-        >        
+        >
         <Box>
             <Typography variant="h5" sx={{ fontWeight: "bold" }}>User Table Details</Typography>
             <Typography variant="body2">You can check all details</Typography>
@@ -155,12 +155,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
                  <StyledTableCell align="center">
                     {user.profileImage ? (
-                      <img 
+                      <img
                         src={user.profileImage.startsWith('http') ? user.profileImage : `${imageBaseURL}${user.profileImage}`}
-                        alt={user.userName} 
-                        style={{ width: '56px', height: '56px', borderRadius: '50%' }} 
+                        alt={user.userName}
+                        style={{ width: '56px', height: '56px', borderRadius: '50%' }}
                       />
-                    ) : ( 
+                    ) : (
                       <img src={NoUserImage} alt="Placeholder" style={{ width: '56px', height: '56px', borderRadius: '50%' }} />
                     )}
                   </StyledTableCell>
@@ -171,7 +171,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
                   <StyledTableCell align="center">{user.role}</StyledTableCell>
                   <StyledTableCell align="center">{user.createdAt}</StyledTableCell>
                   <StyledTableCell align="center" onClick={() => handleOpenModal(user)}>
-                    <img src={View} alt="View" /> 
+                    <img src={View} alt="View" />
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
@@ -205,6 +205,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 <UserProfileModal open={openModal} user={selectedUser} onClose={handleCloseModal} />
 
   </>
-    
+
   )
 }

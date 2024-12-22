@@ -53,7 +53,7 @@ const BookingModal: React.FC<{ open: boolean; onClose: () => void; booking: Book
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <Typography variant="body1"  sx={{color: 'black'}} color="textSecondary">Guest</Typography>
-              <Typography variant="body1"  sx={{color: 'black'}} fontWeight={600}>{booking?.user.userName}</Typography>
+              {/* <Typography variant="body1"  sx={{color: 'black'}} fontWeight={600}>{booking?.user.userName}</Typography> */}
             </Grid>
             <Grid item xs={6}>
               <Typography variant="body1" sx={{color: 'black'}} color="textSecondary">Room Number</Typography>

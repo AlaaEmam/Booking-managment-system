@@ -223,7 +223,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
                   </StyledTableCell> */}
                   <StyledTableCell align="center"sx={{ cursor: "pointer" }} onClick={handleOpen}>
                   <img src={View} alt="View" />
-                  <BookingModal open={openModal} onClose={handleClose} booking={booking}  />
+                  {/* <BookingModal open={openModal} onClose={handleClose} booking={booking}  /> */}
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
