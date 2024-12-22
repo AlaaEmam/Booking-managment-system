@@ -279,10 +279,10 @@ console.log(error)
           <Item
             sx={{ boxShadow: "none", textAlign: { md: "left", sm: "center" } }}
           >
-            <Typography id="modal-modal-title" variant="h4" component="h6">
+            <Typography color={"var(--dark-gray)"} id="modal-modal-title" variant="h4" component="h6">
               Rooms Table Details
             </Typography>
-            <Typography id="modal-modal-title" component="span">
+            <Typography id="modal-modal-title" component="span" color={"var(--dark-gray)"} >
               You can check all details
             </Typography>
           </Item>

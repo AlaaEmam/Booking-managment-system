@@ -23,6 +23,10 @@ export const ADMINUSERS = {
   getUserProfile: (id: string) => `admin/users/${id}`,
 };
 
+export const ADMINChart = {
+  getChart: `admin/dashboard`,
+};
+
 export const ADMINROOMS = {
   createRoom: `admin/rooms`,
   updateRoom: (id: string) => `admin/rooms/${id}`,

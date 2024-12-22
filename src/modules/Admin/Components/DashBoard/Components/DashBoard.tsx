@@ -9,6 +9,9 @@ import {
 } from "../../../../../constants/URLS";
 import { useEffect, useState } from "react";
 import BedIcon from "@mui/icons-material/Bed";
+import Chart from "../../Chart/Components/Chart";
+import UsersChart from "../../UsersChart/component/UsersChart";
+import shadows from "@mui/material/styles/shadows";
 
 export default function DashBoard() {
   interface RoomList {
@@ -35,7 +38,8 @@ export default function DashBoard() {
   }));
 
   let [getRoomslist, setRoomsList] = useState<RoomList>();
-  let [getRoomFacilitieslist, setRoomFacilitiesList] = useState<FacilitiesList>();
+  let [getRoomFacilitieslist, setRoomFacilitiesList] =
+    useState<FacilitiesList>();
   let [getAdslist, setAdsList] = useState<AdsList>();
 
   const [getBookinglist, setBookingList] = useState();
@@ -71,10 +75,9 @@ export default function DashBoard() {
     setAdsList(response.data.data);
   };
 
- 
-const totalRoomCount = getRoomslist?.totalCount || 0;
-const totalFacilities = getRoomFacilitieslist?.totalCount || 0;
-const totalAds = getAdslist?.totalCount || 0;
+  const totalRoomCount = getRoomslist?.totalCount || 0;
+  const totalFacilities = getRoomFacilitieslist?.totalCount || 0;
+  const totalAds = getAdslist?.totalCount || 0;
 
   useEffect(() => {
     getRooms();
@@ -83,48 +86,58 @@ const totalAds = getAdslist?.totalCount || 0;
     getBooking();
   }, []);
   return (
-    <Box
-      sx={{
-        height: "50vh", // Full viewport height
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundImage: `url("/NOt")`, // Replace with your image URL
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        color: "black",
-        textAlign: "center",
-      }}
-    >
-      <Grid container sx={{ justifyContent: "center" }} spacing={10}>
-        <Grid item xs={3}>
-          <Item sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h4">
-              {totalRoomCount}
-              <Typography>Rooms</Typography>
-            </Typography>
-            <BedIcon sx={{ color: "rgb(144, 191, 222)", fontSize: 40 }} />
-          </Item>
+    <>
+      <Box
+        sx={{
+          height: "50vh", // Full viewport height
+          display: "flex",
+          justifyContent: "center",
+          backgroundImage: `url("/NOt")`, // Replace with your image URL
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          color: "black",
+          textAlign: "center",
+        }}
+      >
+        <Grid container sx={{ justifyContent:"center"}} spacing={10}>
+          <Grid item xs={3}>
+            <Item sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography variant="h4">
+                {totalRoomCount}
+                <Typography>Rooms</Typography>
+              </Typography>
+              <BedIcon sx={{ color: "rgb(144, 191, 222)", fontSize: 40 }} />
+            </Item>
+          </Grid>
+          <Grid item xs={3}>
+            <Item sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography variant="h4">
+                {totalFacilities}
+                <Typography>Facilities</Typography>
+              </Typography>
+              <BedIcon sx={{ color: "rgb(144, 191, 222)", fontSize: 40 }} />
+            </Item>
+          </Grid>
+          <Grid item xs={3}>
+            <Item sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography variant="h4">
+                {totalAds}
+                <Typography>Ads</Typography>
+              </Typography>
+              <BedIcon sx={{ color: "rgb(144, 191, 222)", fontSize: 40 }} />
+            </Item>
+          </Grid>
+          <Grid item xs={6}>
+          <Item sx={{ backgroundColor:"transparent" ,boxShadow:"none"}}>              <Chart />
+            </Item>
+          </Grid>
+          <Grid item xs={6}>
+            <Item sx={{ backgroundColor:"transparent" ,boxShadow:"none"}}>
+              <UsersChart />
+            </Item>
+          </Grid>
         </Grid>
-        <Grid item xs={3}>
-          <Item sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h4">
-              {totalFacilities}
-              <Typography>Facilities</Typography>
-            </Typography>
-            <BedIcon sx={{ color: "rgb(144, 191, 222)", fontSize: 40 }} />
-          </Item>
-        </Grid>
-        <Grid item xs={3}>
-          <Item sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h4">
-              {totalAds}
-              <Typography>Ads</Typography>
-            </Typography>
-            <BedIcon sx={{ color: "rgb(144, 191, 222)", fontSize: 40 }} />
-          </Item>
-        </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </>
   );
 }
