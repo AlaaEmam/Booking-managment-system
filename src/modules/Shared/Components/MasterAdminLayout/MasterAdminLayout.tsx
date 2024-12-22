@@ -23,7 +23,7 @@ export default function MasterAdminLayout() {
             <NavbarAdmin />
           </Box>
 
-          <Box sx={{ flexGrow: 1, overflow: "auto",padding:"1rem" }}>
+          <Box sx={{ flexGrow: 1,padding:"1rem" }}>
             <Outlet />
           </Box>
         </Box>
