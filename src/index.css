@@ -86,3 +86,6 @@
   display: inherit !important; 
 
 }
+.css-4nmryk-MuiBackdrop-root-MuiModal-backdrop{
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}

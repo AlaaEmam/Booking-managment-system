@@ -4,6 +4,8 @@ import { ADMINBOOKING, axiosInstance } from '../../../../constants/URLS'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ClearIcon from '@mui/icons-material/Clear';
 import View from "../../../../assets/icons/View.svg";
+import BookingModal from './BookingModal';
+import { Button } from '@mui/material';
 
 // STYLE
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -43,16 +45,7 @@ export default function BookingList() {
     endDate: string;
     user: User;
   }
-  
-  // interface BookingListProps{
-  //   _id:string;
-  //   room:object;
-  //   endDate:string;
-  //   startDate:string;
-  //   totalPrice:number;
-  //   roomNumber:string;
-  //   userName:string;
-  // }
+
   
   
   const [page, setPage] = React.useState(0);
@@ -113,9 +106,17 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     getBookingList();
   },[]) 
   
+
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleOpen = () => setOpenModal(true);
+  const handleClose = () => setOpenModal(false);
+
+
+  
   return (
   <>
-    <Modal
+    {/* <Modal
         open={showView}
         onClose={handleCloseView}
         aria-labelledby="modal-modal-title"
@@ -172,7 +173,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
               </Typography>
             </Stack>
         </Box>
-    </Modal>
+    </Modal> */}
+
+<div>
+
+    </div>
 
       <Box
         sx={{
@@ -213,8 +218,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
                   <StyledTableCell align="center">{booking.startDate}</StyledTableCell>
                   <StyledTableCell align="center">{booking.endDate}</StyledTableCell>
                   <StyledTableCell align="center">{booking.user.userName}</StyledTableCell>
-                  <StyledTableCell align="center" onClick={() => handleShowView(booking)} sx={{ cursor: "pointer" }}>
+                  {/* <StyledTableCell align="center" onClick={() => handleShowView(booking)} sx={{ cursor: "pointer" }}>
                     <img src={View} alt="View" />
+                  </StyledTableCell> */}
+                  <StyledTableCell align="center"sx={{ cursor: "pointer" }} onClick={handleOpen}>
+                  <img src={View} alt="View" />
+                  <BookingModal open={openModal} onClose={handleClose} booking={booking}  />
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
