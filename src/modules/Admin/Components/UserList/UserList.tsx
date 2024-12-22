@@ -1,12 +1,12 @@
 
-import { Box, Paper,  styled, Table,  TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { Box, Pagination, Paper,  styled, Table,  TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import  { useEffect, useState } from 'react'
 import View from "../../../../assets/icons/View.svg";
 import { ADMINUSERS, axiosInstance } from '../../../../constants/URLS';
 import axios from 'axios';
 import UserProfileModal from './UserProfileModal';
 import NoUserImage from '../../../../assets/defaultavatar.jpg';
-
+import CustomTablePagination from '../Shared/Components/CustomTablePagination/CustomTablePagination';
 // STYLE
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -29,7 +29,26 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 export default function UserList() {
-
+ 
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      fontSize: 16,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
+  
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
+  }));
+  
   interface UserListProps {
     _id: string;
     userName: string;
@@ -39,43 +58,35 @@ export default function UserList() {
     role: string;
     createdAt: string;
     profileImage: string;
+    totalCount: number;
   }
 
   const [userList, setUserList] = useState<UserListProps[]>([]);
   const imageBaseURL = 'https://upskilling-egypt.com:3000/'; // Set the base URL
 
-const getUserList = async () => {
-  try {
-    let response = await axios.get(`https://upskilling-egypt.com:3000/api/v0/admin/users?page=1&size=10`, {
-      headers: {
-        Authorization: localStorage.getItem('token'),
-      },
-    });
-    console.log(response.data.data.users);
-    setUserList(response?.data?.data?.users);
-  } catch (error) {
-    console.log(error);
-  }
-};
+  const [page, setPage] = useState(1); // Start from page 1
+  const [rowsPerPage, setRowsPerPage] = useState(5); // Default rows per page
+  const [totalItems, setTotalItems] = useState(0); 
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    fontSize: 16,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
+  const getUserList = async () => {
+    try {
+      let response = await axios.get(`https://upskilling-egypt.com:3000/api/v0/admin/users`, {
+        params: {
+          size: rowsPerPage, // Set the number of rows per page
+          page: page, // Set the current page number
+        },
+        headers: {
+          Authorization: localStorage.getItem('token'),
+        },
+      });
+      console.log(response.data.data.users);
+      setUserList(response?.data?.data?.users);
+      setTotalItems(response.data.data.totalCount  || 0); // Ensure this is a number
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}));
 
   //Modal View
   const [showView, setShowView] = useState<boolean>(false);
@@ -98,21 +109,30 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     setOpenModal(false);
     setSelectedUser(null);
   };
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    boxShadow: 24,
-    pt: 2,
-    px: 4,
-    pb: 3,
+
+
+
+  //Handel pagination
+  const rowsPerPageOptions = [5, 10, 25, 50, 100];
+
+  const handleChangePage = (newPage: number) => {
+    setPage(newPage); // Update the current page
   };
-  useEffect(()=>{
+
+  // const handleChangeRowsPerPage = (newRowsPerPage: number) => {
+  //   setRowsPerPage(newRowsPerPage);
+  //   setPage(1); // Reset to the first page
+  // };
+  const handleChangeRowsPerPage = (newRowsPerPage: number) => {
+    if (rowsPerPageOptions.includes(newRowsPerPage)) {
+      setRowsPerPage(newRowsPerPage); // Update the state with the new rows per page
+      setPage(1); // Reset to the first page
+    }
+  };
+
+  useEffect(() => {
     getUserList();
-  },[])
+  }, [page, rowsPerPage])
 
   return (
   <>
@@ -132,20 +152,20 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
             <Typography variant="h5" sx={{ fontWeight: "bold" }}>User Table Details</Typography>
             <Typography variant="body2">You can check all details</Typography>
           </Box>
-        </Box>
-
+      </Box>
 
       {userList && userList.length > 0 ? (
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+          <Table sx={{ minWidth: 500 , overflow: 'auto'  }} aria-label="customized table">
             <TableHead>
               <TableRow>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">User Profile</StyledTableCell>
                 <StyledTableCell sx={{ fontWeight: 700 }} align="center">User Name</StyledTableCell>
-                <StyledTableCell sx={{ fontWeight: 700 }} align="center">email</StyledTableCell>
-                <StyledTableCell sx={{ fontWeight: 700 }} align="center">phoneNumber</StyledTableCell>
-                <StyledTableCell sx={{ fontWeight: 700 }} align="center">country</StyledTableCell>
-                <StyledTableCell sx={{ fontWeight: 700 }} align="center">role </StyledTableCell>
-                <StyledTableCell sx={{ fontWeight: 700 }} align="center">createdAt</StyledTableCell>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">User Email</StyledTableCell>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">Phone Number</StyledTableCell>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">Country</StyledTableCell>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">Role </StyledTableCell>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">Created At</StyledTableCell>
                 <StyledTableCell sx={{ fontWeight: 700 }} align="center">Action</StyledTableCell>
               </TableRow>
             </TableHead>
@@ -153,12 +173,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
               {userList.map((user: UserListProps) => (
                 <StyledTableRow key={user._id}>
 
-                 <StyledTableCell align="center">
+                 <StyledTableCell align="center" sx={{padding: 0}}>
                     {user.profileImage ? (
                       <img
                         src={user.profileImage.startsWith('http') ? user.profileImage : `${imageBaseURL}${user.profileImage}`}
                         alt={user.userName}
-                        style={{ width: '56px', height: '56px', borderRadius: '50%' }}
+                        style={{ width: '56px', height: '56px', borderRadius: '50%' , marginBlock: 10, boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.1)' , border: '1px solid rgba(10, 10, 10, 0.26)'}}
                       />
                     ) : (
                       <img src={NoUserImage} alt="Placeholder" style={{ width: '56px', height: '56px', borderRadius: '50%' }} />
@@ -169,7 +189,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
                   <StyledTableCell align="center">{user.phoneNumber}</StyledTableCell>
                   <StyledTableCell align="center">{user.country}</StyledTableCell>
                   <StyledTableCell align="center">{user.role}</StyledTableCell>
-                  <StyledTableCell align="center">{user.createdAt}</StyledTableCell>
+                  <StyledTableCell align="center">{user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</StyledTableCell>
                   <StyledTableCell align="center" onClick={() => handleOpenModal(user)}>
                     <img src={View} alt="View" />
                   </StyledTableCell>
@@ -180,29 +200,19 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
         </TableContainer>
       ) : (
         <TableContainer>
-          {/* <Table>
-            <TableHead>
-              <TableRow sx={{ "& th": { backgroundColor: "lightgray" } }}>
-                <StyledTableCell>Room Number</StyledTableCell>
-                <StyledTableCell>Price</StyledTableCell>
-                <StyledTableCell>Start Date</StyledTableCell>
-                <StyledTableCell>End Date</StyledTableCell>
-                <StyledTableCell>User</StyledTableCell>
-                <StyledTableCell>Action</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow>
-                <TableCell colSpan={6} sx={{ textAlign: 'center' }}>
-                  <Typography variant='h6'>No Data</Typography>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table> */}
         </TableContainer>
       )}
 
 <UserProfileModal open={openModal} user={selectedUser} onClose={handleCloseModal} />
+
+  <CustomTablePagination
+    count={Math.ceil(totalItems / rowsPerPage) || 0} 
+    page={page}
+    onPageChange={handleChangePage}
+    rowsPerPage={rowsPerPage}
+    onRowsPerPageChange={handleChangeRowsPerPage}
+    rowsPerPageOptions={rowsPerPageOptions} // Pass the available options
+    />
 
   </>
 
