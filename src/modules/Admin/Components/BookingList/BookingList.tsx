@@ -6,6 +6,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import View from "../../../../assets/icons/View.svg";
 import BookingModal from './BookingModal';
 import { Button } from '@mui/material';
+import CustomTablePagination from './../Shared/Components/CustomTablePagination/CustomTablePagination';
 
 // STYLE
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -48,15 +49,23 @@ export default function BookingList() {
 
   
   
-  const [page, setPage] = React.useState(0);
-const [rowsPerPage, setRowsPerPage] = React.useState(5);
 const [bookingList, setBookingList] = React.useState([]); // Added missing state for bookingList
+
+  const [page, setPage] = useState(1); // Start from page 1
+  const [rowsPerPage, setRowsPerPage] = useState(5); // Default rows per page
+  const [totalItems, setTotalItems] = useState(0); 
 
 const getBookingList = async () => {
   try {
-    let response = await axiosInstance.get(ADMINBOOKING.getAllBooking);
+    let response = await axiosInstance.get(ADMINBOOKING.getAllBooking, {
+      params: {
+        size: rowsPerPage, // Set the number of rows per page
+        page: page, // Set the current page number
+      },
+    });
     console.log(response.data.data.booking);
     setBookingList(response?.data?.data?.booking);
+    setTotalItems(response.data.data.totalCount  || 0); // Ensure this is a number
   } catch (error) {
     console.log(error);
   }
@@ -90,29 +99,45 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     setSelectedBooking(booking);
     setShowView(true);
   };
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    boxShadow: 24,
-    pt: 2,
-    px: 4,
-    pb: 3,
-  };
-  useEffect(()=>{
-    getBookingList();
-  },[]) 
-  
+  // const style = {
+  //   position: 'absolute',
+  //   top: '50%',
+  //   left: '50%',
+  //   transform: 'translate(-50%, -50%)',
+  //   width: 400,
+  //   bgcolor: 'background.paper',
+  //   boxShadow: 24,
+  //   pt: 2,
+  //   px: 4,
+  //   pb: 3,
+  // };
+
 
   const [openModal, setOpenModal] = useState(false);
 
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
 
+  //Handel pagination
+  const rowsPerPageOptions = [5, 10, 25, 50, 100];
 
+  const handleChangePage = (newPage: number) => {
+    setPage(newPage); // Update the current page
+  };
+
+  // const handleChangeRowsPerPage = (newRowsPerPage: number) => {
+  //   setRowsPerPage(newRowsPerPage);
+  //   setPage(1); // Reset to the first page
+  // };
+  const handleChangeRowsPerPage = (newRowsPerPage: number) => {
+    if (rowsPerPageOptions.includes(newRowsPerPage)) {
+      setRowsPerPage(newRowsPerPage); // Update the state with the new rows per page
+      setPage(1); // Reset to the first page
+    }
+  };
+  useEffect(()=>{
+    getBookingList();
+  },[page, rowsPerPage]) 
   
   return (
   <>
@@ -253,6 +278,17 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
           </Table>
         </TableContainer>
       )}
+
+
+    <CustomTablePagination
+    count={Math.ceil(totalItems / rowsPerPage) || 0} 
+    page={page}
+    onPageChange={handleChangePage}
+    rowsPerPage={rowsPerPage}
+    onRowsPerPageChange={handleChangeRowsPerPage}
+    rowsPerPageOptions={rowsPerPageOptions} // Pass the available options
+    />
+
   </>
     
   )
