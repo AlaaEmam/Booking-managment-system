@@ -1,13 +1,13 @@
 import React from 'react';
-import { Modal, Box, Typography, IconButton, Grid } from '@mui/material';
+import { Modal, Box, Typography, Grid } from '@mui/material';
 import { styled } from '@mui/system';
 import { Person as PersonIcon, Email as EmailIcon, Phone as PhoneIcon, Public as PublicIcon, AssignmentInd as RoleIcon, CalendarToday as CalendarIcon } from '@mui/icons-material';
+import NoUserImage from '../../../../assets/defaultavatar.jpg'; // Placeholder image
 
 // Styled components
 const Cover = styled(Box)({
   position: 'relative',
   height: '200px',
-  backgroundImage: "url('http://farm9.staticflickr.com/8370/8553416434_8cfb7e205f.jpg')",
   backgroundSize: 'cover',
   backgroundPosition: 'center',
 });
@@ -23,14 +23,14 @@ const Title = styled(Typography)({
 
 const IconContainer = styled(Box)({
   position: 'absolute',
-  top: '200px',
+  top: '12.5rem', // Adjusted for better centering
   left: '50%',
   transform: 'translate(-50%, -50%)',
   height: '100px',
   width: '100px',
   border: '5px solid #ffffff',
   borderRadius: '50%',
-  background: 'linear-gradient(rgb(13, 0, 255),rgb(12, 39, 101))',
+  background: 'linear-gradient(rgb(13, 0, 255), rgb(12, 39, 101))',
   color: '#ffffff',
   textAlign: 'center',
   fontSize: '4rem',
@@ -66,10 +66,18 @@ interface UserListProps {
 }
 
 const UserProfileModal: React.FC<{ open: boolean; user: UserListProps | null; onClose: () => void }> = ({ open, user, onClose }) => {
+  const imageBaseURL = 'https://upskilling-egypt.com:3000/';
+
   return (
     <Modal open={open} onClose={onClose}>
       <ModalContent>
-        <Cover />
+        <Cover>
+          <img 
+            src={user?.profileImage ? (user.profileImage.startsWith('http') ? user.profileImage : `${imageBaseURL}${user.profileImage}`) : NoUserImage}
+            alt={user?.userName} 
+            style={{ position: 'absolute' , width: '100%', height: '100%', objectFit: 'cover' }} 
+          />
+        </Cover>
         <IconContainer>
           <PersonIcon fontSize="inherit" />
         </IconContainer>
@@ -95,9 +103,8 @@ const UserProfileModal: React.FC<{ open: boolean; user: UserListProps | null; on
           </Grid>
           <Grid item xs={12} container alignItems="center">
             <CalendarIcon />
-            <Text sx={{ marginLeft: '8px' }}>{user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
-            </Text>
-            </Grid>
+            <Text sx={{ marginLeft: '8px' }}>{user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</Text>
+          </Grid>
         </Grid>
       </ModalContent>
     </Modal>

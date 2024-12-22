@@ -5,7 +5,7 @@ import View from "../../../../assets/icons/View.svg";
 import { ADMINUSERS, axiosInstance } from '../../../../constants/URLS';
 import axios from 'axios';
 import UserProfileModal from './UserProfileModal';
-import NoUserImage from '../../../../assets/images/no-user-image.png';
+import NoUserImage from '../../../../assets/defaultavatar.jpg';
 
 // STYLE
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -136,7 +136,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
       {userList && userList.length > 0 ? (
-        <TableContainer component={Paper} sx={{ maxHeight: 700, overflow: 'auto' }}>
+        <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
               <TableRow>
@@ -152,16 +152,17 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
             <TableBody>
               {userList.map((user: UserListProps) => (
                 <StyledTableRow key={user._id}>
-                  <StyledTableCell align="center">
+
+                 <StyledTableCell align="center">
                     {user.profileImage ? (
-                    <img 
-                    src={`${imageBaseURL}/${user.profileImage}`}
-                      alt={user.userName} 
-                      style={{ width: '56px', height: '56px'}} 
-                    />
-                  ) : ( 
-                  <img src={NoUserImage} alt="Placeholder" style={{ width: '56px', height: '56px' }} />
-                  )}
+                      <img 
+                        src={user.profileImage.startsWith('http') ? user.profileImage : `${imageBaseURL}${user.profileImage}`}
+                        alt={user.userName} 
+                        style={{ width: '56px', height: '56px', borderRadius: '50%' }} 
+                      />
+                    ) : ( 
+                      <img src={NoUserImage} alt="Placeholder" style={{ width: '56px', height: '56px', borderRadius: '50%' }} />
+                    )}
                   </StyledTableCell>
                   <StyledTableCell align="center">{user.userName}</StyledTableCell>
                   <StyledTableCell align="center">{user.email}</StyledTableCell>
