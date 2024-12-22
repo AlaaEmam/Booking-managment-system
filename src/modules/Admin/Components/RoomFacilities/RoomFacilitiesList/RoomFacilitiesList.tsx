@@ -35,6 +35,7 @@ import { useForm } from "react-hook-form";
 import FacilityDialog from "../FacilityDialog/FacilityDialog";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CustomTablePagination from './../../Shared/Components/CustomTablePagination/CustomTablePagination';
 // STYLE
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -76,20 +77,23 @@ export default function RoomFacilitiesList() {
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
-  // Fetch Facilities on component mount
-  useEffect(() => {
-    getFacilityList();
-  }, []);
+
 
   const getFacilityList = async () => {
     try {
       const response = await axios.get(
         `https://upskilling-egypt.com:3000/api/v0/admin/room-facilities`,
         {
+          params: {
+            size: rowsPerPage, // Set the number of rows per page
+            page: page, // Set the current page number
+          },
           headers: { Authorization: localStorage.getItem("token") || "" },
         }
       );
       setFacilityList(response.data.data.facilities || []);
+      setTotalItems(response.data.data.totalCount  || 0); // Ensure this is a number
+
     } catch (error) {
       console.error(error);
       toast.error("Failed to fetch Facility.");
@@ -104,6 +108,7 @@ export default function RoomFacilitiesList() {
       await axios.delete(
         `https://upskilling-egypt.com:3000/api/v0/admin/room-facilities/${selectedId}`,
         {
+          
           headers: { Authorization: localStorage.getItem("token") || "" },
         }
       );
@@ -218,6 +223,29 @@ export default function RoomFacilitiesList() {
     setAnchorEl(null);
     setSelectedFacility(null);
   };
+
+    //Handel pagination
+    const [page, setPage] = useState(1); // Start from page 1
+    const [rowsPerPage, setRowsPerPage] = useState(5); // Default rows per page
+    const [totalItems, setTotalItems] = useState(0); 
+    const rowsPerPageOptions = [5, 10, 25, 50, 100];
+
+    const handleChangePage = (newPage: number) => {
+      setPage(newPage); // Update the current page
+    };
+  
+    const handleChangeRowsPerPage = (newRowsPerPage: number) => {
+      if (rowsPerPageOptions.includes(newRowsPerPage)) {
+        setRowsPerPage(newRowsPerPage); // Update the state with the new rows per page
+        setPage(1); // Reset to the first page
+      }
+    };
+
+
+  // Fetch Facilities on component mount
+  useEffect(() => {
+    getFacilityList();
+  }, [page, rowsPerPage]);
 
   return (
     <>
@@ -355,6 +383,15 @@ export default function RoomFacilitiesList() {
         onSave={handleSave}
         facility={selectedFacility}
       />
+
+      <CustomTablePagination
+        count={Math.ceil(totalItems / rowsPerPage) || 0} 
+        page={page}
+        onPageChange={handleChangePage}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        rowsPerPageOptions={rowsPerPageOptions} // Pass the available options
+        />
     </>
   );
 }

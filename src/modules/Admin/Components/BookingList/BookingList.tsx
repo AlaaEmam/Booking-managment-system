@@ -125,10 +125,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     setPage(newPage); // Update the current page
   };
 
-  // const handleChangeRowsPerPage = (newRowsPerPage: number) => {
-  //   setRowsPerPage(newRowsPerPage);
-  //   setPage(1); // Reset to the first page
-  // };
   const handleChangeRowsPerPage = (newRowsPerPage: number) => {
     if (rowsPerPageOptions.includes(newRowsPerPage)) {
       setRowsPerPage(newRowsPerPage); // Update the state with the new rows per page
