@@ -31,6 +31,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import React from "react";
+import RoomForm from "./modules/Admin/Components/Rooms/RoomForm/RoomForm";
+import RoomFacilitiesForm from "./modules/Admin/Components/RoomFacilities/RoomFacilitiesForm/RoomFacilitiesForm";
 
 
 const lightTheme = createTheme({
@@ -123,8 +125,11 @@ function App() {
         { path: "room-facility", element: <RoomFacilitiesList /> },
 
         { path: "rooms-list", element: <RoomsList /> },
-        { path: "rooms-list/room-form", element: <RoomFacilitiesList /> },
-        { path: "rooms-list/:roomId", element: <RoomFacilitiesList /> },
+        { path: "rooms-list/new-room", element: <RoomForm /> },
+        { path: "rooms-list/:roomId", element: <RoomForm /> },
+
+
+
 
         { path: "booking-list", element: <BookingList /> },
         { path: "users-list", element: <UserList /> },
