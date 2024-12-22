@@ -39,20 +39,6 @@ interface LoginData {
   email: string;
   password: string;
   isAdmin: boolean; // Add this field
-<<<<<<< HEAD
-
-};
-
-
-
-export default function Login() {
-
-  const navigate= useNavigate();
-  const { register, handleSubmit, formState: { errors ,isSubmitting } } = useForm<LoginData>();
-  const {saveLoginData}:any=React.useContext(AuthContext);
-
-
-=======
 }
 
 export default function Login() {
@@ -64,7 +50,6 @@ export default function Login() {
   } = useForm<LoginData>();
   const { saveLoginData }: any = React.useContext(AuthContext);
 
->>>>>>> 5d1d49b7c1b27ddd7491cc6f0305b914474ce470
   //Handel Login data
   const [isAdmin, setIsAdmin] = React.useState(false); // Default to user login
 

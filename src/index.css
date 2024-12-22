@@ -12,9 +12,17 @@
   --light-gray: #E2E5EB; /* White with 80% opacity */
   --dark-gray: #1A1B1E; /* Dark gray */
   --blue: #35C2FD; /* Light blue */
+  --dark-blue: #203FC7; /* dark blue */
   --green: #54D14D; /* Green */
   --red: #7783BF; /* Soft blue */
   --off-white: #FAFAFA; /* Very light gray */
+  --light-gray-row:#F8F9FB;
+  --light-baby-blue:  #F7F7F7;
+  --light-green:  #F1FFF0;
+  --dark-green:  #009247
+
+
+
 }
 
 [data-theme="dark"] {
@@ -23,6 +31,8 @@
   --secondary-color: #FFFFFF; /* White text */
   --light-gray: rgba(255, 255, 255, 0.2); /* White with 20% opacity */
   --light-red: #FF6B6B; /* Lighter red for dark mode */
+  --dark-blue: #203FC7; /* dark blue */
+
   --red: #E74C3C;
   --dark-gray: #FFFFFF; /* White for contrast */
   --blue: #35C2FD; /* Keep light blue */

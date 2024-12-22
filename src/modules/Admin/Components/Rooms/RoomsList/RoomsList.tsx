@@ -6,17 +6,58 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import axios from "axios";
-import { CardMedia } from "@mui/material";
-import roomIcon from '../../../../../assets/roomIcon.png'
-
-
+import { Alert, CardMedia } from "@mui/material";
+import roomIcon from "../../../../../assets/roomIcon.png";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import DriveFileRenameOutlineOutlinedIcon from "@mui/icons-material/DriveFileRenameOutlineOutlined";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
+import { Room } from "@mui/icons-material";
+import { axiosInstance } from "../../../../../constants/URLS";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid2";
+import { Link, useNavigate } from "react-router-dom";
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  boxShadow: "none",
+  color: theme.palette.text.secondary,
+  ...theme.applyStyles("dark", {
+    backgroundColor: "#1A2027",
+  }),
+}));
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: {
+    xs: "60%", // 20px padding for extra-small screens
+    sm: "60%", // 30px padding for small screens and up
+    md: "50%", // 40px padding for medium screens and up
+    lg: "40%", // 50px padding for large screens and up
+  },
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+    backgroundColor: "var(--light-gray)",
+    color: "var(--secondary-color)",
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
@@ -25,7 +66,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
-    backgroundColor: "red"//theme.palette.action.hover,
+    backgroundColor: theme.palette.action.hover,
   },
   // hide last border
   "&:last-child td, &:last-child th": {
@@ -33,96 +74,322 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-// function createData(
-//   name: string,
-//   calories: number,
-//   fat: number,
-//   carbs: number,
-//   protein: number,
-// ) {
-//   return { name, calories, fat, carbs, protein };
-// }
-
-// const rows = [
-//   createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-//   createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-//   createData('Eclair', 262, 16.0, 24, 6.0),
-//   createData('Cupcake', 305, 3.7, 67, 4.3),
-//   createData('Gingerbread', 356, 16.0, 49, 3.9),
-// ];
 
 interface rooms_IF {
+  _id: number;
   roomNumber: String;
   price: String;
   capacity: String;
   discount: String;
   images: string[];
+  facilities: string[];
 }
 
 export default function RoomsList() {
+
+  const navigate=useNavigate()
+
+
+  const tst = async (id: any) => {
+    const res = await axios.get(
+      `https://upskilling-egypt.com:3000/api/v0/admin/rooms/${id}`,
+      { headers: { Authorization: localStorage.getItem("token") } }
+    );
+    console.log(res.data.data.room);
+
+    setroomView(res.data.data.room);
+    handleOpen();
+  };
+
+  const [openM, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleCloseM = () => setOpen(false);
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const [rooms, setRooms] = React.useState<rooms_IF[]>([]);
+  const [roomView, setroomView] = React.useState<rooms_IF>();
+
   React.useEffect(() => {
     const getRoomsList = async () => {
       const res = await axios.get(
         "https://upskilling-egypt.com:3000/api/v0/admin/rooms?page=1&size=10",
         { headers: { Authorization: localStorage.getItem("token") } }
       );
+
       setRooms(res.data.data.rooms);
     };
     getRoomsList();
+
+
+
+
+
   }, []);
+
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell align="center">room Number</StyledTableCell>
-            <StyledTableCell align="center">images</StyledTableCell>
-            <StyledTableCell align="center">price</StyledTableCell>
-            <StyledTableCell align="center">capacity</StyledTableCell>
-            <StyledTableCell align="center">Discount</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        {/* <TableBody>
-        {rows.map((row) => (
-          <StyledTableRow key={row.name}>
-            <StyledTableCell component="th" scope="row">
-              {row.name}
-            </StyledTableCell>
-            <StyledTableCell align="right">{row.calories}</StyledTableCell>
-            <StyledTableCell align="right">{row.fat}</StyledTableCell>
-            <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-            <StyledTableCell align="right">{row.protein}</StyledTableCell>
-          </StyledTableRow>
-        ))}
-      </TableBody> */}
+    <>  <Modal
+          open={openM}
+          onClose={handleCloseM}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+          sx={{ textAlign: "center" }}
+        >
+          <Box sx={style}>
+            <CardMedia
+              component="img"
+              style={{
+                width: "150px",
+                margin: "auto",
+                borderRadius: "3px",
+                marginBottom: "1rem",
+              }}
+              image={
+                roomView?.images[0]
+                  ? roomView?.images[0]
+                  : "/src/assets/roomIcon.png"
+              }
+              alt=" Image"
+            />
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Room Number: {roomView?.roomNumber}
+            </Typography>
+            <Typography
+              id="modal-modal-description"
+              variant="h6"
+              sx={{ mt: 2 }}
+            >
+              capacity : {roomView?.capacity}
+            </Typography>
+            <Typography
+              id="modal-modal-description"
+              variant="h6"
+              sx={{ mt: 2 }}
+            >
+              {roomView?.discount ? `discount ${roomView?.discount} LE` : ""}
+            </Typography>
+            <Typography
+              id="modal-modal-description"
+              variant="h6"
+              sx={{ mt: 2 }}
+            >
+              price : {roomView?.price ? roomView?.price + "LE" : ""}
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              {roomView?.facilities.map((f: any) => (
+                <Typography component="span" variant="h6" sx={{ mr: 2 }}>
+                  {f.name}
+                </Typography>
+              ))}
+            </Typography>
+          </Box>
+        </Modal>
 
-        <TableBody>
-          {rooms.map((room) => (
-            <StyledTableRow>
-              <StyledTableCell component="th" scope="row" align="center">
-                {room.roomNumber}
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                <CardMedia
-                component="img"
-                  style={{
-                    width: "100px",
-                    margin:"auto",
-                    borderRadius:"3px"
-                  }}
-                  image={room.images[0]? room.images[0] : roomIcon}
-                  alt=" Image"
-                />
+      <Grid container >
+        <Grid size={{ md: 6, sm: 12 }}>
+          <Item
+            sx={{ boxShadow: "none", textAlign: { md: "left", sm: "center" } }}
+          >
+            <Typography id="modal-modal-title" variant="h4" component="h6">
+              Rooms Table Details
+            </Typography>
+            <Typography id="modal-modal-title" component="span">
+              You can check all details
+            </Typography>
+          </Item>
+        </Grid>
+        <Grid size={{ md: 6, sm: 12 }}>
+          <Item sx={{ textAlign: { md: "right", sm: "center" } }}>
+            <Link to="new-room">
+              <Button
+                sx={{ padding: "0.6rem 3rem", borderRadius: "0.5rem" }}
+                variant="contained"
+              >
+                Add New Room
+              </Button>
+            </Link>
+          </Item>
+        </Grid>
+        <Grid size={12}>
+          <Item>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: "700" }} aria-label="customized table">
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell align="center">
+                      room Number
+                    </StyledTableCell>
+                    <StyledTableCell align="center">images</StyledTableCell>
+                    <StyledTableCell align="center">price</StyledTableCell>
+                    <StyledTableCell align="center">capacity</StyledTableCell>
+                    <StyledTableCell align="center">Discount</StyledTableCell>
+                    <StyledTableCell align="center">Action</StyledTableCell>
+                  </TableRow>
+                </TableHead>
 
-              </StyledTableCell>
-              <StyledTableCell align="center">{room.price}</StyledTableCell>
-              <StyledTableCell align="center">{room.capacity}</StyledTableCell>
-              <StyledTableCell align="center">{room.discount}</StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+                <TableBody>
+                  {rooms.map((room) => (
+                    <StyledTableRow key={room._id}>
+                      <StyledTableCell
+                        component="th"
+                        scope="row"
+                        align="center"
+                      >
+                        {room.roomNumber}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        <CardMedia
+                          component="img"
+                          style={{
+                            width: "70px",
+                            margin: "auto",
+                            height: "40px",
+                            borderRadius: "3px",
+                          }}
+                          image={room.images[0] ? room.images[0] : roomIcon}
+                          alt=" Image"
+                        />
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {room.price} LE
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {room.capacity}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {room?.discount ? ` ${room?.discount} LE` : "_"}
+                      </StyledTableCell>
+
+                      <StyledTableCell align="center">
+                        <PopupState variant="popover" popupId="demo-popup-menu">
+                          {(popupState) => (
+                            <React.Fragment>
+                              <Button
+                                variant="text"
+                                {...bindTrigger(popupState)}
+                              >
+                                <MoreVertIcon />
+                              </Button>
+                              <Menu {...bindMenu(popupState)}>
+                                <MenuItem onClick={() => tst(room._id)}>
+                                  <VisibilityOutlinedIcon
+                                    sx={{
+                                      color: "var(--dark-blue)",
+                                      marginRight: "10px",
+                                      display: "inline-block",
+                                    }}
+                                    fontSize="small"
+                                  />
+                                  View
+                                </MenuItem>
+                                <MenuItem onClick={()=>navigate(`${room._id}`)}>
+                                  <DriveFileRenameOutlineOutlinedIcon
+                                    sx={{
+                                      color: "var(--dark-blue)",
+                                      marginRight: "10px",
+                                      display: "inline-block",
+                                    }}
+
+                                  />
+                                  Edit
+                                </MenuItem>
+                                <MenuItem onClick={popupState.close}>
+                                  <DeleteOutlineIcon
+                                    sx={{
+                                      color: "var(--dark-blue)",
+                                      marginRight: "10px",
+                                      display: "inline-block",
+                                    }}
+                                  />
+                                  Edit
+                                </MenuItem>
+                              </Menu>
+                            </React.Fragment>
+                          )}
+                        </PopupState>
+                        {/* <IconButton
+                    aria-label="more"
+                    id="long-button"
+                    aria-controls={open ? "long-menu" : undefined}
+                    aria-expanded={open ? "true" : undefined}
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                  >
+                    <MoreVertIcon />
+                  </IconButton> */}
+                        {/* <Menu
+                    id="demo-positioned-menu"
+                    MenuListProps={{
+                      "aria-labelledby": "long-button",
+                    }}
+                    //anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    slotProps={{
+                      paper: {
+                        style: {
+                          maxHeight: ITEM_HEIGHT * 4.5,
+                          width: "33ch",
+                          textAlign: "center",
+                          borderRadius: "5px",
+                          boxShadow: "0px 2px 5px 7px rgba(0,0,0,0.02)",
+                          margin: "auto",
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem
+                      onClick={() => handleOpen(room._id)}
+                      sx={{ textAlign: "center" }}
+                    >
+                      <VisibilityOutlinedIcon
+                        sx={{
+                          color: "var(--dark-blue)",
+                          marginRight: "10px",
+                          display: "inline-block",
+                        }}
+                        fontSize="small"
+                      />
+                      View {room._id}
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      <DriveFileRenameOutlineOutlinedIcon
+                        sx={{
+                          color: "var(--dark-blue)",
+                          marginRight: "10px",
+                          display: "inline-block",
+                        }}
+                      />
+                      Edit
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      <DeleteForeverOutlinedIcon
+                        sx={{
+                          color: "var(--dark-blue)",
+                          marginRight: "10px",
+                          display: "inline-block",
+                        }}
+                      />
+                      Delete
+                    </MenuItem>
+                  </Menu> */}
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Item>
+        </Grid>
+      </Grid>
+    </>
   );
 }
