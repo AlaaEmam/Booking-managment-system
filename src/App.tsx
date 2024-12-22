@@ -21,7 +21,7 @@ import MasterUserLayout from "./modules/Shared/Components/MasterUserLayout/Maste
 import HomePage from "./modules/User/Components/HomePage/HomePage";
 import RoomDetailsPage from "./modules/User/Components/RoomDetailsPage/RoomDetailsPage";
 import BookingPage from "./modules/User/Components/BookingPage/BookingPage";
-import ExploarePage from "./modules/User/Components/ExploarePage/ExploarePage";
+import ExploarePage from "./modules/User/Components/Explore/ExplorePage";
 import FavoriteRoomPage from "./modules/User/Components/FavoriteRoomPage/FavoriteRoomPage";
 import ProtectedRoute from "./modules/Auth/Components/ProtectedRoute/ProtectedRoute";
 import { useContext } from "react";
@@ -32,7 +32,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import React from "react";
 import RoomForm from "./modules/Admin/Components/Rooms/RoomForm/RoomForm";
-import RoomFacilitiesForm from "./modules/Admin/Components/RoomFacilities/RoomFacilitiesForm/RoomFacilitiesForm";
+import ExplorePage from "./modules/User/Components/Explore/ExplorePage";
 
 
 const lightTheme = createTheme({
@@ -151,7 +151,7 @@ function App() {
             </ProtectedRoute>
           ),
         },
-        { path: "explore-rooms", element: <ExploarePage /> },
+        { path: "explore-rooms", element: <ExplorePage /> },
         {
           path: "your-favorite",
           element: <FavoriteRoomPage />,
