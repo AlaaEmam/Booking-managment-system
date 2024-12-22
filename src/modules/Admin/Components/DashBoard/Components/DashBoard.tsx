@@ -89,7 +89,7 @@ export default function DashBoard() {
     <>
       <Box
         sx={{
-          height: "50vh", // Full viewport height
+          height: "60vh", // Full viewport height
           display: "flex",
           justifyContent: "center",
           backgroundImage: `url("/NOt")`, // Replace with your image URL
@@ -99,28 +99,28 @@ export default function DashBoard() {
           textAlign: "center",
         }}
       >
-        <Grid container sx={{ justifyContent:"center"}} spacing={10}>
-          <Grid item xs={3}>
-            <Item sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography variant="h4">
+        <Grid container sx={{ justifyContent:"center"}} spacing={3}>
+          <Grid item xs={4}>
+            <Item sx={{padding:"3rem 2rem" ,display: "flex", justifyContent: "space-between",margin:"3rem 0",borderRadius:"15px" }}>
+              <Typography variant="h4" >
                 {totalRoomCount}
                 <Typography>Rooms</Typography>
               </Typography>
               <BedIcon sx={{ color: "rgb(144, 191, 222)", fontSize: 40 }} />
             </Item>
           </Grid>
-          <Grid item xs={3}>
-            <Item sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography variant="h4">
+          <Grid item xs={4}>
+          <Item sx={{padding:"3rem 2rem" ,display: "flex", justifyContent: "space-between",margin:"3rem 0",borderRadius:"15px" }}>
+          <Typography variant="h4">
                 {totalFacilities}
                 <Typography>Facilities</Typography>
               </Typography>
               <BedIcon sx={{ color: "rgb(144, 191, 222)", fontSize: 40 }} />
             </Item>
           </Grid>
-          <Grid item xs={3}>
-            <Item sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography variant="h4">
+          <Grid item xs={4}>
+          <Item sx={{padding:"3rem 2rem" ,display: "flex", justifyContent: "space-between",margin:"3rem 0",borderRadius:"15px" }}>
+          <Typography variant="h4" >
                 {totalAds}
                 <Typography>Ads</Typography>
               </Typography>
