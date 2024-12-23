@@ -36,43 +36,43 @@ import ExplorePage from "./modules/User/Components/Explore/ExplorePage";
 
 
 const lightTheme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: {
-      main: '#152C5B', // Primary blue
-    },
-    secondary: {
-      main: '#000000', // Black
-    },
-    background: {
-      default: '#ffffff', // White background
-      paper: '#FAFAFA', // Off-white
-    },
-    text: {
-      primary: '#000000', // Black text
-      secondary: '#ffffff', // White text for contrast
-    },
-  },
+  // palette: {
+  //   mode: 'light',
+  //   primary: {
+  //     main: '#152C5B', // Primary blue
+  //   },
+  //   secondary: {
+  //     main: '#000000', // Black
+  //   },
+  //   background: {
+  //     default: '#ffffff', // White background
+  //     paper: '#FAFAFA', // Off-white
+  //   },
+  //   text: {
+  //     primary: '#000000', // Black text
+  //     secondary: '#ffffff', // White text for contrast
+  //   },
+  // },
 });
 
 const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#152C5B', // Keep primary blue
-    },
-    secondary: {
-      main: '#ffffff', // White text
-    },
-    background: {
-      default: '#121212', // Dark background
-      paper: '#1A1B1E', // Dark gray
-    },
-    text: {
-      primary: '#FFFFFF', // White text
-      secondary: '#000000', // Black for contrast
-    },
-  },
+  // palette: {
+  //   mode: 'dark',
+  //   primary: {
+  //     main: '#152C5B', // Keep primary blue
+  //   },
+  //   secondary: {
+  //   main: '#ffffff', // White text
+  //   },
+  //   background: {
+  //     default: '#121212', // Dark background
+  //     paper: '#1A1B1E', // Dark gray
+  //   },
+  //   text: {
+  //     primary: '#FFFFFF', // White text
+  //     secondary: '#000000', // Black for contrast
+  //   },
+  // },
 });
 
 function App() {
@@ -167,10 +167,10 @@ function App() {
       <button onClick={toggleTheme}>Toggle Theme</button>
 
       <ToastContainer />
-      <RouterProvider router={router}></RouterProvider>    
-      
+      <RouterProvider router={router}></RouterProvider>
+
       </ThemeProvider>
-      
+
     </>
   );
 }
