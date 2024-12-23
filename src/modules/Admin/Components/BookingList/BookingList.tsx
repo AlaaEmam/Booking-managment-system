@@ -6,6 +6,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import View from "../../../../assets/icons/View.svg";
 import BookingModal from './BookingModal';
 import { Button } from '@mui/material';
+import CustomTablePagination from '../Shared/Components/CustomTablePagination/CustomTablePagination';
 
 // STYLE
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -44,19 +45,23 @@ export default function BookingList() {
     startDate: string;
     endDate: string;
     user: User;
+    // totalCount: number;
   }
 
   
   
-  const [page, setPage] = React.useState(0);
-const [rowsPerPage, setRowsPerPage] = React.useState(5);
 const [bookingList, setBookingList] = React.useState([]); // Added missing state for bookingList
 
 const getBookingList = async () => {
   try {
-    let response = await axiosInstance.get(ADMINBOOKING.getAllBooking);
-    console.log(response.data.data.booking);
-    setBookingList(response?.data?.data?.booking);
+    let response = await axiosInstance.get(ADMINBOOKING.getAllBooking, {
+      params: {
+        size: rowsPerPage,
+        page: page,
+      },
+    });
+    setBookingList(response.data.data.booking);
+    setTotalItems(response.data.data.totalCount); // Set total count for pagination
   } catch (error) {
     console.log(error);
   }
@@ -102,18 +107,35 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     px: 4,
     pb: 3,
   };
-  useEffect(()=>{
-    getBookingList();
-  },[]) 
-  
 
   const [openModal, setOpenModal] = useState(false);
 
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
 
+   // Pagination states
+   const rowsPerPageOptions = [5, 10, 25, 50, 100];
+   const [page, setPage] = useState(1);
+   const [rowsPerPage, setRowsPerPage] = useState(5);
+   const [totalItems, setTotalItems] = useState(0);
+ 
+   // Handle pagination
+   const handleChangePage = (newPage: number) => {
+    setPage(newPage);
+  };
 
+  const handleChangeRowsPerPage = (newRowsPerPage: number) => {
+    if (rowsPerPageOptions.includes(newRowsPerPage)) {
+      setRowsPerPage(newRowsPerPage);
+      setPage(1); // Reset to the first page
+    }
+  };
+
+  useEffect(()=>{
+    getBookingList();
+  },[page, rowsPerPage]) 
   
+
   return (
   <>
     {/* <Modal
@@ -253,6 +275,17 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
           </Table>
         </TableContainer>
       )}
+
+
+      {/* Pagination */}
+      <CustomTablePagination
+        count={Math.ceil(totalItems / rowsPerPage) || 0}
+        page={page}
+        onPageChange={handleChangePage}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        rowsPerPageOptions={rowsPerPageOptions}
+      />
   </>
     
   )

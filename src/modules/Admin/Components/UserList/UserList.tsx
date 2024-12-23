@@ -6,6 +6,7 @@ import { ADMINUSERS, axiosInstance } from '../../../../constants/URLS';
 import axios from 'axios';
 import UserProfileModal from './UserProfileModal';
 import NoUserImage from '../../../../assets/defaultavatar.jpg';
+import CustomTablePagination from '../Shared/Components/CustomTablePagination/CustomTablePagination';
 
 // STYLE
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -39,6 +40,7 @@ export default function UserList() {
     role: string;
     createdAt: string;
     profileImage: string;
+    totalCount: number;
   }
 
   const [userList, setUserList] = useState<UserListProps[]>([]);
@@ -46,13 +48,19 @@ export default function UserList() {
 
 const getUserList = async () => {
   try {
-    let response = await axios.get(`https://upskilling-egypt.com:3000/api/v0/admin/users?page=1&size=10`, {
+    let response = await axios.get(`https://upskilling-egypt.com:3000/api/v0/admin/users`, {
+      params: {
+        size: rowsPerPage,
+        page: page,
+      },
       headers: {
         Authorization: localStorage.getItem('token'),
       },
     });
     console.log(response.data.data.users);
     setUserList(response?.data?.data?.users);
+    setTotalItems(response.data.data.totalCount || 0);
+
   } catch (error) {
     console.log(error);
   }
@@ -110,9 +118,27 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     px: 4,
     pb: 3,
   };
+
+   // Pagination states
+   const rowsPerPageOptions = [5, 10, 25, 50, 100];
+   const [page, setPage] = useState(1);
+   const [rowsPerPage, setRowsPerPage] = useState(5);
+   const [totalItems, setTotalItems] = useState(0);
+ 
+  // Handle pagination
+  const handleChangePage = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (newRowsPerPage: number) => {
+    if (rowsPerPageOptions.includes(newRowsPerPage)) {
+      setRowsPerPage(newRowsPerPage);
+      setPage(1); // Reset to the first page
+    }
+  };
   useEffect(()=>{
     getUserList();
-  },[])
+  },[page, rowsPerPage])
 
   return (
   <>
@@ -204,6 +230,15 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 <UserProfileModal open={openModal} user={selectedUser} onClose={handleCloseModal} />
 
+   {/* Pagination */}
+   <CustomTablePagination
+        count={Math.ceil(totalItems / rowsPerPage) || 0}
+        page={page}
+        onPageChange={handleChangePage}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        rowsPerPageOptions={rowsPerPageOptions}
+      />
   </>
 
   )

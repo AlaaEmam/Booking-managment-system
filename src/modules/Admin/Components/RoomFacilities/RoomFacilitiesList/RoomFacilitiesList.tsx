@@ -35,6 +35,7 @@ import { useForm } from "react-hook-form";
 import FacilityDialog from "../FacilityDialog/FacilityDialog";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CustomTablePagination from "../../Shared/Components/CustomTablePagination/CustomTablePagination";
 // STYLE
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -57,6 +58,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function RoomFacilitiesList() {
   interface Facility {
+    totalCount: number;
     id: string;
     name: string;
     createdBy: {
@@ -65,31 +67,34 @@ export default function RoomFacilitiesList() {
     };
     createdAt: string;
     updatedAt: string;
+  
   }
   const [facilityList, setFacilityList] = useState<Facility[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showDelete, setShowDelete] = useState<boolean>(false);
   const [showView, setShowView] = useState<boolean>(false);
-  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(
-    null
-  );
+  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(null);
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
-  // Fetch Facilities on component mount
-  useEffect(() => {
-    getFacilityList();
-  }, []);
-
+ 
   const getFacilityList = async () => {
     try {
       const response = await axios.get(
         `https://upskilling-egypt.com:3000/api/v0/admin/room-facilities`,
         {
           headers: { Authorization: localStorage.getItem("token") || "" },
+          params: {
+            size: rowsPerPage,
+            page: page,
+          },
         }
       );
+      console.log(response.data.data);
+      
+      setTotalItems(response.data.data.totalCount);
       setFacilityList(response.data.data.facilities || []);
+
     } catch (error) {
       console.error(error);
       toast.error("Failed to fetch Facility.");
@@ -101,7 +106,7 @@ export default function RoomFacilitiesList() {
     if (!selectedId) return;
 
     try {
-      await axios.delete(
+      const responsedelete = await axios.delete(
         `https://upskilling-egypt.com:3000/api/v0/admin/room-facilities/${selectedId}`,
         {
           headers: { Authorization: localStorage.getItem("token") || "" },
@@ -149,6 +154,7 @@ export default function RoomFacilitiesList() {
       }
       handleCloseDialog();
       getFacilityList();
+      
       // Optionally refresh the facility list here
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -219,6 +225,28 @@ export default function RoomFacilitiesList() {
     setSelectedFacility(null);
   };
 
+  
+    // Pagination states
+    const rowsPerPageOptions = [5, 10, 25, 50, 100];
+    const [page, setPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(5); 
+    const [totalItems, setTotalItems] = useState(0);
+    // Handle pagination
+    const handleChangePage = (newPage: number) => {
+      setPage(newPage);
+    };
+
+  const handleChangeRowsPerPage = (newRowsPerPage: number) => {
+    if (rowsPerPageOptions.includes(newRowsPerPage)) {
+      setRowsPerPage(newRowsPerPage);
+      setPage(1); // Reset to the first page
+    }
+  };
+
+  useEffect(() => {
+    getFacilityList();
+  }, [page, rowsPerPage]);
+  
   return (
     <>
       <Box
@@ -354,6 +382,16 @@ export default function RoomFacilitiesList() {
         onClose={handleCloseDialog}
         onSave={handleSave}
         facility={selectedFacility}
+      />
+
+      {/* Pagination */}
+      <CustomTablePagination
+        count={Math.ceil(totalItems / rowsPerPage) || 0}
+        page={page}
+        onPageChange={handleChangePage}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        rowsPerPageOptions={rowsPerPageOptions}
       />
     </>
   );
