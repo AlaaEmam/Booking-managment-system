@@ -5,9 +5,9 @@ export const EmailValidation = {
       message: "Email should be valid mail",
     },
   };
-  
-  // const PasswordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
-  
+
+  const PasswordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+
   export const PasswordValidation = {
     required: "Password is required Please enter your Password.",
     // pattern: {
@@ -16,8 +16,8 @@ export const EmailValidation = {
     // },
   };
 
-   const PhoneNumberwordRegEx = /^01[0-9]{9}$/;
-  
+  const PhoneNumberwordRegEx = /^01[0-9]{9}$/;
+
   export const PhoneNumberValidation ={
     required: "Phone Number is required .",
       pattern: {

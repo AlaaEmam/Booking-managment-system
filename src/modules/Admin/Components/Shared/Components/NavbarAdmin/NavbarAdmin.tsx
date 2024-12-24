@@ -16,9 +16,11 @@ import {
 } from "@mui/icons-material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../../../../context/AuthContext";
 
 export default function NavbarAdmin() {
-  const navigate = useNavigate();
+  let navigate = useNavigate();
+  const { clearLoginData, loginData } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -31,10 +33,7 @@ export default function NavbarAdmin() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const logout = () => {
-    localStorage.removeItem("token");
-    navigate("/")
-}
+
   return (
     <>
       <AppBar
@@ -87,7 +86,7 @@ export default function NavbarAdmin() {
 
             {/* Text Next to Image */}
             <Typography variant="body1" sx={{ fontWeight: "500" }}>
-              Upskilling
+              {loginData?.userName || "Guest"}
             </Typography>
 
             {/* Dropdown Icon */}
@@ -131,8 +130,8 @@ export default function NavbarAdmin() {
               <MenuItem onClick={handleClose}>Settings</MenuItem>
               <MenuItem
                 onClick={() => {
-                  localStorage.removeItem("token");
-                  window.location.reload();
+                  clearLoginData();
+                  navigate("/auth/login");
                 }}
               >
                 Logout

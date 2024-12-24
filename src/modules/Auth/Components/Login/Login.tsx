@@ -1,69 +1,66 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
-import { Button, Typography, Link } from "@mui/material";
+import { useState } from "react";
+import {
+  TextField,
+  Button,
+  Typography,
+  Link,
+  Box,
+  Container,
+  Grid,
+  IconButton,
+  InputAdornment,
+  styled,
+  Paper,
+} from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { useAuth } from "../../../../context/AuthContext";
+import LoginImage from "../../../../assets/LoginImage.png";
+import Logo from "../../../../assets/Logo.svg";
 import {
   EmailValidation,
   PasswordValidation,
 } from "../../../../constants/validations";
-import { useEffect } from "react";
-import { useState } from "react";
-import LoginImage from "../../../../assets/LoginImage.png";
-import LogoImage from "../../../../assets/Logo.svg";
-import IconButton from "@mui/material/IconButton";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Input from "@mui/material/Input";
-import FilledInput from "@mui/material/FilledInput";
-import FormHelperText from "@mui/material/FormHelperText";
-import {
-  ADMINAUTHURLS,
-  axiosInstance,
-  PORTALAUTHURLS,
-} from "../../../../constants/URLS";
-import { toast } from "react-toastify";
-import { AuthContext } from "../../../../context/AuthContext";
-import axios from "axios";
-import { jwtDecode } from "jwt-decode";
-
 interface LoginData {
   email: string;
   password: string;
-  isAdmin: boolean; // Add this field
 }
+
+// Styled component
+const Item = styled(Paper)(({ theme }) => ({
+  ...theme.typography.body2,
+  textAlign: "left",
+  border: "none",
+  boxShadow: "none",
+  padding: "1.5rem",
+}));
 
 export default function Login() {
   const navigate = useNavigate();
+  const { saveLoginData } = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginData>();
-  const { saveLoginData }: any = React.useContext(AuthContext);
 
-  //Handel Login data
-  const [isAdmin, setIsAdmin] = React.useState(false); // Default to user login
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const onSubmit: SubmitHandler<LoginData> = async (data) => {
     try {
-      const loginUrl = isAdmin
-        ? `https://upskilling-egypt.com:3000/api/v0/admin/users/login`
-        : `https://upskilling-egypt.com:3000/api/v0/portal/users/login`;
+      const loginUrl = `https://upskilling-egypt.com:3000/api/v0/portal/users/login`;
 
       // Send data directly
       const response = await axios.post(loginUrl, {
         email: data.email,
         password: data.password,
       });
+
       console.log("Login response:", response); // Log the response
 
       // Access token and role from the response
@@ -73,75 +70,32 @@ export default function Login() {
 
       console.log("Role:", role);
       console.log("Token:", token);
+      // console.log(response.data.data.user.userName);
 
+      // Navigate based on role
+      let userData: any = response;
       if (token && role) {
         toast.success("Login Succeeded");
-        localStorage.setItem("token", token); // Store the token
-        saveLoginData(); // Update login data in context
+        localStorage.setItem("token", token);
+        saveLoginData(userData);
 
-        // Navigate based on role
-        if (role === "admin") {
-          navigate("/dashboard");
-        } else if (role === "user") {
-          navigate("/homepage");
-        } else {
-          toast.error("Unknown role. Please contact support.");
-        }
+        navigate(role === "admin" ? "/dashboard" : "/homepage");
       } else {
-        toast.error("Invalid login response.");
+        throw new Error("Invalid login response.");
       }
-    } catch (error: any) {
-      console.error("Login error:", error);
-      toast.error(error.response?.data?.message || "Login failed");
+    } catch (error) {
+      const err = error as any;
+      console.error("Login error:", err.response?.data || err.message);
+      toast.error(err.response?.data?.message || "Login failed");
     }
   };
 
-  //Handel show password
-  const [showPassword, setShowPassword] = React.useState(false);
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
-  };
-
-  const handleMouseUpPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
-  };
-
-  const Item = styled(Paper)(({ theme }) => ({
-    ...theme.typography.body2,
-    textAlign: "left",
-    border: "none",
-    position: "relative",
-    overflow: "hidden",
-  }));
-
-  const OverlayText = styled(Typography)(({ theme }) => ({
-    position: "absolute",
-    bottom: "20%",
-    transform: "translateX(-50%)",
-    color: "white",
-    textAlign: "left",
-    padding: "10px",
-    borderRadius: "5px",
-  }));
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    console.log("Token in storage:", token);
-  }, []);
-
   return (
-    <Grid container sx={{ textAlign: "left" }}>
-      <Grid item xs={12} md={6}>
-        <Item sx={{ margin: "5%", boxShadow: "none" }}>
-          <img src={LogoImage} alt="Login" />
-        </Item>
+    <Grid
+      container
+      sx={{ textAlign: "left", display: "flex", alignItems: "center" }}
+    >
+      <Grid xs={12} md={6}>
         <Item
           sx={{
             padding: {
@@ -153,6 +107,13 @@ export default function Login() {
             boxShadow: "none",
           }}
         >
+          <Item sx={{ marginY: 4, boxShadow: "none" }}>
+            <img
+              src={Logo}
+              style={{ maxWidth: "100%", width: "80%" }}
+              alt="logo"
+            />
+          </Item>
           <Typography
             sx={{
               fontSize: "30px",
@@ -167,7 +128,7 @@ export default function Login() {
           <Typography sx={{ marginBottom: "2rem" }}>
             You can{" "}
             <Link
-              onClick={() => navigate("/registration")}
+              onClick={() => navigate("/auth/registration")}
               underline="none"
               sx={{
                 color: "var(--primary-color)",
@@ -227,8 +188,7 @@ export default function Login() {
                       aria-label={
                         showPassword ? "Hide password" : "Show password"
                       }
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
+                      onClick={togglePasswordVisibility}
                       edge="end"
                     >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -240,7 +200,7 @@ export default function Login() {
 
             <Button
               disabled={isSubmitting}
-              sx={{ marginTop: "20%" }}
+              sx={{ marginTop: 4 }}
               variant="contained"
               size="large"
               type="submit"
@@ -249,43 +209,92 @@ export default function Login() {
               {isSubmitting ? "Logging in..." : "Login"}
             </Button>
           </form>
-        </Item>
-        <Link
-          component="button"
-          onClick={() => navigate("/forget-password")}
-          sx={{
-            color: "var(--light-color)",
-            textDecorationColor: "var(--light-color)",
-            textAlign: "right",
-          }}
-        >
-          {" "}
-          Forgot Password ?
-        </Link>
-      </Grid>
-      <Grid item md={6} xs={12}>
-        <Item>
-          <img
-            src={LoginImage}
-            alt="Login"
-            style={{ width: "100%", height: "97vh" }}
-          />
-          <OverlayText
-            sx={{ left: "35%", fontSize: "40px", fontWeight: "bolder" }}
-          >
-            Sign in to Roamhome
-          </OverlayText>
-          <OverlayText
+          <Link
+            component="button"
+            onClick={() => navigate("/auth/forget-password")}
             sx={{
-              left: "23%",
-              textAlign: "left",
-              fontSize: "20px",
-              bottom: "15%",
+              color: "var(--light-color)",
+              textDecorationColor: "var(--light-color)",
+              textAlign: "right",
+              mt: 2,
             }}
           >
-            Homes as unique as you.
-          </OverlayText>
+            Forgot Password ?
+          </Link>
         </Item>
+      </Grid>
+      <Grid
+        item
+        md={6}
+        xs={12}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh", // Full viewport height
+          overflow: "hidden", // Prevent scrolling
+          padding: "1rem", // Add padding for spacing around the edges
+          boxSizing: "border-box",
+        }}
+      >
+        {/* Parent container with relative positioning */}
+        <Container
+          disableGutters
+          sx={{
+            position: "relative",
+            maxHeight: "100%", // Restrict height to prevent overflow
+            maxWidth: "100%", // Ensure it doesn't exceed parent width
+            borderRadius: "10px", // Optional: Add rounded corners
+            overflow: "hidden",
+          }}
+        >
+          <Box
+            sx={{
+              position: "relative", // To position the background image and text correctly
+              height: "100vh", // Full height for this section
+              backgroundImage: `url(${LoginImage})`, // Set image as background
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              display: "flex",
+              maxHeight: "100vh",
+              padding: "2rem",
+            }}
+          >
+            <Box
+              sx={{
+                position: "relative",
+                display: "flex",
+                flexDirection: "column", // Stack text vertically
+                justifyContent: "center", // Center text vertically
+                alignItems: "", // Center text horizontally
+                height: "100%", // Full height to match the parent container
+                color: "white", // White text for contrast
+                margin: 9,
+              }}
+            >
+              {/* Main heading */}
+              <Typography
+                variant="h1"
+                sx={{
+                  fontSize: { xs: "24px", md: "36px" },
+                  fontWeight: "bolder",
+                }}
+              >
+                Sign in to Roam Home
+              </Typography>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontSize: { xs: "16px", md: "20px" }, // Responsive font size for smaller screens
+                  marginTop: 2, // Add spacing between the heading and sub-heading
+                }}
+              >
+                Homes as unique as you.
+              </Typography>
+            </Box>
+          </Box>
+        </Container>
       </Grid>
     </Grid>
   );

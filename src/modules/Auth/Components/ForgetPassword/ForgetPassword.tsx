@@ -50,7 +50,7 @@ export default function ForgetPassword() {
       );
       console.log(response);
       toast.success(response.data.message || 'check your mail');
-      navigate('/reset-password', { state: data.email });
+      navigate('/auth/reset-password', { state: data.email });
     } catch (error) {
       console.log(error);
       toast.error('failed');
@@ -88,7 +88,7 @@ export default function ForgetPassword() {
           <Typography sx={{ marginBottom: '2rem' }}>
             You can{' '}
             <Link
-              onClick={() => navigate('/login')}
+              onClick={() => navigate('/auth/login')}
               underline="none"
               sx={{
                 color: '#eb5149',

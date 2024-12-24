@@ -12,9 +12,17 @@
   --light-gray: #E2E5EB; /* White with 80% opacity */
   --dark-gray: #1A1B1E; /* Dark gray */
   --blue: #35C2FD; /* Light blue */
+  --dark-blue: #203FC7; /* dark blue */
   --green: #54D14D; /* Green */
   --red: #7783BF; /* Soft blue */
   --off-white: #FAFAFA; /* Very light gray */
+  --light-gray-row:#F8F9FB;
+  --light-baby-blue:  #F7F7F7;
+  --light-green:  #F1FFF0;
+  --dark-green:  #009247
+
+
+
 }
 
 [data-theme="dark"] {
@@ -23,6 +31,8 @@
   --secondary-color: #FFFFFF; /* White text */
   --light-gray: rgba(255, 255, 255, 0.2); /* White with 20% opacity */
   --light-red: #FF6B6B; /* Lighter red for dark mode */
+  --dark-blue: #203FC7; /* dark blue */
+
   --red: #E74C3C;
   --dark-gray: #FFFFFF; /* White for contrast */
   --blue: #35C2FD; /* Keep light blue */
@@ -44,7 +54,7 @@
   background-color: var(--primary-color);
   color: var(--off-white);
   height: 100vh;
-  
+
 }
 .sidebar-container .ps-menu-button {
   transition: all 0.3s ease-in-out;
@@ -60,6 +70,22 @@
 .bi-trash,.bi-pencil-square{
   cursor: pointer;
 }
+/* dropdown */
+.css-1tktgsa-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+  background-color: #ffffff !important;
+  --shadow:0px 1px 1px -10px rgba(0,0,0,0.2),0px 0px 14px -27px rgba(0,0,0,-4.86),0px 1px 16px -3px rgba(0,0,0,0.12);
+  -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important;
+  transition: none !important ;
+  border-radius: 11px !important;
+  box-shadow: var(--shadow) !important;  
+  background-image: none !important;
+}
+/* delete confirmation  */
 
+.css-78e6go-MuiImageList-root {
+  display: inherit !important; 
 
-  
+}
+.css-4nmryk-MuiBackdrop-root-MuiModal-backdrop{
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}

@@ -16,14 +16,14 @@ export default function MasterAdminLayout() {
             flexGrow: 1,
             display: "flex",
             flexDirection: "column",
-            p: 2,
+
           }}
         >
           <Box sx={{}}>
             <NavbarAdmin />
           </Box>
 
-          <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+          <Box sx={{ flexGrow: 1,padding:"1rem" }}>
             <Outlet />
           </Box>
         </Box>
