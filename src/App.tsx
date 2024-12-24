@@ -61,6 +61,7 @@
           { path: "ads-list", element: <AdsList /> },
           { path: "ads-list/ads-form", element: <AdsForm /> },
           { path: "ads-list/:adsId", element: <AdsForm /> },
+          { path: "favoriteroomPage", element: <FavoriteRoomPage /> },
 
           { path: "room-facility", element: <RoomFacilitiesList /> },
           {
