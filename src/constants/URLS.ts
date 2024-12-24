@@ -74,6 +74,7 @@ export const PORTALUSERS = {
 export const PORTALROOMS = {
   getAllRooms: `portal/rooms/available`,
   getRoomDetails: (num: string) => `portal/rooms/${num}`,
+  filterRoom:(startDate:string,endDate:string,capacity:string)=>`/portal/rooms/available?page=1&size=10&startDate=${startDate}&endDate=${endDate}&capacity=${capacity}`
 };
 
 export const PORTALBOOKING = {
