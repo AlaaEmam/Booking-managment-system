@@ -28,59 +28,51 @@ export default function SideBar() {
               alt="logo"
             />{" "}
           </div>
+          <MenuItem
+  icon={<i className="bi bi-house-door"></i>}
+  component={<Link to="/dashboard" />}>
+  Home
+</MenuItem>
+<MenuItem
+  icon={<i className="bi bi-people"></i>}
+  component={<Link to="/dashboard/users-list" />}>
+  Users
+</MenuItem>
 
-          <MenuItem
-            icon={<i className="bi bi-house-door"></i>}
-            component={<Link to="/dashboard" />}
-          >
-            Home
-          </MenuItem>
-          <MenuItem
-            icon={<i className="bi bi-people"></i>}
-            component={<Link to="/users-list" />}
-          >
-            Users
-          </MenuItem>
+<MenuItem
+  icon={<i className="bi bi-columns-gap"></i>}
+  component={<Link to="/dashboard/rooms-list" />}>
+  Rooms
+</MenuItem>
+<MenuItem
+  icon={<i className="bi bi-columns-gap"></i>}
+  component={<Link to="/dashboard/ads-list" />}>
+  Ads
+</MenuItem>
+<MenuItem
+  icon={<i className="bi bi-columns-gap"></i>}
+  component={<Link to="/dashboard/booking-list" />}>
+  Bookings
+</MenuItem>
+<MenuItem
+  icon={<i className="bi bi-columns-gap"></i>}
+  component={<Link to="/dashboard/room-facility" />}>
+  Facilities
+</MenuItem>
+<MenuItem
+  icon={<i className="bi bi-lock"></i>}
+  component={<Link to="/dashboard/change-password" />}>
+  Change Password
+</MenuItem>
+<MenuItem
+  icon={<i className="bi bi-box-arrow-right"></i>}
+  component={<Link to="/" />}
+  onClick={() => {
+    localStorage.removeItem("token");
+  }}>
+  Logout
+</MenuItem>
 
-          <MenuItem
-            icon={<i className="bi bi-columns-gap"></i>}
-            component={<Link to="/rooms-list" />}
-          >
-            Rooms
-          </MenuItem>
-          <MenuItem
-            icon={<i className="bi bi-columns-gap"></i>}
-            component={<Link to="/ads-list" />}
-          >
-            Ads
-          </MenuItem>
-          <MenuItem
-            icon={<i className="bi bi-columns-gap"></i>}
-            component={<Link to="/booking-list" />}
-          >
-            Bookings
-          </MenuItem>
-          <MenuItem
-            icon={<i className="bi bi-columns-gap"></i>}
-            component={<Link to="room-facility" />}
-          >
-            Facilities
-          </MenuItem>
-          <MenuItem
-            icon={<i className="bi bi-lock"></i>}
-            component={<Link to="/change-password" />}
-          >
-            Change Password
-          </MenuItem>
-          <MenuItem
-            icon={<i className="bi bi-box-arrow-right"></i>}
-            component={<Link to="/" />}
-            onClick={() => {
-              localStorage.removeItem("token");
-            }}
-          >
-            Logout
-          </MenuItem>
         </Menu>
       </Sidebar>
     </div>
