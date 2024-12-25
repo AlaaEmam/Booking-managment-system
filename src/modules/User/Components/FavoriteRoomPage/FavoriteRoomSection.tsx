@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // استيراد useNavigate
 import { Grid, Card, CardMedia, Box, Typography, Container } from "@mui/material";
 import { Favorite, Visibility } from "@mui/icons-material";
-import { ADMINADDS, axiosInstance } from "../../../../constants/URLS";
-import img from "../../../../imges/room.jpg";
 import axios from "axios";
+import img from "../../../../imges/room.jpg";
 
 interface Ad {
   _id: string;
@@ -24,6 +24,7 @@ interface Ad {
 
 const FavoriteRoomSection = () => {
   const [ads, setAds] = useState<Ad[]>([]);
+  const navigate = useNavigate(); // تعريف useNavigate
 
   useEffect(() => {
     const callAds = async () => {
@@ -40,6 +41,10 @@ const FavoriteRoomSection = () => {
     callAds();
   }, []);
 
+  const handleCardClick = (adId: string) => {
+    navigate(`/your-favorite?adId=${adId}`); // توجيه إلى صفحة المفضلة مع تمرير ID الإعلان
+  };
+
   return (
     <Container>
       <Typography
@@ -47,7 +52,7 @@ const FavoriteRoomSection = () => {
         sx={{
           fontWeight: "bold",
           marginBottom: 2,
-          textAlign: "left", // محاذاة النص لليسار
+          textAlign: "left",
         }}
       >
         Most Popular Ads
@@ -60,11 +65,13 @@ const FavoriteRoomSection = () => {
               sx={{
                 position: "relative",
                 height: 516,
+                cursor: "pointer", // إضافة شكل اليد عند التحويم
                 "&:hover": {
                   "& .hover-icons": { opacity: 1, transform: "translateY(0)" },
                   "& .image": { filter: "brightness(0.8)" },
                 },
               }}
+              onClick={() => handleCardClick(ads[0]._id)} // عند الضغط على الكارد
             >
               <CardMedia
                 className="image"
@@ -128,7 +135,6 @@ const FavoriteRoomSection = () => {
           )}
         </Grid>
 
-        {/* الصور الصغيرة */}
         <Grid item xs={12} md={8}>
           <Grid container spacing={2}>
             {ads.slice(1, 5).map((ad) => (
@@ -137,11 +143,13 @@ const FavoriteRoomSection = () => {
                   sx={{
                     position: "relative",
                     height: 245,
+                    cursor: "pointer",
                     "&:hover": {
                       "& .hover-icons": { opacity: 1, transform: "translateY(0)" },
                       "& .image": { filter: "brightness(0.8)" },
                     },
                   }}
+                  onClick={() => handleCardClick(ad._id)} // عند الضغط على الكارد
                 >
                   <CardMedia
                     className="image"
