@@ -69,7 +69,10 @@
 .css-1wvake5 {
   border: 0 !important;
 }
-
+.css-dip3t8 {
+  position: fixed !important;
+  width: inherit !important;
+}
 .bi-trash,.bi-pencil-square{
   cursor: pointer;
 }
@@ -87,8 +90,25 @@
 
 .css-78e6go-MuiImageList-root {
   display: inherit !important;
-
 }
 .css-4nmryk-MuiBackdrop-root-MuiModal-backdrop{
   background-color: rgba(0, 0, 0, 0.1) !important;
+}
+/* RoomFacilitiesList.css */
+.table-container {
+  overflow-y: auto; /* Enable horizontal scrolling */
+}
+
+.table {
+  min-width: 700px; /* Set a minimum width for the table */
+}
+
+@media (max-width: 600px) {
+  .table {
+    min-width: 100%; /* Allow the table to take full width on smaller screens */
+  }
+}
+
+.css-cturab-MuiTableCell-root {
+  padding: 5px 0 !important;
 }

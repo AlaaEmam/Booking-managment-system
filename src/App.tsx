@@ -11,7 +11,7 @@ import VerifyAccount from "./modules/Auth/Components/VerifyAccount/VerifyAccount
 import ChangePassword from "./modules/Auth/Components/ChangePassword/ChangePassword";
 import DashBoard from "./modules/Admin/Components/DashBoard/Components/DashBoard";
 import AdsList from "./modules/Admin/Components/Ads/AdsList/AdsList";
-import AdsForm from "./modules/Admin/Components/Ads/AdsForm/AdsForm";
+import AdsForm from "./modules/Admin/Components/Ads/AdDialog/AdDialog";
 import BookingList from "./modules/Admin/Components/BookingList/BookingList";
 import RoomFacilitiesList from "./modules/Admin/Components/RoomFacilities/RoomFacilitiesList/RoomFacilitiesList";
 import RoomsList from "./modules/Admin/Components/Rooms/RoomsList/RoomsList";
@@ -119,9 +119,7 @@ function App() {
         { index: true, element: <DashBoard /> },
 
         { path: "ads-list", element: <AdsList /> },
-        { path: "ads-list/ads-form", element: <AdsForm /> },
-        { path: "ads-list/:adsId", element: <AdsForm /> },
-
+  
         { path: "room-facility", element: <RoomFacilitiesList /> },
 
         { path: "rooms-list", element: <RoomsList /> },
@@ -164,7 +162,7 @@ function App() {
     <>
        <ThemeProvider theme={theme}>
       <CssBaseline />
-      <button onClick={toggleTheme}>Toggle Theme</button>
+      {/* <button onClick={toggleTheme}>Toggle Theme</button> */}
 
       <ToastContainer />
       <RouterProvider router={router}></RouterProvider>    

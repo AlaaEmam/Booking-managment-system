@@ -49,11 +49,11 @@ export const ADMINROOMFACILITIES = {
   updateRoomFacilities: (id: string) => `admin/room-facilities/${id}`,
 };
 
-export const ADMINADDS = {
-  getAdds: `admin/ads`,
-  getAddDetails: (id: string) => `admin/ads/${id}`,
-  deleteAdd: (id: string) => `admin/ads/${id}`,
-  updateAdd: (id: string) => `admin/ads/${id}`,
+export const ADMINADS = {
+  getAds: `admin/ads`,
+  getAdDetails: (id: string) => `admin/ads/${id}`,
+  deleteAd: (id: string) => `admin/ads/${id}`,
+  updateAd: (id: string) => `admin/ads/${id}`,
 };
 // portal users
 

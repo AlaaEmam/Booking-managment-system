@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 // Define the Facility interface directly in this file
 interface Facility {
   totalCount: number;
-  id: string;
+  _id: string;
   name: string;
   createdBy: {
     _id: string;

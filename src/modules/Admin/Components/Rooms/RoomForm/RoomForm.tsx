@@ -44,22 +44,6 @@ const MenuProps = {
   },
 };
 
-const CustomStyledTextField = styled(TextField)({
-  '& label': {
-    color: 'var(--dark-gray)', // Change this to your desired color
-  }
-});
-
-Select
-
-const CustomStyledSelect = styled(OutlinedInput)({
-  '& label': {
-    color: 'var(--dark-gray)', // Change this to your desired color
-  }
-});
-
-
-
 function getStyles(name: string, facilty: string[], theme: Theme) {
   return {
     fontWeight: facilty.includes(name)
@@ -71,9 +55,9 @@ function getStyles(name: string, facilty: string[], theme: Theme) {
 // end sec select
 
 interface facility {
-  _id: String;
-  userName: String;
-  name: String;
+  _id: string;
+  userName: string;
+  name: string;
 }
 
 const VisuallyHiddenInput = styled("input")({
@@ -118,14 +102,15 @@ export default function RoomForm() {
       price: 0,
       capacity: 0,
       discount: 0,
-      facilities:"kkk",
+      facilities: [],
     },
   });
   const onSubmit: SubmitHandler<IFormRoom> = async (data) => {
     let formata = new FormData();
     formata.append("roomNumber", data.roomNumber);
-    formata.append("capacity", data.capacity);
-    formata.append("discount", data.discount);
+    formata.append("capacity", data.capacity.toString());
+    formata.append("discount", data.discount.toString());
+    formata.append("price", data.price.toString());
 
     for (let i = 0; i < data.facilities.length; i++) {
       formata.append("facilities[]", data.facilities[i]);
@@ -135,7 +120,6 @@ export default function RoomForm() {
       formata.append("imgs", selectedFiles[i]);
     }
 
-    formata.append("price", data.price);
 
     try {
       console.log(data.facilities);
@@ -182,10 +166,10 @@ console.log("result", params?.roomId )
 
   interface IFormRoom {
     _id: number;
-    roomNumber: "";
-    price: "";
-    capacity: "";
-    discount: "";
+    roomNumber: string;
+    price: number;
+    capacity: number;
+    discount: number;
     imgs: string[];
     facilities: [];
   }
@@ -197,7 +181,7 @@ console.log("result", params?.roomId )
 
   const handleFileChange = (event: any) => {
     const files = Array.from(event.target.files);
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
+    const imageUrls = files.map((file) => URL.createObjectURL(file as Blob));
     setImages((prevImages): any => [...prevImages, ...imageUrls]);
     // Check if more than one file is selected
     if (files.length > 1) {
@@ -230,12 +214,11 @@ console.log("result", params?.roomId )
             autoComplete="off"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <CustomStyledTextField
+            <TextField
               label="Room Number"
               fullWidth
               variant="outlined"
               type="text"
-
               sx={{
                 marginBottom: "1rem ",
               }}
@@ -251,7 +234,7 @@ console.log("result", params?.roomId )
                 justifyContent: "space-between",
               }}
             >
-              <CustomStyledTextField
+              <TextField
                 label="Price"
                 fullWidth
                 variant="outlined"
@@ -267,7 +250,7 @@ console.log("result", params?.roomId )
                 helperText={errors.price ? errors.price.message : ""} // Display error message
               />
 
-              <CustomStyledTextField
+              <TextField
                 label="capacity"
                 fullWidth
                 variant="outlined"
@@ -289,7 +272,7 @@ console.log("result", params?.roomId )
                 justifyContent: "space-between",
               }}
             >
-              <CustomStyledTextField
+              <TextField
                 id="outlined-basic"
                 label="Discount"
                 fullWidth
@@ -328,7 +311,7 @@ console.log("result", params?.roomId )
                   })}
                   error={!!errors.facilities}
                   onChange={handleChange}
-                  input={<CustomStyledSelect label="facility" />}
+                  input={<OutlinedInput label="facility" />}
                   MenuProps={MenuProps}
                 >
                   {facility.map((fac) => (

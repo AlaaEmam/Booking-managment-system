@@ -1,6 +1,6 @@
 import { Box, Grid, Paper, styled, Typography } from "@mui/material";
 import {
-  ADMINADDS,
+  ADMINADS,
   ADMINBOOKING,
   ADMINROOMFACILITIES,
   ADMINROOMS,
@@ -69,7 +69,7 @@ export default function DashBoard() {
   };
 
   let getAds = async () => {
-    let response = await axiosInstance.get(ADMINADDS.getAdds);
+    let response = await axiosInstance.get(ADMINADS.getAds);
     console.log(response.data.data);
 
     setAdsList(response.data.data);

@@ -2,10 +2,12 @@ import { Outlet } from "react-router-dom";
 import SideBar from "../../../Admin/Components/Shared/Components/SideBar/SideBar";
 import NavbarAdmin from "../../../Admin/Components/Shared/Components/NavbarAdmin/NavbarAdmin";
 import { Box } from "@mui/material";
+import Grid from "@mui/material/Grid2";
+
 export default function MasterAdminLayout() {
   return (
     <div>
-      <Box sx={{ display: "flex", height: "100vh" }}>
+      <Grid sx={{ display: "flex", height: "100vh" }}>
         <Box sx={{ bgcolor: "primary.main", color: "#fff" }}>
           <SideBar />
         </Box>
@@ -19,7 +21,7 @@ export default function MasterAdminLayout() {
 
           }}
         >
-          <Box sx={{}}>
+          <Box sx={{padding:"1rem"}}>
             <NavbarAdmin />
           </Box>
 
@@ -27,7 +29,7 @@ export default function MasterAdminLayout() {
             <Outlet />
           </Box>
         </Box>
-      </Box>
+      </Grid>
     </div>
   );
 }
