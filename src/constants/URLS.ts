@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // https://upskilling-egypt.com:3000
-const baseURL = `https://upskilling-egypt.com:3000/api/v0/`;
+export const baseURL = `https://upskilling-egypt.com:3000/api/v0/`;
 
 export const axiosInstance = axios.create({
   baseURL,
@@ -72,9 +72,11 @@ export const PORTALUSERS = {
 };
 
 export const PORTALROOMS = {
-  getAllRooms: `portal/rooms/available`,
+  //getAllRooms: `portal/rooms/available`,
+  getAllRooms: (page:string,size:string)=>`portal/rooms/available?page=${page}&size=${size}`,
+
   getRoomDetails: (num: string) => `portal/rooms/${num}`,
-  filterRoom:(startDate:string,endDate:string,capacity:string)=>`/portal/rooms/available?page=1&size=10&startDate=${startDate}&endDate=${endDate}&capacity=${capacity}`
+  filterRoom:(startDate:string,endDate:string,capacity:string)=>`portal/rooms/available?page=1&size=10&startDate=${startDate}&endDate=${endDate}&capacity=${capacity}`
 };
 
 export const PORTALBOOKING = {

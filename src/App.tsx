@@ -143,6 +143,8 @@ function App() {
         { index: true, element: <HomePage /> },
         { path: "homepage", element: <HomePage /> },
         { path: "room-details", element: <RoomDetailsPage /> },
+        { path: "explore-rooms/room-details/:roomId", element: <RoomDetailsPage /> },
+
         {
           path: "payment",
           element: (
