@@ -21,7 +21,6 @@ import MasterUserLayout from "./modules/Shared/Components/MasterUserLayout/Maste
 import HomePage from "./modules/User/Components/HomePage/HomePage";
 import RoomDetailsPage from "./modules/User/Components/RoomDetailsPage/RoomDetailsPage";
 import BookingPage from "./modules/User/Components/BookingPage/BookingPage";
-import ExploarePage from "./modules/User/Components/Explore/ExplorePage";
 import FavoriteRoomPage from "./modules/User/Components/FavoriteRoomPage/FavoriteRoomPage";
 import ProtectedRoute from "./modules/Auth/Components/ProtectedRoute/ProtectedRoute";
 import { useContext } from "react";
