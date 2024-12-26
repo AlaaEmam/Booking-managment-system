@@ -88,7 +88,8 @@ export const PORTALBOOKING = {
 //   getAddDetails:(id: string) =>`admin/ads/${id}`
 // }
 
-// export const FAVROOMS={
-//   getAdds:`admin/ads`,
-//   getAddDetails:(id: string) =>`admin/ads/${id}`
-// }
+export const FAVROOMS={
+  getAddsFAVROOMS:`/api/v0/portal/favorite-rooms`,
+  getAddDetailsFAVROOMS:(id: string) =>`/api/v0/portal/favorite-rooms${id}`,
+deleteDetailsFAVROOMS:(id:string)=>`/api/v0/portal/favorite-rooms/${id}`
+}

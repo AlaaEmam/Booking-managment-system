@@ -1,4 +1,4 @@
-import "./App.css";
+  import "./App.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthLayout from "./modules/Shared/Components/AuthLayout/AuthLayout";
@@ -92,7 +92,52 @@ function App() {
     return null;
   }
 
-  const router = createBrowserRouter([
+    const router = createBrowserRouter([
+      {
+        path: "login",
+        element: <AuthLayout />,
+        errorElement: <Notfound />,
+        children: [
+          { index: true, element: <Login /> },
+          { path: "login", element: <Login /> },
+          { path: "forget-password", element: <ForgetPassword /> },
+          { path: "reset-password", element: <ResetPass /> },
+          { path: "registration", element: <Registration /> },
+          { path: "verify-account", element: <VerifyAccount /> },
+          { path: "change-password", element: <ChangePassword /> },
+        ],
+      },
+      {
+        path: "dashboard",
+        element: (
+          <ProtectedRoute loginData={loginData}>
+            <MasterAdminLayout />
+          </ProtectedRoute>
+        ),
+        errorElement: <Notfound />,
+        children: [
+          { index: true, element: <DashBoard /> },
+
+          { path: "ads-list", element: <AdsList /> },
+          // { path: "ads-list/ads-form", element: <AdsForm /> },
+          // { path: "ads-list/:adsId", element: <AdsForm /> },
+          { path: "favoriteroomPage", element: <FavoriteRoomPage /> },
+
+          { path: "room-facility", element: <RoomFacilitiesList /> },
+          {
+            path: "room-facility/facility-form",
+            element: <RoomFacilitiesList />,
+          },
+          { path: "room-facility/:facilityId", element: <RoomFacilitiesList /> },
+
+          { path: "rooms-list", element: <RoomsList /> },
+          { path: "rooms-list/room-form", element: <RoomFacilitiesList /> },
+          { path: "rooms-list/:roomId", element: <RoomFacilitiesList /> },
+
+          { path: "booking-list", element: <BookingList /> },
+          { path: "users-list", element: <UserList /> },
+        ],
+      },
     {
       path: "auth",
       element: <AuthLayout />,
