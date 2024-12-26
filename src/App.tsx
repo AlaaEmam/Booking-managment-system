@@ -155,6 +155,7 @@ function App() {
         { path: "explore-rooms", element: <ExplorePage /> },
 
         { path: "explore-rooms/:capacity", element: <ExplorePage /> },
+        { path: "explore-rooms/room-details/:room_id", element: <RoomDetailsPage /> },
 
 
         {

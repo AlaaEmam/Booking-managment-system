@@ -266,10 +266,7 @@ export default function ExploreSection() {
           </Grid>
           <Grid size={{ lg: 6, md: 4, sm: 12 }}>
             <Item>
-              <Stack spacing={2}>
-                <Pagination count={10} shape="rounded" />
-                <Pagination count={10} variant="outlined" shape="rounded" />
-              </Stack>
+              
               <img src={panner} alt="" width="100%" />
             </Item>
           </Grid>
