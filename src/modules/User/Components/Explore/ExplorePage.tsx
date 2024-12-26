@@ -230,24 +230,30 @@ export default function ExplorePage() {
               </Link>
             </Grid>
           ))}
+<Grid  size={{ md: 12 }}>
+  <Pagination
+        count={totalPages}
+        page={currentPage}
+        size="large"
+        onChange={isFoundCapacity ? filterhandlePageChange : handlePageChange}
+        variant="outlined"
+        shape="rounded"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: 8,
+          textAlign: "center",
+        }}
+      />
+</Grid>
+
+
+
 
         </Grid>
 
       </Container>
-      // <Pagination
-      //   count={totalPages}
-      //   page={currentPage}
-      //   size="large"
-      //   onChange={isFoundCapacity ? filterhandlePageChange : handlePageChange}
-      //   variant="outlined"
-      //   shape="rounded"
-      //   sx={{
-      //     display: "flex",
-      //     justifyContent: "center",
-      //     marginTop: 8,
-      //     textAlign: "center",
-      //   }}
-      // />
+
 
 
     )
