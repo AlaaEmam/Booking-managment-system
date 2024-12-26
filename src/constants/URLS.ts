@@ -79,12 +79,12 @@ export const PORTALBOOKING = {
   payBooking: (id: string) => `portal/booking/${id}/pay`,
 };
 
-// export const PORTALADDS={
-//   getAdds:`admin/ads`,
-//   getAddDetails:(id: string) =>`admin/ads/${id}`
-// }
+export const PORTALROOMSCOMMENTS={
+  createComment:`portal/room-comments`,
 
-// export const FAVROOMS={
-//   getAdds:`admin/ads`,
-//   getAddDetails:(id: string) =>`admin/ads/${id}`
-// }
+}
+
+export const PORTALROOMREVIEW={
+  createReview:`portal/room-reviews`
+}
+
