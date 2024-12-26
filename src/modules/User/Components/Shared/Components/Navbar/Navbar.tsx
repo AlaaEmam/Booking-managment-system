@@ -90,7 +90,7 @@ export default function Navbar() {
                   Reviews
                 </Link>
                 <Link
-                  onClick={() => navigate("/favorites")}
+                  onClick={() => navigate("your-favorite")}
                   underline="none"
                   sx={{ color: "black", fontWeight: "500", cursor: "pointer" }}
                 >

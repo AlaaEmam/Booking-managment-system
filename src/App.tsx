@@ -121,7 +121,6 @@ function App() {
           { path: "ads-list", element: <AdsList /> },
           // { path: "ads-list/ads-form", element: <AdsForm /> },
           // { path: "ads-list/:adsId", element: <AdsForm /> },
-          { path: "favoriteroomPage", element: <FavoriteRoomPage /> },
 
           { path: "room-facility", element: <RoomFacilitiesList /> },
           {
@@ -197,7 +196,10 @@ function App() {
         { path: "explore-rooms", element: <ExplorePage /> },
         {
           path: "your-favorite",
-          element: <FavoriteRoomPage />,
+          element:
+          <ProtectedRoute loginData={loginData}>
+            <FavoriteRoomPage />
+          </ProtectedRoute>,
         },
       ],
     },
