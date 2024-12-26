@@ -83,17 +83,21 @@ export const PORTALBOOKING = {
   payBooking: (id: string) => `portal/booking/${id}/pay`,
 };
 
+export const PORTALADS={
+  getAds:`admin/ads`,
+  getAddDetails:(id: string) =>`admin/ads/${id}`
+};
+
 export const PORTALROOMSCOMMENTS={
   createComment:`portal/room-comments`,
-
-}
+};
 
 export const PORTALROOMREVIEW={
   createReview:`portal/room-reviews`
-}
+};
 
 export const FAVROOMS={
   getAddsFAVROOMS:`/api/v0/portal/favorite-rooms`,
   getAddDetailsFAVROOMS:(id: string) =>`/api/v0/portal/favorite-rooms${id}`,
 deleteDetailsFAVROOMS:(id:string)=>`/api/v0/portal/favorite-rooms/${id}`
-}
+};
