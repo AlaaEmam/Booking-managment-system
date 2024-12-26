@@ -72,7 +72,7 @@ export const PORTALUSERS = {
 };
 
 export const PORTALROOMS = {
-  //getAllRooms: `portal/rooms/available`,
+  getAllRoomsAll: `portal/rooms/available`,
   getAllRooms: (page:string,size:string)=>`portal/rooms/available?page=${page}&size=${size}`,
 
   getRoomDetails: (num: string) => `portal/rooms/${num}`,

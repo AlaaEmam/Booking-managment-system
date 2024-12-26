@@ -25,7 +25,7 @@ export default function DataHomePage() {
 
   const getRooms = async () => {
     try {
-      const response = await axiosInstance.get(PORTALROOMS.getAllRooms,{
+      const response = await axiosInstance.get(PORTALROOMS.getAllRoomsAll,{
         params: {
           size: 10 ,
           page: 1,
@@ -69,6 +69,7 @@ export default function DataHomePage() {
           {ads.filter(ad => ad.isActive).map((ad) => ( 
             <Grid item key={ad._id}>
               <RoomsCard
+                _id={ad.room?._id || 'default-id'}
                 title={ad.room?.roomNumber || 'No Room Number'} 
                 location='Bogor, Indonesia'
                 imageUrl={ad.room?.images[0] || defaultImage} 
@@ -88,12 +89,13 @@ export default function DataHomePage() {
         {rooms.map((room) => (
           <Grid item key={room._id}>
             <RoomsCard
-              title={room.roomNumber}
-              location='Bogor, Indonesia'
-              imageUrl={room.images[0]} 
-              price={room.price}
-              discount={`${room.discount} Discount`} 
-            />
+            _id={room._id}
+            title={room.roomNumber}
+            location="Bogor, Indonesia"
+            imageUrl={room.images[0]} 
+            price={room.price}
+            discount={`${room.discount} Discount`} 
+          />
           </Grid>
         ))}
       </Grid>

@@ -7,8 +7,6 @@ import UsersReview from './../UsersReview/UsersReview';
 export default function HomePage() {
   return (
     <>
-    
-    <div>HomePage</div>
     <ExploreSection/>
     <FavoriteRoomSection/>
     <DataHomePage/>
