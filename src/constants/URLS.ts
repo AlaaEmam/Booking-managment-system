@@ -83,10 +83,10 @@ export const PORTALBOOKING = {
   payBooking: (id: string) => `portal/booking/${id}/pay`,
 };
 
-// export const PORTALADDS={
-//   getAdds:`admin/ads`,
-//   getAddDetails:(id: string) =>`admin/ads/${id}`
-// }
+export const PORTALADS={
+  getAds:`admin/ads`,
+  getAddDetails:(id: string) =>`admin/ads/${id}`
+}
 
 // export const FAVROOMS={
 //   getAdds:`admin/ads`,
