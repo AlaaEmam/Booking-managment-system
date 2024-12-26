@@ -175,20 +175,15 @@ export default function ExplorePage() {
                 }}
                 >
                   <Link color="inherit" to="/">
-                    MUI
+                    home
                   </Link>
-                  <Link
-                    color="inherit"
-                    to="/material-ui/getting-started/installation/"
-                  >
-                    Core
-                  </Link>
+
                   <Link
                     color="text.primary"
-                    to="/material-ui/react-breadcrumbs/"
+                    to="/"
                     aria-current="page"
                   >
-                    Breadcrumbs
+                    explore
                   </Link>
                 </Breadcrumbs>
               </div>
