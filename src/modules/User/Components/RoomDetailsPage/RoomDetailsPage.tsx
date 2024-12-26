@@ -235,7 +235,6 @@ export default function RoomDetailsPage() {
             {...register("startDate",{
               required:"please select your date"
             })}
-            renderInput={(params:any) => <TextField {...params} fullWidth />}
             onChange={handleStartDateChange}
           />
           <Box>
@@ -249,8 +248,6 @@ export default function RoomDetailsPage() {
                 required:"please select your date"
               })}
               onChange={handleEndDateChange}
-              
-              renderInput={(params:any) => <TextField {...params} fullWidth />}
               minDate={startDate}
             />
           </Box>
