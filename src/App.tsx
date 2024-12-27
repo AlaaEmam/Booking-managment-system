@@ -152,7 +152,7 @@ function App() {
         },
         { path: "explore-rooms", element: <ExploarePage /> },
         { path: "explore-rooms/:capacity", element: <ExplorePage /> },
-        { path: "explore-rooms/room-details/:room_id", element: <RoomDetailsPage /> },
+     //   { path: "explore-rooms/room-details/:room_id", element: <RoomDetailsPage /> },
 
 
         {
