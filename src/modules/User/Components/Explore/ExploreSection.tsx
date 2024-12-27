@@ -19,7 +19,6 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useNavigate } from "react-router-dom";
 import panner from "../../../../assets/banner.png";
 import { DateRangePicker } from "materialui-daterange-picker";
-import Pagination from "@mui/material/Pagination";
 
 const CssTextField = styled(TextField)({
   ".MuiInputBase-input ": {
@@ -266,7 +265,7 @@ export default function ExploreSection() {
           </Grid>
           <Grid size={{ lg: 6, md: 4, sm: 12 }}>
             <Item>
-              
+
               <img src={panner} alt="" width="100%" />
             </Item>
           </Grid>

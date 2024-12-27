@@ -74,7 +74,7 @@ export default function Navbar() {
               Home
             </Link>
             <Link
-              onClick={() => navigate("/explore")}
+              onClick={() => navigate("/explore-rooms")}
               underline="none"
               sx={{ color: "black", fontWeight: "500", cursor: "pointer" }}
             >
