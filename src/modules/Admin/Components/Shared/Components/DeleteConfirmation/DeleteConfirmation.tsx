@@ -1,8 +1,7 @@
 import React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, ImageList } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import deleteconfirm from '../../../../../../assets/deleteconfirm.png';
-import { Image } from '@mui/icons-material';
 
 interface DeleteConfirmationProps {
   showDelete: boolean;
@@ -24,29 +23,31 @@ const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
       aria-labelledby="delete-confirmation-dialog-title"
       aria-describedby="delete-confirmation-dialog-description"
     >
-       <IconButton
-          edge="end"
-          color="inherit"
-          onClick={handleCloseDelete}
-          aria-label="close"
-          style={{ position: 'absolute', right: 20, top: 8 }}
-        >
-          <CloseIcon />
-        </IconButton>
+      <IconButton
+        edge="end"
+        color="inherit"
+        onClick={handleCloseDelete}
+        aria-label="close"
+        style={{ position: 'absolute', right: 20, top: 8 }}
+      >
+        <CloseIcon />
+      </IconButton>
       <DialogTitle 
-      style={{ textAlign: 'center' , fontWeight: 'bolder', marginTop: '10px'}}
-      id="delete-confirmation-dialog-title">
-        Delete This {deleteItem}
+        style={{ textAlign: 'center', fontWeight: 'bolder', marginTop: '10px' }}
+        id="delete-confirmation-dialog-title"
+      >
+        Delete This {deleteItem} ?
       </DialogTitle>
       <DialogContent>
-        <ImageList
-        sx={{ textAlign: 'center' ,marginTop: '10px'}}
+        <div style={{ textAlign: 'center', marginTop: '10px' }}>
+          <img src={deleteconfirm} alt="delete confirm" style={{ maxWidth: '100%', height: 'auto' }} />
+        </div>
+        <DialogContentText 
+          id="delete-confirmation-dialog-description" 
+          style={{ textAlign: 'center', marginTop: '20px' ,color: 'var(--dark-gray)' }}
         >
-          <img src={deleteconfirm} alt="deleteconfirm" />
-        </ImageList>
-          <DialogContentText id="delete-confirmation-dialog-description" className="mt-4">
-            Are you sure you want to delete this {deleteItem}? If you are sure, just click on delete.
-          </DialogContentText>
+          Are you sure you want to delete this {deleteItem}? If you are sure, just click on delete.
+        </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button 

@@ -29,7 +29,6 @@ export default function SideBar() {
               alt="logo"
             />{" "}
           </div>
-
           <MenuItem
             icon={<i className="bi bi-house-door"></i>}
             component={<Link to="/dashboard" />}

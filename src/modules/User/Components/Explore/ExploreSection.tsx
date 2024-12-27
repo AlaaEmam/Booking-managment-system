@@ -19,6 +19,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useNavigate } from "react-router-dom";
 import panner from "../../../../assets/banner.png";
 import { DateRangePicker } from "materialui-daterange-picker";
+// import { DateRangePicker } from "materialui-daterange-picker";
+import Pagination from "@mui/material/Pagination";
 
 const CssTextField = styled(TextField)({
   ".MuiInputBase-input ": {
@@ -141,7 +143,7 @@ export default function ExploreSection() {
                     toggle();
                   }}
                 />
-                <DateRangePicker
+                {/* <DateRangePicker
                   open={open}
                   toggle={toggle}
                   onChange={(range) => {
@@ -159,7 +161,7 @@ export default function ExploreSection() {
                       range.startDate?.toISOString()
                     );
                   }}
-                />{" "}
+                /> */}
               </div><Stack>
               {/* <Stack
                 direction={{ xs: "column", sm: "row" }}

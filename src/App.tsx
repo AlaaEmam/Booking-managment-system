@@ -1,5 +1,4 @@
 import "./App.css";
-
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthLayout from "./modules/Shared/Components/AuthLayout/AuthLayout";
 import Notfound from "./modules/Shared/Components/Notfound/Notfound";
@@ -11,7 +10,6 @@ import VerifyAccount from "./modules/Auth/Components/VerifyAccount/VerifyAccount
 import ChangePassword from "./modules/Auth/Components/ChangePassword/ChangePassword";
 import DashBoard from "./modules/Admin/Components/DashBoard/Components/DashBoard";
 import AdsList from "./modules/Admin/Components/Ads/AdsList/AdsList";
-import AdsForm from "./modules/Admin/Components/Ads/AdsForm/AdsForm";
 import BookingList from "./modules/Admin/Components/BookingList/BookingList";
 import RoomFacilitiesList from "./modules/Admin/Components/RoomFacilities/RoomFacilitiesList/RoomFacilitiesList";
 import RoomsList from "./modules/Admin/Components/Rooms/RoomsList/RoomsList";
@@ -21,6 +19,7 @@ import MasterUserLayout from "./modules/Shared/Components/MasterUserLayout/Maste
 import HomePage from "./modules/User/Components/HomePage/HomePage";
 import RoomDetailsPage from "./modules/User/Components/RoomDetailsPage/RoomDetailsPage";
 import BookingPage from "./modules/User/Components/BookingPage/BookingPage";
+import ExploarePage from "./modules/User/Components/Explore/ExplorePage";
 import FavoriteRoomPage from "./modules/User/Components/FavoriteRoomPage/FavoriteRoomPage";
 import ProtectedRoute from "./modules/Auth/Components/ProtectedRoute/ProtectedRoute";
 import { useContext } from "react";
@@ -35,43 +34,43 @@ import ExplorePage from "./modules/User/Components/Explore/ExplorePage";
 
 
 const lightTheme = createTheme({
-  // palette: {
-  //   mode: 'light',
-  //   primary: {
-  //     main: '#152C5B', // Primary blue
-  //   },
-  //   secondary: {
-  //     main: '#000000', // Black
-  //   },
-  //   background: {
-  //     default: '#ffffff', // White background
-  //     paper: '#FAFAFA', // Off-white
-  //   },
-  //   text: {
-  //     primary: '#000000', // Black text
-  //     secondary: '#ffffff', // White text for contrast
-  //   },
-  // },
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#152C5B', // Primary blue
+    },
+    secondary: {
+      main: '#000000', // Black
+    },
+    background: {
+      default: '#ffffff', // White background
+      paper: '#FAFAFA', // Off-white
+    },
+    text: {
+      primary: '#000000', // Black text
+      secondary: '#ffffff', // White text for contrast
+    },
+  },
 });
 
 const darkTheme = createTheme({
-  // palette: {
-  //   mode: 'dark',
-  //   primary: {
-  //     main: '#152C5B', // Keep primary blue
-  //   },
-  //   secondary: {
-  //   main: '#ffffff', // White text
-  //   },
-  //   background: {
-  //     default: '#121212', // Dark background
-  //     paper: '#1A1B1E', // Dark gray
-  //   },
-  //   text: {
-  //     primary: '#FFFFFF', // White text
-  //     secondary: '#000000', // Black for contrast
-  //   },
-  // },
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#152C5B', // Keep primary blue
+    },
+    secondary: {
+      main: '#ffffff', // White text
+    },
+    background: {
+      default: '#121212', // Dark background
+      paper: '#1A1B1E', // Dark gray
+    },
+    text: {
+      primary: '#FFFFFF', // White text
+      secondary: '#000000', // Black for contrast
+    },
+  },
 });
 
 function App() {
@@ -118,17 +117,18 @@ function App() {
         { index: true, element: <DashBoard /> },
 
         { path: "ads-list", element: <AdsList /> },
-        { path: "ads-list/ads-form", element: <AdsForm /> },
-        { path: "ads-list/:adsId", element: <AdsForm /> },
-
+        // { path: "ads-list/ads-form", element: <AdsForm /> },
+        // { path: "ads-list/:adsId", element: <AdsForm /> },
         { path: "room-facility", element: <RoomFacilitiesList /> },
+        {
+          path: "room-facility/facility-form",
+          element: <RoomFacilitiesList />,
+        },
+        { path: "room-facility/:facilityId", element: <RoomFacilitiesList /> },
 
         { path: "rooms-list", element: <RoomsList /> },
-        { path: "rooms-list/new-room", element: <RoomForm /> },
-        { path: "rooms-list/:roomId", element: <RoomForm /> },
-
-
-
+        { path: "rooms-list/room-form", element: <RoomFacilitiesList /> },
+        { path: "rooms-list/:roomId", element: <RoomFacilitiesList /> },
 
         { path: "booking-list", element: <BookingList /> },
         { path: "users-list", element: <UserList /> },
@@ -142,8 +142,6 @@ function App() {
         { index: true, element: <HomePage /> },
         { path: "homepage", element: <HomePage /> },
         { path: "room-details", element: <RoomDetailsPage /> },
-        { path: "explore-rooms/room-details/:roomId", element: <RoomDetailsPage /> },
-
         {
           path: "payment",
           element: (
@@ -152,28 +150,35 @@ function App() {
             </ProtectedRoute>
           ),
         },
-        { path: "explore-rooms", element: <ExplorePage /> },
-
+        { path: "explore-rooms", element: <ExploarePage /> },
         { path: "explore-rooms/:capacity", element: <ExplorePage /> },
         { path: "explore-rooms/room-details/:room_id", element: <RoomDetailsPage /> },
 
 
         {
           path: "your-favorite",
-          element: <FavoriteRoomPage />,
+          element: (
+            <ProtectedRoute loginData={loginData}>
+              <FavoriteRoomPage />
+            </ProtectedRoute>
+          ),
+
         },
       ],
     },
   ]);
 
+
+
+
   return (
     <>
-       <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <button onClick={toggleTheme}>Toggle Theme</button>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {/* <button onClick={toggleTheme}>Toggle Theme</button> */}
 
-      <ToastContainer />
-      <RouterProvider router={router}></RouterProvider>
+        <ToastContainer />
+        <RouterProvider router={router}></RouterProvider>
 
       </ThemeProvider>
 
