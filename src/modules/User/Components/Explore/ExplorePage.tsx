@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import {
   axiosInstance,
-  PORTALROOMS,
+  PORTALROOMS,baseURL
 } from "../../../../constants/URLS";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -73,7 +73,7 @@ export default function ExplorePage() {
 
     try {
       const res = await axios.get(
-        `${PORTALROOMS.getAllRooms(`${page}`, `${size}`)}`
+        `${baseURL}${PORTALROOMS.getAllRooms(`${page}`, `${size}`)}`
       );
       setRooms(res.data.data.rooms);
       settotalResult(res?.data.data.totalCount);
@@ -88,7 +88,7 @@ export default function ExplorePage() {
             setIsLoading(true)
 
       const res = await axios.get(
-          `${PORTALROOMS.filterRoom(
+          `${baseURL}${PORTALROOMS.filterRoom(
           localStorage.getItem("startDate") || Date(),
           localStorage.getItem("endDate") || Date(),
           isFoundCapacity,

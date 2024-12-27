@@ -143,7 +143,7 @@ export default function ExploreSection() {
                     toggle();
                   }}
                 />
-                {/* <DateRangePicker
+                 <DateRangePicker
                   open={open}
                   toggle={toggle}
                   onChange={(range) => {
@@ -161,7 +161,7 @@ export default function ExploreSection() {
                       range.startDate?.toISOString()
                     );
                   }}
-                /> */}
+                />
               </div><Stack>
               {/* <Stack
                 direction={{ xs: "column", sm: "row" }}
