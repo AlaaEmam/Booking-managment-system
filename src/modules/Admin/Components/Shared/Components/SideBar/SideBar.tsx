@@ -30,17 +30,6 @@ export default function SideBar() {
             />{" "}
           </div>
           <MenuItem
-  icon={<i className="bi bi-house-door"></i>}
-  component={<Link to="/dashboard" />}>
-  Home
-</MenuItem>
-<MenuItem
-  icon={<i className="bi bi-people"></i>}
-  component={<Link to="/dashboard/users-list" />}>
-  Users
-</MenuItem>
-
-          <MenuItem
             icon={<i className="bi bi-house-door"></i>}
             component={<Link to="/dashboard" />}
           >

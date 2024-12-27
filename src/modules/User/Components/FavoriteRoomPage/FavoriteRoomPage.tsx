@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { axiosInstance, FAVROOMS } from '../../../../constants/URLS';
-import { Box, Card, Typography, Grid, CardMedia, IconButton } from '@mui/material';
-import { FaHeart } from 'react-icons/fa'; // استخدام ايقونة القلب من FontAwesome
+import { Box, Card, Typography, Grid, CardMedia, IconButton, Pagination } from '@mui/material';
+import { FaHeart } from 'react-icons/fa';
 
 interface Room {
   _id: string;
@@ -16,14 +16,15 @@ interface Room {
 
 const FavoriteRoomPage = () => {
   const [favoriteRooms, setFavoriteRooms] = useState<any[]>([]);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
-  // Load favorite rooms when the component mounts
-  const loadFavoriteRooms = async () => {
+  const loadFavoriteRooms = async (page: number = 1) => {
     try {
-      const response = await axiosInstance.get(FAVROOMS.getAddsFAVROOMS);
-      console.log('Favorite Rooms Response:', response); // Display response in console
+      const response = await axiosInstance.get(FAVROOMS.getAddsFAVROOMS, { params: { page } });
       if (response.data?.data?.favoriteRooms) {
         setFavoriteRooms(response.data.data.favoriteRooms);
+        setTotalPages(Math.ceil(response.data.data.totalCount / 10));
       } else {
         console.error(response.data.message);
       }
@@ -32,21 +33,18 @@ const FavoriteRoomPage = () => {
     }
   };
 
-  useEffect(() => {
-    loadFavoriteRooms();
-  }, []);
+  const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
+    setCurrentPage(page);
+    loadFavoriteRooms(page);
+  };
 
   const deleteDetailsFAVROOMS = async (roomId: string) => {
-    console.log(roomId);
     try {
       const response = await axiosInstance.delete(FAVROOMS.deleteDetailsFAVROOMS(roomId), {
-        data: { "roomId": roomId },
+        data: { roomId },
       });
-      console.log('Delete Response:', response); // Log the response after deletion
-
       if (response.data.success) {
-        // After successful deletion, reload the favorite rooms
-        loadFavoriteRooms();
+        loadFavoriteRooms(currentPage);
       } else {
         console.error('Failed to delete the favorite room');
       }
@@ -54,6 +52,10 @@ const FavoriteRoomPage = () => {
       console.error('Error deleting favorite room:', error);
     }
   };
+
+  useEffect(() => {
+    loadFavoriteRooms();
+  }, []);
 
   return (
     <Box sx={{ padding: 4 }}>
@@ -95,14 +97,7 @@ const FavoriteRoomPage = () => {
                   height="180"
                   image={room.images[0] || '/default-image.jpg'}
                   alt={room.roomNumber}
-                  sx={{
-                    cursor: 'pointer',
-                    '&:hover': {
-                      padding: 2,
-                    },
-                  }}
                 />
-
                 <Box
                   sx={{
                     position: 'absolute',
@@ -119,7 +114,6 @@ const FavoriteRoomPage = () => {
                   </Typography>
                   <Typography variant="body2">{`Price: $${room.price}`}</Typography>
                 </Box>
-
                 <IconButton
                   sx={{
                     position: 'absolute',
@@ -132,7 +126,7 @@ const FavoriteRoomPage = () => {
                       backgroundColor: 'rgba(255, 0, 0, 0.7)',
                     },
                   }}
-                  onClick={() => deleteDetailsFAVROOMS(room._id)} // When heart icon is clicked
+                  onClick={() => deleteDetailsFAVROOMS(room._id)}
                 >
                   <FaHeart size={30} />
                 </IconButton>
@@ -141,6 +135,16 @@ const FavoriteRoomPage = () => {
           </Grid>
         ))}
       </Grid>
+
+      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          color="primary"
+          shape="rounded"
+        />
+      </Box>
     </Box>
   );
 };

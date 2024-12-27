@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // https://upskilling-egypt.com:3000
-export const baseURL = `https://upskilling-egypt.com:3000/api/v0/`;
+const baseURL = `https://upskilling-egypt.com:3000/api/v0/`;
 
 export const axiosInstance = axios.create({
   baseURL,

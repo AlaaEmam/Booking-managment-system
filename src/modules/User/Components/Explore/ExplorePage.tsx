@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import {
   axiosInstance,
-  baseURL,
   PORTALROOMS,
 } from "../../../../constants/URLS";
 import { useParams } from "react-router-dom";
@@ -74,7 +73,7 @@ export default function ExplorePage() {
 
     try {
       const res = await axios.get(
-        `${baseURL}${PORTALROOMS.getAllRooms(`${page}`, `${size}`)}`
+        `${PORTALROOMS.getAllRooms(`${page}`, `${size}`)}`
       );
       setRooms(res.data.data.rooms);
       settotalResult(res?.data.data.totalCount);
@@ -89,7 +88,7 @@ export default function ExplorePage() {
             setIsLoading(true)
 
       const res = await axios.get(
-        `${baseURL}${PORTALROOMS.filterRoom(
+          `${PORTALROOMS.filterRoom(
           localStorage.getItem("startDate") || Date(),
           localStorage.getItem("endDate") || Date(),
           isFoundCapacity,

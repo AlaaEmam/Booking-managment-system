@@ -46,7 +46,7 @@ export default function DashBoard() {
 
   let getRooms = async () => {
     let response = await axiosInstance.get(ADMINROOMS.getAllRooms);
-    let responsePortal = await axiosInstance.get(PORTALROOMS.getAllRooms);
+    let responsePortal = await axiosInstance.get(PORTALROOMS.getAllRoomsAll());
 
     console.log(response.data.data);
     console.log(responsePortal.data.data);
