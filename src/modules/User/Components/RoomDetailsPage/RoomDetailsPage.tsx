@@ -52,7 +52,7 @@ export default function RoomDetailsPage() {
 
   const getRoomsList = async () => {
     try {
-      const res = await axiosInstance.get(PORTALROOMS.getAllRooms)
+      const res = await axiosInstance.get(PORTALROOMS.getAllRoomsAll)
   
       console.log(res.data.data.rooms);
       // console.log(res?.data?.data?.rooms[0]._id);
