@@ -38,8 +38,9 @@ export default function RoomDetailsPage() {
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
   
   const [value, setValue] = React.useState<number | null>(0);
-  const {register, handleSubmit, formState: { errors },}=useForm();
-  
+  const {register:registerDate, handleSubmit:handleSubmitDate, formState: { errors:errorDate },}=useForm();
+  const {register:registerRate, handleSubmit:handleSubmitRate , formState: { errors:errorRate },}=useForm();
+  const {register:registerComment, handleSubmit:handleSubmitComment , formState: { errors:errorComment },}=useForm();
   
   const [roomDetails, setRoomDetails]=useState<rooms_IF[]>([])
 
@@ -237,7 +238,7 @@ export default function RoomDetailsPage() {
           </Grid>
         </Box>
         <Box component={'form'}
-          onSubmit={handleSubmit(onSubmitDate)}
+          onSubmit={handleSubmitDate(onSubmitDate)}
           sx={{ border:2, borderRadius:2, 
           borderColor:"rgb(151, 151, 151)",  
           width: '40%', padding:5, marginBottom:30}}>
@@ -252,7 +253,7 @@ export default function RoomDetailsPage() {
             sx={{marginTop:2}}
             label="Start Date"
             value={startDate}
-            {...register("startDate",{
+            {...registerDate("startDate",{
               required:"please select your date"
             })}
             onChange={handleStartDateChange}
@@ -264,7 +265,7 @@ export default function RoomDetailsPage() {
               label="End Date"
               value={endDate}
               disabled={!startDate}
-              {...register("startDate",{
+              {...registerDate("endDate",{
                 required:"please select your date"
               })}
               onChange={handleEndDateChange}
@@ -286,13 +287,13 @@ export default function RoomDetailsPage() {
         spacing={2}
         direction={'row'}
       >
-        <Rate onSubmitRate={onSubmitRate}/>
+        {/* <Rate onSubmitRate={onSubmitRate}/> */}
 
-        {/* <Box sx={{  width: '30%'}}
+        <Box sx={{  width: '30%'}}
           component="form" 
           noValidate
           autoComplete="off"
-          onSubmit={handleSubmit(onSubmitRate)}
+          onSubmit={handleSubmitRate(onSubmitRate)}
         >
           <Stack spacing={10} direction={'row'} sx={{marginBottom:5, justifyContent:'space-between'}}>
             
@@ -300,10 +301,10 @@ export default function RoomDetailsPage() {
             
               Rate 
             </Typography>
-            <FormControl {...register("rate",{
+            <FormControl {...registerRate("rate",{
               required:"please rate this room"
             })}
-            error={!!errors.rate}
+            error={!!errorRate.rate}
             >
 
               <Rating 
@@ -322,28 +323,29 @@ export default function RoomDetailsPage() {
           </Typography>
           
           <TextField sx={{width:'90%'}} multiline
-          rows={6} {...register("review", {
+          rows={6} {...registerRate("review", {
             required:"Please put your review before submitting"
           })}
-          error={!!errors.review}/>
+          error={!!errorRate.review}/>
           
           
           <Button sx={{marginTop:5, paddingX:10, color:'white', backgroundColor:'rgb(50, 82, 223)'}}>Rate</Button>
           
         
-        </Box> */}
+        </Box>
 
-        <Comments onSubmitComment={onSubmitComment}/>
-        {/* <Box
+        {/* <Comments onSubmitComment={onSubmitComment}/> */}
+        <Box
           component="form" 
           noValidate
           autoComplete="off"  
           sx={{  width: '30%', paddingLeft:5}}
           
-          onSubmit={handleSubmit(onSubmitComment)}
-          
+          onSubmit={handleSubmitComment(onSubmitComment)}
           >
-          <Stack>
+          <Stack {...registerComment(`${room_id}`,{
+            required:"Please put your comment here"
+          })}>
             <Typography variant='h5'>
               Add your comment
             </Typography>
@@ -351,10 +353,10 @@ export default function RoomDetailsPage() {
             <TextField 
             sx={{width:'100%', marginTop:10}} 
             multiline rows={6}
-            {...register("comment",{
+            {...registerComment("comment",{
               required:"Please put your comment here"
             })}
-            error={!!errors.comment}
+            error={!!errorComment.comment}
             />
             <Box sx={{marginTop:5, textAlign:'right'}}>
               <Button sx={{ color:'white', paddingX:10,
@@ -362,7 +364,7 @@ export default function RoomDetailsPage() {
 
             </Box>
           </Stack>
-        </Box> */}
+        </Box>
       </Stack>
       </Box>
 
