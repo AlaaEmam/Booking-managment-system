@@ -18,17 +18,20 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
+import { Rate } from './Rate';
+import { Comments } from './Comments';
 interface rooms_IF {
   _id: number;
   roomNumber: String;
-  price: String;
+  price: number;
   capacity: String;
-  discount: String;
+  discount: number;
   images: string[];
   facilities: string[];
 }
 export default function RoomDetailsPage() {
-
+  const params =useParams();
   const [rooms, setRooms]=React.useState<rooms_IF[]>([]);
   
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
@@ -37,6 +40,10 @@ export default function RoomDetailsPage() {
   const [value, setValue] = React.useState<number | null>(0);
   const {register, handleSubmit, formState: { errors },}=useForm();
   
+  
+  const [roomDetails, setRoomDetails]=useState<rooms_IF[]>([])
+
+  const room_id=params.room_id;
 
   const handleStartDateChange = (newStartDate: Dayjs | null ) => {
     setStartDate(newStartDate);
@@ -62,6 +69,17 @@ export default function RoomDetailsPage() {
     }
 
   };
+
+  const getRoomDetails=async()=>{
+    try{
+      const res=await axiosInstance.get(PORTALROOMS.getRoomDetails(room_id))
+      console.log(res.data.data.room);
+      setRoomDetails(res.data.data.room);
+    }catch(error){
+      console.log(error)
+    }
+  }
+
 
   
   const onSubmitDate=async()=>{
@@ -105,7 +123,8 @@ export default function RoomDetailsPage() {
     
     
   useEffect(()=>{
-    getRoomsList()
+    getRoomsList();
+    getRoomDetails()
   },[]);
   
   return (
@@ -117,7 +136,7 @@ export default function RoomDetailsPage() {
       </Stack>
 
       <Stack direction={'row'} sx={{justifyContent:'center', alignItems:"center"}} spacing={1}>
-        <img width={500} style={{borderRadius:10}} height={500} src={bookingImg} alt="" />
+        <img width={500} style={{borderRadius:10}} height={500} src={roomDetails.images} alt="" />
         <Stack direction={'column'} spacing={1}>
           <ImageList sx={{ width: 300, height: 500 }}  cols={1} rowHeight={164}>
             <ImageListItem sx={{borderRadius:10}}>
@@ -222,9 +241,10 @@ export default function RoomDetailsPage() {
           sx={{ border:2, borderRadius:2, 
           borderColor:"rgb(151, 151, 151)",  
           width: '40%', padding:5, marginBottom:30}}>
+
           <Typography variant='h5'>Start booking</Typography>
-          <Typography variant='h3'>${(rooms.price-rooms.discount)} per night</Typography>
-          <Typography color='error' variant='subtitle1'>Discount 20%</Typography>
+          <Typography variant='h3'>${(roomDetails?.price-roomDetails?.discount)} per night</Typography>
+          <Typography color='error' variant='subtitle1'>Discount {Math.floor((roomDetails?.discount/roomDetails?.price)* 100)}%</Typography>
           
           
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -266,8 +286,9 @@ export default function RoomDetailsPage() {
         spacing={2}
         direction={'row'}
       >
-        
-        <Box sx={{  width: '30%'}}
+        <Rate onSubmitRate={onSubmitRate}/>
+
+        {/* <Box sx={{  width: '30%'}}
           component="form" 
           noValidate
           autoComplete="off"
@@ -287,8 +308,10 @@ export default function RoomDetailsPage() {
 
               <Rating 
                 value={value}
+                
                 onChange={(event, newValue) => {
-                  setValue(newValue);  
+                  setValue(newValue);
+                    
                 }}/>
             
             </FormControl>
@@ -304,18 +327,21 @@ export default function RoomDetailsPage() {
           })}
           error={!!errors.review}/>
           
-          <Box sx={{marginTop:5}}>
-            <Button sx={{paddingX:10, color:'white', backgroundColor:'rgb(50, 82, 223)'}}>Rate</Button>
-          </Box>
+          
+          <Button sx={{marginTop:5, paddingX:10, color:'white', backgroundColor:'rgb(50, 82, 223)'}}>Rate</Button>
+          
         
-        </Box>
+        </Box> */}
 
-        <Box
+        <Comments onSubmitComment={onSubmitComment}/>
+        {/* <Box
           component="form" 
           noValidate
           autoComplete="off"  
           sx={{  width: '30%', paddingLeft:5}}
+          
           onSubmit={handleSubmit(onSubmitComment)}
+          
           >
           <Stack>
             <Typography variant='h5'>
@@ -336,7 +362,7 @@ export default function RoomDetailsPage() {
 
             </Box>
           </Stack>
-        </Box>
+        </Box> */}
       </Stack>
       </Box>
 

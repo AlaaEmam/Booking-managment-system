@@ -32,6 +32,7 @@ const FavoriteRoomSection = () => {
     const callAds = async () => {
       try {
         const response = await axios.get('https://upskilling-egypt.com:3000/api/v0/portal/ads');
+        console.log(response.data.data.ads)
         if (response.data.success) {
           setAds(response.data.data.ads);
         }
@@ -151,7 +152,7 @@ const FavoriteRoomSection = () => {
                       "& .image": { filter: "brightness(0.8)" },
                     },
                   }}
-                  onClick={() => handleCardClick(ad._id)} // عند الضغط على الكارد
+                   // عند الضغط على الكارد
                 >
                   <CardMedia
                     className="image"
@@ -217,7 +218,7 @@ const FavoriteRoomSection = () => {
                 }}
               >
                 <IconButton sx={{ width: '40px', height: '40px' }}>
-                <Link>
+                <Link >
                   <VisibilityIcon
                   style={{ 
                     color: 'white', 
@@ -230,7 +231,7 @@ const FavoriteRoomSection = () => {
                     e.currentTarget.style.color = 'white';
                     e.currentTarget.style.transform = 'scale(1)';
                   }} 
-                  onClick={() => navigate("room-details")}
+                  onClick={()=>{navigate(`room-details/${ad?.room._id}`)}}
                   />
                 </Link>
                 </IconButton>
@@ -250,7 +251,7 @@ const FavoriteRoomSection = () => {
                   e.currentTarget.style.transform = 'scale(1)';
                 }}
                 onClick={
-                  () => { handleCardClick(ads[0]._id); }}
+                  () => { handleCardClick(ad._id); }}
                 /></Link>
                 </IconButton>
               </Box>
