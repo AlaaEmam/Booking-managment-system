@@ -44,6 +44,22 @@ const MenuProps = {
   },
 };
 
+const CustomStyledTextField = styled(TextField)({
+  '& label': {
+    color: 'var(--dark-gray)', // Change this to your desired color
+  }
+});
+
+Select
+
+const CustomStyledSelect = styled(OutlinedInput)({
+  '& label': {
+    color: 'var(--dark-gray)', // Change this to your desired color
+  }
+});
+
+
+
 function getStyles(name: string, facilty: string[], theme: Theme) {
   return {
     fontWeight: facilty.includes(name)
@@ -102,7 +118,7 @@ export default function RoomForm() {
       price: 0,
       capacity: 0,
       discount: 0,
-      facilities: [],
+      facilities:"kkk",
     },
   });
   const onSubmit: SubmitHandler<IFormRoom> = async (data) => {
@@ -214,11 +230,12 @@ console.log("result", params?.roomId )
             autoComplete="off"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <TextField
+            <CustomStyledTextField
               label="Room Number"
               fullWidth
               variant="outlined"
               type="text"
+
               sx={{
                 marginBottom: "1rem ",
               }}
@@ -234,7 +251,7 @@ console.log("result", params?.roomId )
                 justifyContent: "space-between",
               }}
             >
-              <TextField
+              <CustomStyledTextField
                 label="Price"
                 fullWidth
                 variant="outlined"
@@ -250,7 +267,7 @@ console.log("result", params?.roomId )
                 helperText={errors.price ? errors.price.message : ""} // Display error message
               />
 
-              <TextField
+              <CustomStyledTextField
                 label="capacity"
                 fullWidth
                 variant="outlined"
@@ -272,7 +289,7 @@ console.log("result", params?.roomId )
                 justifyContent: "space-between",
               }}
             >
-              <TextField
+              <CustomStyledTextField
                 id="outlined-basic"
                 label="Discount"
                 fullWidth
@@ -311,7 +328,7 @@ console.log("result", params?.roomId )
                   })}
                   error={!!errors.facilities}
                   onChange={handleChange}
-                  input={<OutlinedInput label="facility" />}
+                  input={<CustomStyledSelect label="facility" />}
                   MenuProps={MenuProps}
                 >
                   {facility.map((fac) => (

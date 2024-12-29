@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // https://upskilling-egypt.com:3000
-const baseURL = `https://upskilling-egypt.com:3000/api/v0/`;
+export const baseURL = `https://upskilling-egypt.com:3000/api/v0/`;
 
 export const axiosInstance = axios.create({
   baseURL,
@@ -21,6 +21,10 @@ export const ADMINAUTHURLS = {
 export const ADMINUSERS = {
   getAllUsers: `admin/users`,
   getUserProfile: (id: string) => `admin/users/${id}`,
+};
+
+export const ADMINChart = {
+  getChart: `admin/dashboard`,
 };
 
 export const ADMINROOMS = {
@@ -68,8 +72,12 @@ export const PORTALUSERS = {
 };
 
 export const PORTALROOMS = {
-  getAllRooms: `portal/rooms/available`,
+  //getAllRooms: `portal/rooms/available`,
+  getAllRooms: (page:string,size:string)=>`portal/rooms/available?page=${page}&size=${size}`,
+
   getRoomDetails: (num: string) => `portal/rooms/${num}`,
+  filterRoom:(startDate:string,endDate:string,capacity:string,page:string,size:string)=>`portal/rooms/available?page=1&size=10&startDate=${startDate}&endDate=${endDate}&capacity=${capacity}&page=${page}&size=${size}`
+
 };
 
 export const PORTALBOOKING = {

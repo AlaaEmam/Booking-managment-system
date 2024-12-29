@@ -21,7 +21,6 @@ import MasterUserLayout from "./modules/Shared/Components/MasterUserLayout/Maste
 import HomePage from "./modules/User/Components/HomePage/HomePage";
 import RoomDetailsPage from "./modules/User/Components/RoomDetailsPage/RoomDetailsPage";
 import BookingPage from "./modules/User/Components/BookingPage/BookingPage";
-import ExploarePage from "./modules/User/Components/Explore/ExplorePage";
 import FavoriteRoomPage from "./modules/User/Components/FavoriteRoomPage/FavoriteRoomPage";
 import ProtectedRoute from "./modules/Auth/Components/ProtectedRoute/ProtectedRoute";
 import { useContext } from "react";
@@ -36,43 +35,43 @@ import ExplorePage from "./modules/User/Components/Explore/ExplorePage";
 
 
 const lightTheme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: {
-      main: '#152C5B', // Primary blue
-    },
-    secondary: {
-      main: '#000000', // Black
-    },
-    background: {
-      default: '#ffffff', // White background
-      paper: '#FAFAFA', // Off-white
-    },
-    text: {
-      primary: '#000000', // Black text
-      secondary: '#ffffff', // White text for contrast
-    },
-  },
+  // palette: {
+  //   mode: 'light',
+  //   primary: {
+  //     main: '#152C5B', // Primary blue
+  //   },
+  //   secondary: {
+  //     main: '#000000', // Black
+  //   },
+  //   background: {
+  //     default: '#ffffff', // White background
+  //     paper: '#FAFAFA', // Off-white
+  //   },
+  //   text: {
+  //     primary: '#000000', // Black text
+  //     secondary: '#ffffff', // White text for contrast
+  //   },
+  // },
 });
 
 const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#152C5B', // Keep primary blue
-    },
-    secondary: {
-      main: '#ffffff', // White text
-    },
-    background: {
-      default: '#121212', // Dark background
-      paper: '#1A1B1E', // Dark gray
-    },
-    text: {
-      primary: '#FFFFFF', // White text
-      secondary: '#000000', // Black for contrast
-    },
-  },
+  // palette: {
+  //   mode: 'dark',
+  //   primary: {
+  //     main: '#152C5B', // Keep primary blue
+  //   },
+  //   secondary: {
+  //   main: '#ffffff', // White text
+  //   },
+  //   background: {
+  //     default: '#121212', // Dark background
+  //     paper: '#1A1B1E', // Dark gray
+  //   },
+  //   text: {
+  //     primary: '#FFFFFF', // White text
+  //     secondary: '#000000', // Black for contrast
+  //   },
+  // },
 });
 
 function App() {
@@ -143,6 +142,8 @@ function App() {
         { index: true, element: <HomePage /> },
         { path: "homepage", element: <HomePage /> },
         { path: "room-details", element: <RoomDetailsPage /> },
+        { path: "explore-rooms/room-details/:roomId", element: <RoomDetailsPage /> },
+
         {
           path: "payment",
           element: (
@@ -152,6 +153,11 @@ function App() {
           ),
         },
         { path: "explore-rooms", element: <ExplorePage /> },
+
+        { path: "explore-rooms/:capacity", element: <ExplorePage /> },
+        { path: "explore-rooms/room-details/:room_id", element: <RoomDetailsPage /> },
+
+
         {
           path: "your-favorite",
           element: <FavoriteRoomPage />,
@@ -167,10 +173,10 @@ function App() {
       <button onClick={toggleTheme}>Toggle Theme</button>
 
       <ToastContainer />
-      <RouterProvider router={router}></RouterProvider>    
-      
+      <RouterProvider router={router}></RouterProvider>
+
       </ThemeProvider>
-      
+
     </>
   );
 }
