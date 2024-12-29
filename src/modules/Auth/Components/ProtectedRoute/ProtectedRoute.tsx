@@ -1,22 +1,32 @@
-import React, { ReactNode } from "react";
-import { Navigate } from "react-router-dom";
+import React, { ReactNode, useEffect, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
 interface ProtectedRouteProps {
   loginData: any; // يمكن تحديد النوع بناءً على محتوى loginData
   children: ReactNode;
 }
 
-const ProtectedRoute = ({ loginData, children }: ProtectedRouteProps) => {
-  // التحقق من أن loginData موجود وصالح أو أن الـ token موجود وغير فارغ
-  const token = localStorage.getItem("token");
-  const isLoggedIn = token && loginData; // تحقق مزدوج من أن loginData موجود و token غير فارغ
+const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+  let navigate = useNavigate();
 
-  if (isLoggedIn) {
-    return <>{children}</>; // عرض الـ children إذا كان المستخدم مسجل الدخول
-  } else {
-    return <Navigate to="/login" />; // إعادة التوجيه إلى صفحة تسجيل الدخول إذا لم يكن مسجل الدخول
+  const token = localStorage.getItem("token");
+  // const isLoggedIn = token && loginData;
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (token) {
+      setIsLoading(false);
+    } else {
+      navigate("/auth/login");
+    }
+  }, [token]);
+
+  if (isLoading) {
+    // return <>{children}</>; // Render children if user is logged in
+    return <div>Loading...</div>;
   }
+
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;
-

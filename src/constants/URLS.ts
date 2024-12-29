@@ -1,87 +1,107 @@
-import axios from "axios";
+import axios from 'axios';
 
 // https://upskilling-egypt.com:3000
-const baseURL=`http://154.41.228.234:3000`
+export const baseURL = `https://upskilling-egypt.com:3000/api/v0/`;
 
-export  const axiosInstance=axios.create({baseURL, 
-  headers:{Authorization:localStorage.getItem("token")} })
+export const axiosInstance = axios.create({
+  baseURL,
+  headers: { Authorization: localStorage.getItem('token') },
+});
 
 // Admin
-export const ADMINAUTHURLS={
-  createUser:`/api/v0/admin/users`,
-  forgetPassword:`/api/v0/admin/users`,
-  changePassword:`/api/v0/admin/users/change-password`,
-  resetPassword:`/api/v0/admin/users/reset-password`,
-  login:`/api/v0/admin/users/login`,
-}
+export const ADMINAUTHURLS = {
+  createUser: `admin/users`,
+  forgetPassword: `portal/users/forgot-password`,
 
-export const ADMINUSERS={
-  getAllUsers:`/api/v0/admin/users`,
-  getUserProfile:(id: string) =>`/api/v0/admin/users/${id}`
-}
+  changePassword: `admin/users/change-password`,
+  resetPassword: `admin/users/reset-password`,
+  login: `admin/users/login`,
+};
 
-export const ADMINROOMS={
-  createRoom:`/api/v0/admin/rooms`,
-  updateRoom:(id: string) =>`/api/v0/admin/rooms/${id}`,
-  getRoomDetails:(id: string) =>`/api/v0/admin/rooms/${id}`,
-  deleteRoom:(id: string) =>`/api/v0/admin/rooms/${id}`,
-  getAllRooms:`/api/v0/admin/rooms`
-}
+export const ADMINUSERS = {
+  getAllUsers: `admin/users`,
+  getUserProfile: (id: string) => `admin/users/${id}`,
+};
 
-export const ADMINBOOKING={
-  getBookingDetails:(id: string) =>`/api/v0/admin/booking/${id}`,
-  deleteBooking:(id: string) =>`/api/v0/admin/booking/${id}`,
-  getAllBooking:`/api/v0/admin/booking`
-}
+export const ADMINChart = {
+  getChart: `admin/dashboard`,
+};
 
-export const ADMINROOMFACILITIES={
-  createRoomFacilities:`/api/v0/admin/room-facilities`,
-  getRoomFacilities:`/api/v0/admin/room-facilities`,
-  getRoomFacilityDetails:(id: string) =>`/api/v0/admin/room-facilities/${id}`,
-  deleteRoomFacilities:(id: string) =>`/api/v0/admin/room-facilities/${id}`,
-  updateRoomFacilities:(id:string)=>`/api/v0/admin/room-facilities/${id}`
-}
+export const ADMINROOMS = {
+  createRoom: `admin/rooms`,
+  updateRoom: (id: string) => `admin/rooms/${id}`,
+  getRoomDetails: (id: string) => `admin/rooms/${id}`,
+  deleteRoom: (id: string) => `admin/rooms/${id}`,
+  getAllRooms: `admin/rooms`,
+};
 
-export const ADMINADDS={
-  getAdds:`/api/v0/admin/ads`,
-  getAddDetails:(id: string) =>`/api/v0/admin/ads/${id}`,
-  deleteAdd:(id: string) =>`/api/v0/admin/ads/${id}`,
-  updateAdd:(id:string)=>`/api/v0/admin/ads/${id}`
-}
+export const ADMINBOOKING = {
+  getBookingDetails: (id: string) => `admin/booking/${id}`,
+  deleteBooking: (id: string) => `admin/booking/${id}`,
+  getAllBooking: `admin/booking`,
+};
+
+export const ADMINROOMFACILITIES = {
+  createRoomFacilities: `admin/room-facilities`,
+  getRoomFacilities: `admin/room-facilities`,
+  getRoomFacilityDetails: (id: string) => `admin/room-facilities/${id}`,
+  deleteRoomFacilities: (id: string) => `admin/room-facilities/${id}`,
+  updateRoomFacilities: (id: string) => `admin/room-facilities/${id}`,
+};
+
+export const ADMINADS = {
+  getAds: `admin/ads`,
+  getAdDetails: (id: string) => `admin/ads/${id}`,
+  deleteAd: (id: string) => `admin/ads/${id}`,
+  updateAd: (id: string) => `admin/ads/${id}`,
+};
 // portal users
 
-export const PORTALAUTHURLS={
-  createUser:`/api/v0/portal/users`,
-  forgetPassword:`/api/v0/portal/users/forgot-password`,
-  changePassword:`/api/v0/portal/users/change-password`,
-  resetPassword:`/api/v0/portal/users/reset-password`,
-  login:`/api/v0/portal/users/login`,
-}
+export const PORTALAUTHURLS = {
+  createUser: `portal/users`,
+  forgetPassword: `portal/users/forgot-password`,
+  changePassword: `portal/users/change-password`,
+  resetPassword: `portal/users/reset-password`,
+  login: `portal/users/login`,
+};
 
-export const PORTALUSERS={
-  getUserProfile:(id: string) =>`/api/v0/portal/users/${id}`,
-  GOOGLEAUTH:`/api/v0/portal/users/auth/google`, 
-  FACEBOOKAUTH:`/api/v0/portal/users/auth/facebook`,
-}
+export const PORTALUSERS = {
+  getUserProfile: (id: string) => `portal/users/${id}`,
+  GOOGLEAUTH: `portal/users/auth/google`,
+  FACEBOOKAUTH: `portal/users/auth/facebook`,
+};
 
-export const PORTALROOMS={
-  getAllRooms:`/api/v0/portal/rooms/available`,
-  getRoomDetails:(num: string) =>`/api/v0/portal/rooms/${num}`
-}
+export const PORTALROOMS = {
+  getAllRoomsAll: `portal/rooms/available`,
+  getAllRooms: (page:string,size:string)=>`portal/rooms/available?page=${page}&size=${size}`,
 
-export const PORTALBOOKING={
-  createBooking:`/api/v0/portal/booking`,
-  getBookingDetails:(id: string) =>`/api/v0/portal/booking/${id}`,
-  getAllMyBooking:`/api/v0/portal/booking/my`,
-  payBooking:(id: string) =>`/api/v0/portal/booking/${id}/pay`
-}
+  getRoomDetails: (num: string) => `portal/rooms/${num}`,
+  filterRoom:(startDate:string,endDate:string,capacity:string,page:string,size:string)=>`portal/rooms/available?page=1&size=10&startDate=${startDate}&endDate=${endDate}&capacity=${capacity}&page=${page}&size=${size}`
 
-// export const PORTALADDS={
-//   getAdds:`/api/v0/admin/ads`,
-//   getAddDetails:(id: string) =>`/api/v0/admin/ads/${id}`
-// }
+};
 
-// export const FAVROOMS={
-//   getAdds:`/api/v0/admin/ads`,
-//   getAddDetails:(id: string) =>`/api/v0/admin/ads/${id}`
-// }
+export const PORTALBOOKING = {
+  createBooking: `portal/booking`,
+  getBookingDetails: (id: string) => `portal/booking/${id}`,
+  getAllMyBooking: `portal/booking/my`,
+  payBooking: (id: string) => `portal/booking/${id}/pay`,
+};
+
+export const PORTALADS={
+  getAds:`admin/ads`,
+  getAddDetails:(id: string) =>`admin/ads/${id}`
+};
+
+export const PORTALROOMSCOMMENTS={
+  createComment:`portal/room-comments`,
+};
+
+export const PORTALROOMREVIEW={
+  createReview:`portal/room-reviews`
+};
+
+export const FAVROOMS={
+  getAddsFAVROOMS:`/api/v0/portal/favorite-rooms`,
+  getAddDetailsFAVROOMS:(id: string) =>`/api/v0/portal/favorite-rooms${id}`,
+deleteDetailsFAVROOMS:(id:string)=>`/api/v0/portal/favorite-rooms/${id}`
+};
