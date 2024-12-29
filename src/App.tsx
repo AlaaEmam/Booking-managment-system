@@ -25,7 +25,6 @@ import FavoriteRoomPage from "./modules/User/Components/FavoriteRoomPage/Favorit
 import ProtectedRoute from "./modules/Auth/Components/ProtectedRoute/ProtectedRoute";
 import { useContext } from "react";
 import { AuthContext, useAuth } from "./context/AuthContext";
-import { AuthContext, useAuth } from "./context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -33,7 +32,6 @@ import { CssBaseline } from '@mui/material';
 import React from "react";
 import RoomForm from "./modules/Admin/Components/Rooms/RoomForm/RoomForm";
 import ExplorePage from "./modules/User/Components/Explore/ExplorePage";
-
 
 const lightTheme = createTheme({
   palette: {
@@ -74,55 +72,8 @@ const darkTheme = createTheme({
     },
   },
 });
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
-import React from "react";
-import RoomForm from "./modules/Admin/Components/Rooms/RoomForm/RoomForm";
-import ExplorePage from "./modules/User/Components/Explore/ExplorePage";
-
-
-const lightTheme = createTheme({
-  // palette: {
-  //   mode: 'light',
-  //   primary: {
-  //     main: '#152C5B', // Primary blue
-  //   },
-  //   secondary: {
-  //     main: '#000000', // Black
-  //   },
-  //   background: {
-  //     default: '#ffffff', // White background
-  //     paper: '#FAFAFA', // Off-white
-  //   },
-  //   text: {
-  //     primary: '#000000', // Black text
-  //     secondary: '#ffffff', // White text for contrast
-  //   },
-  // },
-});
-
-const darkTheme = createTheme({
-  // palette: {
-  //   mode: 'dark',
-  //   primary: {
-  //     main: '#152C5B', // Keep primary blue
-  //   },
-  //   secondary: {
-  //   main: '#ffffff', // White text
-  //   },
-  //   background: {
-  //     default: '#121212', // Dark background
-  //     paper: '#1A1B1E', // Dark gray
-  //   },
-  //   text: {
-  //     primary: '#FFFFFF', // White text
-  //     secondary: '#000000', // Black for contrast
-  //   },
-  // },
-});
 
 function App() {
-
   const [theme, setTheme] = React.useState(lightTheme);
 
   const toggleTheme = () => {
@@ -131,31 +82,14 @@ function App() {
 
   const authContext = useContext(AuthContext);
   const { loginData } = useAuth();
+
   if (!authContext) {
-    console.error(
-      "AuthContext not found. Make sure it's wrapped in AuthContextProvider."
-    );
-    return null;
-  }
-
-  const [theme, setTheme] = React.useState(lightTheme);
-
-  const toggleTheme = () => {
-    setTheme((prev) => (prev.palette.mode === 'light' ? darkTheme : lightTheme));
-  };
-
-  const authContext = useContext(AuthContext);
-  const { loginData } = useAuth();
-  if (!authContext) {
-    console.error(
-      "AuthContext not found. Make sure it's wrapped in AuthContextProvider."
-    );
+    console.error("AuthContext not found. Make sure it's wrapped in AuthContextProvider.");
     return null;
   }
 
   const router = createBrowserRouter([
     {
-      path: "auth",
       path: "auth",
       element: <AuthLayout />,
       errorElement: <Notfound />,
@@ -179,36 +113,26 @@ function App() {
       errorElement: <Notfound />,
       children: [
         { index: true, element: <DashBoard /> },
-
         { path: "ads-list", element: <AdsList /> },
         { path: "ads-list/ads-form", element: <AdsForm /> },
         { path: "ads-list/:adsId", element: <AdsForm /> },
         { path: "room-facility", element: <RoomFacilitiesList /> },
-
         { path: "rooms-list", element: <RoomsList /> },
         { path: "rooms-list/new-room", element: <RoomForm /> },
         { path: "rooms-list/:roomId", element: <RoomForm /> },
-
-
-
-
         { path: "booking-list", element: <BookingList /> },
         { path: "users-list", element: <UserList /> },
       ],
     },
     {
       path: "/",
-    {
-      path: "/",
       element: <MasterUserLayout />,
       errorElement: <Notfound />,
       children: [
         { index: true, element: <HomePage /> },
-        { index: true, element: <HomePage /> },
         { path: "homepage", element: <HomePage /> },
         { path: "room-details", element: <RoomDetailsPage /> },
         { path: "explore-rooms/room-details/:roomId", element: <RoomDetailsPage /> },
-
         {
           path: "payment",
           element: (
@@ -218,11 +142,8 @@ function App() {
           ),
         },
         { path: "explore-rooms", element: <ExplorePage /> },
-
         { path: "explore-rooms/:capacity", element: <ExplorePage /> },
         { path: "explore-rooms/room-details/:room_id", element: <RoomDetailsPage /> },
-
-
         {
           path: "your-favorite",
           element: (
@@ -230,35 +151,18 @@ function App() {
               <FavoriteRoomPage />
             </ProtectedRoute>
           ),
-
         },
       ],
     },
   ]);
 
-
-
-
   return (
-    <>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <button onClick={toggleTheme}>Toggle Theme</button>
-
-        <ToastContainer />
-        <RouterProvider router={router}></RouterProvider>
-
-      </ThemeProvider>
-       <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <button onClick={toggleTheme}>Toggle Theme</button>
-
       <ToastContainer />
-      <RouterProvider router={router}></RouterProvider>
-
-      </ThemeProvider>
-
-    </>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   );
 }
 
