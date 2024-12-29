@@ -55,15 +55,9 @@ function getStyles(name: string, facilty: string[], theme: Theme) {
 // end sec select
 
 interface facility {
-<<<<<<< HEAD
-  _id: string;
-  userName: string;
-  name: string;
-=======
   _id: String;
   userName: String;
   name: String;
->>>>>>> 1d179f8d859c78e16e64194284afe8bb12cd0666
 }
 
 const VisuallyHiddenInput = styled("input")({
@@ -114,14 +108,8 @@ export default function RoomForm() {
   const onSubmit: SubmitHandler<IFormRoom> = async (data) => {
     let formata = new FormData();
     formata.append("roomNumber", data.roomNumber);
-<<<<<<< HEAD
-    formata.append("capacity", data.capacity.toString());
-    formata.append("discount", data.discount.toString());
-    formata.append("price", data.price.toString());
-=======
     formata.append("capacity", data.capacity);
     formata.append("discount", data.discount);
->>>>>>> 1d179f8d859c78e16e64194284afe8bb12cd0666
 
     for (let i = 0; i < data.facilities.length; i++) {
       formata.append("facilities[]", data.facilities[i]);
@@ -131,10 +119,7 @@ export default function RoomForm() {
       formata.append("imgs", selectedFiles[i]);
     }
 
-<<<<<<< HEAD
-=======
     formata.append("price", data.price);
->>>>>>> 1d179f8d859c78e16e64194284afe8bb12cd0666
 
     try {
       console.log(data.facilities);
@@ -181,17 +166,10 @@ console.log("result", params?.roomId )
 
   interface IFormRoom {
     _id: number;
-<<<<<<< HEAD
-    roomNumber: string;
-    price: number;
-    capacity: number;
-    discount: number;
-=======
     roomNumber: "";
     price: "";
     capacity: "";
     discount: "";
->>>>>>> 1d179f8d859c78e16e64194284afe8bb12cd0666
     imgs: string[];
     facilities: [];
   }
@@ -203,11 +181,7 @@ console.log("result", params?.roomId )
 
   const handleFileChange = (event: any) => {
     const files = Array.from(event.target.files);
-<<<<<<< HEAD
-    const imageUrls = files.map((file) => URL.createObjectURL(file as Blob));
-=======
     const imageUrls = files.map((file) => URL.createObjectURL(file));
->>>>>>> 1d179f8d859c78e16e64194284afe8bb12cd0666
     setImages((prevImages): any => [...prevImages, ...imageUrls]);
     // Check if more than one file is selected
     if (files.length > 1) {

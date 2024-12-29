@@ -4,7 +4,7 @@ import { Grid, Card, CardMedia, Box, Typography, Container ,IconButton} from "@m
 import { Favorite, Visibility } from "@mui/icons-material";
 import axios from "axios";
 import img from "../../../../imges/room.jpg";
-import { FaEye } from 'react-icons/fa';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Link } from '@mui/material';
 
 interface Ad {
@@ -218,7 +218,7 @@ const FavoriteRoomSection = () => {
               >
                 <IconButton sx={{ width: '40px', height: '40px' }}>
                 <Link>
-                  <FaEye 
+                  <VisibilityIcon
                   style={{ 
                     color: 'white', 
                     fontSize: 20, 

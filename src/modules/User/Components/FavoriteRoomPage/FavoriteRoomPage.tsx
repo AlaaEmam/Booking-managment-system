@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { axiosInstance, FAVROOMS } from '../../../../constants/URLS';
 import { Box, Card, Typography, Grid, CardMedia, IconButton, Pagination } from '@mui/material';
-import { FaHeart } from 'react-icons/fa';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 interface Room {
   _id: string;
@@ -128,7 +128,7 @@ const FavoriteRoomPage = () => {
                   }}
                   onClick={() => deleteDetailsFAVROOMS(room._id)}
                 >
-                  <FaHeart size={30} />
+                  <FavoriteIcon sx={{ fontSize: 30 }}/>
                 </IconButton>
               </Card>
             ))}
