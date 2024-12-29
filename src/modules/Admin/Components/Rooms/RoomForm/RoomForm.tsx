@@ -6,6 +6,7 @@ import {
   FormGroup,
   ListItemText,
   TextField,
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
@@ -55,9 +56,9 @@ function getStyles(name: string, facilty: string[], theme: Theme) {
 // end sec select
 
 interface facility {
-  _id: String;
-  userName: String;
-  name: String;
+  _id: string;
+  userName: string;
+  name: string;
 }
 
 const VisuallyHiddenInput = styled("input")({
@@ -71,45 +72,36 @@ const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+  ...theme.applyStyles("dark", {
+    backgroundColor: "#1A2027",
+  }),
+}));
+
 export default function RoomForm() {
   const params = useParams();
-
-  const isNewRoom = params.roomId == undefined;
-
+  const isNewRoom = params.roomId === undefined;
   const [facility, setFacility] = React.useState<facility[]>([]);
-
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: "#fff",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-    ...theme.applyStyles("dark", {
-      backgroundColor: "#1A2027",
-    }),
-  }));
-
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<IFormRoom>({
-    defaultValues: {
-      imgs: undefined,
-      roomNumber: "R-1",
-      price: 0,
-      capacity: 0,
-      discount: 0,
-      facilities: [],
-    },
-  });
+  } = useForm<IFormRoom>();
+
+
   const onSubmit: SubmitHandler<IFormRoom> = async (data) => {
     let formata = new FormData();
     formata.append("roomNumber", data.roomNumber);
-    formata.append("capacity", data.capacity);
-    formata.append("discount", data.discount);
+    formata.append("capacity", data.capacity.toString());
+    formata.append("discount", data.discount.toString());
 
     for (let i = 0; i < data.facilities.length; i++) {
       formata.append("facilities[]", data.facilities[i]);
@@ -119,7 +111,7 @@ export default function RoomForm() {
       formata.append("imgs", selectedFiles[i]);
     }
 
-    formata.append("price", data.price);
+    formata.append("price", data.price.toString());
 
     try {
       console.log(data.facilities);
@@ -134,42 +126,35 @@ export default function RoomForm() {
     }
   };
 
-  //getid by params
-
   useEffect(() => {
     const getFacility = async () => {
-      const res = await axiosInstance.get(
-        ADMINROOMFACILITIES.getRoomFacilities
-      );
+      const res = await axiosInstance.get(ADMINROOMFACILITIES.getRoomFacilities);
       setFacility(res.data.data.facilities);
-      console.log(res?.data.data.facilities);
     };
     getFacility();
 
-    if (params.roomId != undefined) {
-      const id = params?.roomId;
-console.log("result", params?.roomId )
+    if (!isNewRoom) {
+      const id = params.roomId;
       const getRoomDetails = async () => {
         const res = await axiosInstance.get(ADMINROOMS.getRoomDetails(`${id}`));
         const response = res?.data.data.room;
-        console.log(response);
         setValue("roomNumber", response.roomNumber);
         setValue("price", response.price);
         setValue("capacity", response.capacity);
         setValue("discount", response.discount);
-        setValue("facilities", response.facilities[0]);
+        setValue("facilities", response.facilities);
         setValue("imgs", response.imgs);
       };
       getRoomDetails();
     }
-  }, []);
+  }, [isNewRoom, params.roomId, setValue]);
 
   interface IFormRoom {
     _id: number;
-    roomNumber: "";
-    price: "";
-    capacity: "";
-    discount: "";
+    roomNumber: string;
+    price: number;
+    capacity: number;
+    discount: number;
     imgs: string[];
     facilities: [];
   }
@@ -181,7 +166,7 @@ console.log("result", params?.roomId )
 
   const handleFileChange = (event: any) => {
     const files = Array.from(event.target.files);
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
+    const imageUrls = files.map((file) => URL.createObjectURL(file as Blob));
     setImages((prevImages): any => [...prevImages, ...imageUrls]);
     // Check if more than one file is selected
     if (files.length > 1) {
@@ -203,31 +188,41 @@ console.log("result", params?.roomId )
     console.log(facilty);
   };
 
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: "#fff",
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    boxShadow: "none",
+    color: 'var(--secondary-color)',
+    ...(theme.palette.mode === 'dark' && { backgroundColor: "#1A2027" }),
+  }));
   return (
     <>
-
       <Grid container spacing={2} mt={10}>
         <Grid size={{ md: 8, sm: 12 }} offset={{ md: 2, sm: 0 }}>
+         
+        <Typography sx={{ fontWeight: "bold" , mb: 3}} variant="h5">
+        {isNewRoom ? "Add New Room" : "Edit Room Data"} 
+            </Typography>
           <Box
             component="form"
             noValidate
             autoComplete="off"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <TextField
-              label="Room Number"
-              fullWidth
-              variant="outlined"
-              type="text"
-              sx={{
-                marginBottom: "1rem ",
-              }}
-              {...register("roomNumber", {
-                required: "roomNumber is required",
-              })}
-              error={!!errors.roomNumber}
-              helperText={errors.roomNumber ? errors.roomNumber.message : ""} // Display error message
-            />
+          <InputLabel htmlFor="room-number" sx={{ color: 'var(--gray-color)' }}>
+            Room Number
+          </InputLabel>
+          <TextField
+            id="room-number"
+            fullWidth
+            variant="outlined"
+            type="text"
+            sx={{ marginBottom: "1rem", color: 'var(--primary-color)' }}
+            {...register("roomNumber", { required: "Room number is required" })}
+            error={!!errors.roomNumber}
+            helperText={errors.roomNumber ? errors.roomNumber.message : ""}
+          />
             <Box
               sx={{
                 display: { md: "flex", sm: "block" },
@@ -235,7 +230,7 @@ console.log("result", params?.roomId )
               }}
             >
               <TextField
-                label="Price"
+                label={isNewRoom ? "Price" : ""}
                 fullWidth
                 variant="outlined"
                 type="text"
@@ -251,7 +246,7 @@ console.log("result", params?.roomId )
               />
 
               <TextField
-                label="capacity"
+                label={isNewRoom ? "Capacity" : ""}
                 fullWidth
                 variant="outlined"
                 type="number"
@@ -274,7 +269,7 @@ console.log("result", params?.roomId )
             >
               <TextField
                 id="outlined-basic"
-                label="Discount"
+                label={isNewRoom ? "Discount" : ""}
                 fullWidth
                 variant="outlined"
                 type="number"
@@ -282,6 +277,8 @@ console.log("result", params?.roomId )
                   backgroundColor: "var(--light-baby-blue)",
                   marginBottom: "1rem ",
                   width: { md: "48%", sm: "100%" },
+                  color: 'var(--primary-color)',
+
                 }}
                 {...register("discount", {
                   required: "Discount is required",
@@ -289,7 +286,7 @@ console.log("result", params?.roomId )
                 error={!!errors.discount}
                 helperText={errors.discount ? errors.discount.message : ""} // Display error message
               />
-
+    
               <FormControl
                 sx={{
                   backgroundColor: "var(--light-baby-blue)",
@@ -297,8 +294,8 @@ console.log("result", params?.roomId )
                   width: { md: "48%", sm: "100%" },
                 }}
               >
-                <InputLabel id="demo-multiple-name-label fullWidth">
-                  facility
+                <InputLabel id="demo-multiple-name-label fullWidth" sx={{color: 'var(--gray-color)'}}>
+                  Facility
                 </InputLabel>
                 <Select
                   labelId="demo-multiple-name-label"
@@ -324,7 +321,7 @@ console.log("result", params?.roomId )
                     </MenuItem>
                   ))}
                 </Select>
-              </FormControl>
+              </FormControl> 
             </Box>
 
             <Button
@@ -334,11 +331,12 @@ console.log("result", params?.roomId )
               tabIndex={-1}
               startIcon={<CloudUploadIcon />}
               sx={{
+                fontWeight: '900',
+                color: 'var(--primary-color)',
                 width: "100%",
-                backgroundColor: "var(--light-green)",
-                border: "1px dashed var(--dark-green)",
-                color: "currentColor",
-                lineHeight: "147px",
+                backgroundColor: "var(--light-blue)",
+                border: "1px dashed var(--primary-color)",
+                lineHeight: "10vh",
                 boxShadow: "none",
               }}
             >
@@ -349,8 +347,6 @@ console.log("result", params?.roomId )
                 {...register("imgs", {
                   required: "imgs is required",
                 })}
-                error={!!errors.imgs}
-                helperText={errors.imgs ? errors.imgs.message : ""}
                 onChange={handleFileChange}
               />
             </Button>
@@ -374,7 +370,7 @@ console.log("result", params?.roomId )
             >
               <Link
                 to="/dashboard/rooms-list"
-                style={{ color: "var(--dark-blue)", textDecoration: "none" }}
+                style={{ color: "var(--primary-color)", textDecoration: "none" }}
               >
                 cancel
               </Link>
@@ -387,14 +383,14 @@ console.log("result", params?.roomId )
                 mt: "1rem",
                 mr: "1rem",
                 padding: "0.5rem 3rem",
-                backgroundColor: "var(--dark-blue)",
+                backgroundColor: "var(--primary-color)",
               }}
             >
              {isNewRoom ? "save" :"update"}
             </Button>
           </Box>
         </Grid>
-        <Grid size={{ md: 8, sm: 12 }} offset={{ md: 2, sm: 0 }}></Grid>
+
 
       </Grid>
     </>
