@@ -15,6 +15,7 @@
   --dark-gray: #1A1B1E; /* Dark gray */
   --blue: #35C2FD; /* Light blue */
   --dark-blue: #203FC7; /* dark blue */
+  --dark-blue: #203FC7; /* dark blue */
   --green: #54D14D; /* Green */
   --red: #7783BF; /* Soft blue */
   --off-white: #FAFAFA; /* Very light gray */
@@ -37,6 +38,8 @@
   --secondary-color: #FFFFFF; /* White text */
   --light-gray: rgba(255, 255, 255, 0.2); /* White with 20% opacity */
   --light-red: #FF6B6B; /* Lighter red for dark mode */
+  --dark-blue: #203FC7; /* dark blue */
+
   --dark-blue: #203FC7; /* dark blue */
 
   --red: #E74C3C;
@@ -62,6 +65,7 @@ body{font-family: "Poppins"}
   background-color: var(--primary-color);
   color: var(--off-white);
   height: 100vh;
+
 
 }
 .sidebar-container .ps-menu-button {

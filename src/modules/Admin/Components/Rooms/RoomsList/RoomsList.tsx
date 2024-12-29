@@ -92,8 +92,173 @@ interface rooms_IF {
   images: string[];
   facilities: string[];
 }
+import * as React from "react";
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import axios from "axios";
+import {
+  Alert,
+  CardMedia,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import roomIcon from "../../../../../assets/roomIcon.png";
+import IconButton from "@mui/material/IconButton";
+import deleteconfirm from "../../../../../assets/deleteconfirm.png";
+
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import DriveFileRenameOutlineOutlinedIcon from "@mui/icons-material/DriveFileRenameOutlineOutlined";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
+import { Room, Try } from "@mui/icons-material";
+import { ADMINROOMS, axiosInstance } from "../../../../../constants/URLS";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid2";
+import { Link, useNavigate } from "react-router-dom";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { toast } from "react-toastify";
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  boxShadow: "none",
+  color: theme.palette.text.secondary,
+  ...theme.applyStyles("dark", {
+    backgroundColor: "#1A2027",
+  }),
+}));
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: {
+    xs: "60%", // 20px padding for extra-small screens
+    sm: "60%", // 30px padding for small screens and up
+    md: "50%", // 40px padding for medium screens and up
+    lg: "40%", // 50px padding for large screens and up
+  },
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "var(--light-gray)",
+    color: "var(--secondary-color)",
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
+
+interface rooms_IF {
+  _id: number;
+  roomNumber: String;
+  price: String;
+  capacity: String;
+  discount: String;
+  images: string[];
+  facilities: string[];
+}
 
 export default function RoomsList() {
+  const [openDelete, setOpenDelete] = React.useState(false);
+  const [roomID, setroomID] = React.useState("0");
+  const handleOpenDelete = (ID: string) => {
+    setOpenDelete(true);
+    setroomID(ID);
+  };
+  const handleCloseDelete = () => setOpenDelete(false);
+
+  const [rooms, setRooms] = React.useState<rooms_IF[]>([]);
+  const [roomView, setroomView] = React.useState<rooms_IF>();
+
+  const getRoomsList = async () => {
+   try {
+    const res = await axiosInstance.get(ADMINROOMS.getAllRooms)
+
+
+    setRooms(res.data.data.rooms);
+   } catch (error) {
+console.log(error)
+   }
+  };
+  const deleteRoom = async (id: string) => {
+    try {
+      const res = await axiosInstance.delete(ADMINROOMS.deleteRoom(id));
+      console.log(res);
+      setOpenDelete(false);
+      toast.success("room deleted ");
+      getRoomsList();
+    } catch (error) {
+      toast.error("error");
+    }
+  };
+
+  const navigate = useNavigate();
+
+  const view = async (id: any) => {
+    try {
+
+      const res = await    axiosInstance.get(ADMINROOMS.getRoomDetails(id))
+      // const res = await axios.get(
+      //   `https://upskilling-egypt.com:3000/api/v0/admin/rooms/${id}`,
+      //   { headers: { Authorization: localStorage.getItem("token") } }
+      // );
+      console.log(res.data.data.room);
+
+      setroomView(res.data.data.room);
+      handleOpen();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [openM, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleCloseM = () => setOpen(false);
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  React.useEffect(() => {
+    getRoomsList();
+  }, []);
+
   const [openDelete, setOpenDelete] = React.useState(false);
   const [roomID, setroomID] = React.useState("0");
   const handleOpenDelete = (ID: string) => {

@@ -30,6 +30,7 @@ export default function SideBar() {
             />{" "}
           </div>
 
+
           <MenuItem
             icon={<i className="bi bi-house-door"></i>}
             component={<Link to="/dashboard" />}
