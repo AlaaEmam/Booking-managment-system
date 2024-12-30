@@ -266,7 +266,7 @@ export default function RoomsList() {
                       {room.capacity}
                     </StyledTableCell>
                     <StyledTableCell align="center"   padding="none">
-                      {room?.discount ? ` ${room?.discount} %` : "_"}
+                      {room?.discount ? ` ${room?.discount} %` : "Not available"}
                     </StyledTableCell>
 
                     <StyledTableCell align="center" padding="none">

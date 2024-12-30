@@ -1,88 +1,3 @@
-// // RoomViewModal.tsx
-// import * as React from 'react';
-// import { Modal, Box, Typography, CardMedia } from '@mui/material';
-
-// interface Facility {
-//     _id: string;
-//     name: string;
-//   }
-  
-//   interface RoomViewModalProps {
-//     open: boolean;
-//     onClose: () => void;
-//     roomView: {
-//       roomNumber: string;
-//       capacity: string;
-//       discount: string;
-//       price: string;
-//       facilities: Facility[];
-//       images: string[];
-//     } | undefined;
-//   }
-  
-// const style = {
-//   position: 'absolute',
-//   top: '50%',
-//   left: '50%',
-//   transform: 'translate(-50%, -50%)',
-//   width: {
-//     xs: '60%',
-//     sm: '60%',
-//     md: '50%',
-//     lg: '40%',
-//   },
-//   bgcolor: 'background.paper',
-//   border: '2px solid #000',
-//   boxShadow: 24,
-// };
-// const RoomViewModal: React.FC<RoomViewModalProps> = ({ open, onClose, roomView }) => {
-//     return (
-//       <Modal
-//         open={open}
-//         onClose={onClose}
-//         aria-labelledby="modal-modal-title"
-//         aria-describedby="modal-modal-description"
-//         sx={{ textAlign: 'center' }}
-//       >
-//         <Box sx={style}>
-//           <CardMedia
-//             component="img"
-//             style={{
-//               width: '150px',
-//               margin: 'auto',
-//               borderRadius: '3px',
-//               marginBottom: '1rem',
-//             }}
-//             image={roomView?.images[0] || '/src/assets/roomIcon.png'}
-//             alt="Room Image"
-//           />
-//           <Typography id="modal-modal-title" variant="h6" component="h2">
-//             Room Number: {roomView?.roomNumber}
-//           </Typography>
-//           <Typography id="modal-modal-description" variant="h6" sx={{ mt: 2 }}>
-//             Capacity: {roomView?.capacity}
-//           </Typography>
-//           {roomView?.discount && (
-//             <Typography id="modal-modal-description" variant="h6" sx={{ mt: 2 }}>
-//               Discount: {roomView?.discount} LE
-//             </Typography>
-//           )}
-//           <Typography id="modal-modal-description" variant="h6" sx={{ mt: 2 }}>
-//             Price: {roomView?.price ? roomView?.price + ' LE' : 'Not available'}
-//           </Typography>
-//           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-//                 {roomView?.facilities.map((facility, index) => (
-//                     <Typography component="span" variant="h6" sx={{ mr: 2 }} key={index}>
-//                     {facility.name} 
-//                     </Typography>
-//                 ))}
-//             </Typography>
-//         </Box>
-//       </Modal>
-//     );
-//   };
-
-// export default RoomViewModal;
 import * as React from 'react';
 import { Modal, Box, Typography, CardMedia, Grid, Divider, Paper } from '@mui/material';
 import { styled } from '@mui/system';
@@ -133,7 +48,7 @@ const RoomViewModal: React.FC<RoomViewModalProps> = ({ open, onClose, roomView }
             aria-describedby="modal-modal-description"
             sx={{ textAlign: 'center' }}
         >
-            <Box sx={{ maxWidth: 300 ,padding: 2, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Box sx={{padding: 2, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Wrapper>
                 <CardMedia
                     component="img"
@@ -164,18 +79,17 @@ const RoomViewModal: React.FC<RoomViewModalProps> = ({ open, onClose, roomView }
                     </Grid>
 
 
-                    {roomView?.discount && (
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                                <Typography variant="body1"  fontWeight={600} color="black">Discount</Typography>
-                                <Typography variant="body1" color='var(--gray-color)'>{roomView.discount} %</Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                            <Typography variant="body1" fontWeight={600} color="black">Price</Typography>
-                            <Typography variant="body1" color='var(--gray-color)'>{roomView?.price ?? 'Not available'} LE</Typography>
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                            <Typography variant="body1"  fontWeight={600} color="black">Discount</Typography>
+                            <Typography variant="body1" color='var(--gray-color)'>{roomView?.discount || 'Not available'} %</Typography>
                         </Grid>
-                        </Grid>
-                    )}
+                        <Grid item xs={6}>
+                        <Typography variant="body1" fontWeight={600} color="black">Price</Typography>
+                        <Typography variant="body1" color='var(--gray-color)'>{roomView?.price ?? 'Not available'} LE</Typography>
+                    </Grid>
+                    </Grid>
+                    
                     
                     <Grid container spacing={2}>
                     <Grid item xs={12}>

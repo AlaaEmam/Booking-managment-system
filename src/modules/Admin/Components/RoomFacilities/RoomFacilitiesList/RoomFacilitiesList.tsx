@@ -135,23 +135,14 @@ export default function RoomFacilitiesList() {
     try {
       if (selectedFacility) {
         // Update existing facility
-        await axios.put(
-          `https://upskilling-egypt.com:3000/api/v0/admin/room-facilities/${selectedFacility}`,
+        await axiosInstance.put(
+          ADMINROOMFACILITIES.updateRoomFacilities(selectedFacility._id),
           data,
-          {
-            headers: { Authorization: localStorage.getItem("token") || "" },
-          }
         );
         toast.success("Facility updated successfully!");
       } else {
         // Create new facility
-        await axios.post(
-          `https://upskilling-egypt.com:3000/api/v0/admin/room-facilities`,
-          data,
-          {
-            headers: { Authorization: localStorage.getItem("token") || "" },
-          }
-        );
+        await axiosInstance.post(ADMINROOMFACILITIES.createRoomFacilities ,data);
         toast.success("Facility created successfully!");
       }
       handleCloseDialog();

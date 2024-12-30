@@ -119,7 +119,7 @@ export default function RoomForm() {
       await axiosInstance[isNewRoom? "post" : "put"](isNewRoom? ADMINROOMS.createRoom : ADMINROOMS.updateRoom(`${params.roomId}`),
         formata
       );
-      toast.success("   successfully");
+      toast.success("Successfully Operation!");
       navigate("/dashboard/rooms-list");
     } catch (error: any) {
       toast.error(error.message);
@@ -223,44 +223,63 @@ export default function RoomForm() {
             error={!!errors.roomNumber}
             helperText={errors.roomNumber ? errors.roomNumber.message : ""}
           />
-            <Box
-              sx={{
-                display: { md: "flex", sm: "block" },
-                justifyContent: "space-between",
-              }}
-            >
-              <TextField
-                label={isNewRoom ? "Price" : ""}
-                fullWidth
-                variant="outlined"
-                type="text"
-                sx={{
-                  marginBottom: "1rem ",
-                  width: { md: "48%", sm: "100%" },
-                }}
-                {...register("price", {
-                  required: "price is required",
-                })}
-                error={!!errors.price}
-                helperText={errors.price ? errors.price.message : ""} // Display error message
-              />
 
-              <TextField
-                label={isNewRoom ? "Capacity" : ""}
-                fullWidth
-                variant="outlined"
-                type="number"
-                sx={{
-                  marginBottom: "1rem ",
-                  width: { md: "48%", sm: "100%" },
-                }}
-                {...register("capacity", {
-                  required: "capacity is required",
-                })}
-                error={!!errors.capacity}
-                helperText={errors.capacity ? errors.capacity.message : ""} // Display error message
-              />
-            </Box>
+          <Box sx={{display: 'flex' , justifyContent: 'space-around' ,textAlign: 'left'}}>
+          <InputLabel htmlFor="price" sx={{ color: 'var(--gray-color)', marginRight: "1rem" }}>
+            Price
+          </InputLabel>
+          <InputLabel htmlFor="Capacity" sx={{ color: 'var(--gray-color)', marginRight: "1rem" }}>
+          Capacity
+          </InputLabel>
+          </Box>
+          <Box
+            sx={{
+              display: { md: "flex", sm: "block" },
+              justifyContent: "space-between",
+            }}
+          >
+    
+            <TextField
+              fullWidth
+              id="price"
+              variant="outlined"
+              type="text"
+              sx={{
+                marginBottom: "1rem ",
+                width: { md: "48%", sm: "100%" },
+              }}
+              {...register("price", {
+                required: "price is required",
+              })}
+              error={!!errors.price}
+              helperText={errors.price ? errors.price.message : ""} // Display error message
+            />
+
+            <TextField
+              fullWidth
+              id="Capacity"
+              variant="outlined"
+              type="number"
+              sx={{
+                marginBottom: "1rem ",
+                width: { md: "48%", sm: "100%" },
+              }}
+              {...register("capacity", {
+                required: "capacity is required",
+              })}
+              error={!!errors.capacity}
+              helperText={errors.capacity ? errors.capacity.message : ""} // Display error message
+            />
+          </Box>
+
+          <Box sx={{display: 'flex' , justifyContent: 'space-around' ,textAlign: 'left'}}>
+          <InputLabel htmlFor="Discount" sx={{ color: 'var(--gray-color)', marginRight: "1rem" }}>
+          Discount
+          </InputLabel>
+          <InputLabel htmlFor="Facility" sx={{ color: 'var(--gray-color)', marginRight: "1rem" }}>
+          Facility
+          </InputLabel>
+          </Box>
             <Box
               sx={{
                 display: { md: "flex", sm: "block" },
@@ -268,13 +287,11 @@ export default function RoomForm() {
               }}
             >
               <TextField
-                id="outlined-basic"
-                label={isNewRoom ? "Discount" : ""}
                 fullWidth
+                id="Discount"
                 variant="outlined"
                 type="number"
                 sx={{
-                  backgroundColor: "var(--light-baby-blue)",
                   marginBottom: "1rem ",
                   width: { md: "48%", sm: "100%" },
                   color: 'var(--primary-color)',
@@ -289,7 +306,6 @@ export default function RoomForm() {
     
               <FormControl
                 sx={{
-                  backgroundColor: "var(--light-baby-blue)",
                   marginBottom: "1rem ",
                   width: { md: "48%", sm: "100%" },
                 }}
