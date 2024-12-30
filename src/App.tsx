@@ -117,18 +117,12 @@ function App() {
         { index: true, element: <DashBoard /> },
 
         { path: "ads-list", element: <AdsList /> },
-        // { path: "ads-list/ads-form", element: <AdsForm /> },
-        // { path: "ads-list/:adsId", element: <AdsForm /> },
+  
         { path: "room-facility", element: <RoomFacilitiesList /> },
-        {
-          path: "room-facility/facility-form",
-          element: <RoomFacilitiesList />,
-        },
-        { path: "room-facility/:facilityId", element: <RoomFacilitiesList /> },
 
         { path: "rooms-list", element: <RoomsList /> },
-        { path: "rooms-list/room-form", element: <RoomFacilitiesList /> },
-        { path: "rooms-list/:roomId", element: <RoomFacilitiesList /> },
+        { path: "rooms-list/new-room", element: <RoomForm /> },
+        { path: "rooms-list/:roomId", element: <RoomForm /> },
 
         { path: "booking-list", element: <BookingList /> },
         { path: "users-list", element: <UserList /> },

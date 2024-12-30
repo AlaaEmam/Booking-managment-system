@@ -9,7 +9,7 @@ import {
 import { Visibility, Favorite } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 import { Box } from '@mui/material';
-import { FaEye } from 'react-icons/fa';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Link } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
@@ -108,8 +108,8 @@ const RoomsCard: React.FC<RoomsCardProps> = ({_id, title, location, imageUrl, pr
     >
       <IconButton sx={{ width: '40px', height: '40px' }}>
        <Link>
-         <FaEye 
-         style={{ 
+         <FavoriteIcon
+         sx={{ 
           color: 'white', 
           fontSize: 20, 
         }} 

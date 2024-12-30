@@ -1,46 +1,35 @@
-import { Box, Button } from "@mui/material";
-export default function Notfound() {
-  return (
-    <Box
-      sx={{
-        height: "100vh", // Full viewport height
-        display: "flex",
-        justifyContent: "left",
-        alignItems: "center",
-        backgroundImage: `url(${`/NotFound.svg`})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center center",
-        color: "red",
-        textAlign: "center",
-        pl: 9,
-      }}
-    >
-      <Box>
-        {/* <Typography variant="h2" fontWeight="bold" gutterBottom>
-          404
-        </Typography>
-        <Typography variant="h5" gutterBottom>
-          Page Not Found
-        </Typography>
-        <Typography variant="body1" sx={{ mb: 3 }}>
-          The page you are looking for does not exist or has been moved.
-        </Typography> */}
+import React from 'react';
+import './NotFound.css'; // Assuming you create a CSS file for styles
+import Logo from '../../../../assets/logo.svg';
+import ErrorImage from '../../../../../public/NotFound.svg'; // Path to your 404 image
+import { Link } from 'react-router-dom';
+import { Box, Grid, Typography, Button } from '@mui/material';
 
-        {/* Back to Home Button */}
-        <Button
-          variant="contained"
-          size="large"
-          href="/"
-          sx={{
-            backgroundColor: "blue",
-            paddingX: 6,
-            paddingY: 2,
-            textTransform: "capitalize",
-          }}
-        >
-          Go Back Home
-        </Button>
-      </Box>
+const NotFound: React.FC = () => {
+  return (
+    <Box sx={{ height: '100vh', display: 'flex'}}>
+      <Grid container>
+       
+        <Grid xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', padding: 5}}>
+          <Box sx={{marginBottom: 10}}>
+          <img src={Logo} alt="Logo" />
+          </Box>
+          <Typography variant="h3" className="font-weight-bold" color="var(--primary-color)">Oops....</Typography>
+          <Typography variant="h4" className="font-weight-light text-success">Page not found</Typography>
+          <Typography className="font-weight-light">
+            This Page doesn’t exist or was removed! We suggest you back to home.
+          </Typography>
+          <Link to="/dashboard">
+            <Button variant="contained" size="large" sx={{ mt: 4, mb: 2 ,backgroundColor: 'var(--primary-color)' }}>
+              <i className="fa-solid fa-arrow-right px-2"></i> Back To Home
+            </Button>
+          </Link>
+        </Grid>
+
+        <Grid item xs={12} md={6} sx={{ backgroundImage: `url(${ErrorImage})`, backgroundSize: 'cover', backgroundPosition: 'right', backgroundRepeat: 'no-repeat', height: '100vh' }} />
+      </Grid>
     </Box>
   );
-}
+};
+
+export default NotFound;

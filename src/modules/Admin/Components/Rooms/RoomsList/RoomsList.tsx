@@ -40,6 +40,7 @@ import { toast } from "react-toastify";
 import CustomTablePagination from './../../Shared/Components/CustomTablePagination/CustomTablePagination';
 import { useState } from "react";
 import DeleteConfirmation from './../../Shared/Components/DeleteConfirmation/DeleteConfirmation';
+import RoomViewModal from './../RoomViewModal/RoomViewModal';
 
 // Styled 
 const Item = styled(Paper)(({ theme }) => ({
@@ -93,25 +94,19 @@ export default function RoomsList() {
 
   interface rooms_IF {
     _id: number;
-    roomNumber: String;
-    price: String;
-    capacity: String;
-    discount: String;
+    roomNumber: string;
+    price: string;
+    capacity: string;
+    discount: string;
     images: string[];
     facilities: string[];
     totalCount: number;
   }
 
-  // const [openDelete, setOpenDelete] = React.useState(false);
-  // const [roomID, setroomID] = React.useState("0");
-  // const handleOpenDelete = (ID: string) => {
-  //   setOpenDelete(true);
-  //   setroomID(ID);
-  // };
-  // const handleCloseDelete = () => setOpenDelete(false);
 
-  const [rooms, setRooms] = React.useState<rooms_IF[]>([]);
-  const [roomView, setroomView] = React.useState<rooms_IF>();
+  const [rooms, setRooms] = React.useState<any[]>([]);
+  const [roomView, setroomView] = React.useState<any>(null);
+  const [openM, setOpenM] = React.useState(false);
 
   const getRoomsList = async () => {
     try {
@@ -136,29 +131,27 @@ export default function RoomsList() {
 
   const view = async (id: any) => {
     try {
-      const res = await axiosInstance.get(ADMINROOMS.getRoomDetails(id))
+      const res = await axiosInstance.get(ADMINROOMS.getRoomDetails(id));
       console.log(res.data.data.room);
       setroomView(res.data.data.room);
-      handleOpen();
+      handleOpen(); // Open the modal after setting the room details
     } catch (error) {
       console.log(error);
     }
   };
 
-  const [openM, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleCloseM = () => setOpen(false);
+  const handleOpen = () => setOpenM(true);
+  const handleCloseM = () => setOpenM(false);
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+
+  // const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  // const open = Boolean(anchorEl);
+  // const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
+  // const handleClose = () => {
+  //   setAnchorEl(null);
+  // };
 
 
   // Pagination states
@@ -226,7 +219,8 @@ export default function RoomsList() {
         <Item sx={{ textAlign: { md: "right", sm: "center" } }}>
           <Link to="new-room">
             <Button
-              sx={{ padding: "0.6rem 3rem", borderRadius: "0.5rem" }}
+           
+              sx={{ padding: "0.6rem 3rem", borderRadius: "0.5rem",  cursor: "pointer"  }}
               variant="contained"
             startIcon={<AddIcon />}
             >
@@ -272,7 +266,7 @@ export default function RoomsList() {
                       {room.capacity}
                     </StyledTableCell>
                     <StyledTableCell align="center"   padding="none">
-                      {room?.discount ? ` ${room?.discount} LE` : "_"}
+                      {room?.discount ? ` ${room?.discount} %` : "Not available"}
                     </StyledTableCell>
 
                     <StyledTableCell align="center" padding="none">
@@ -345,51 +339,7 @@ export default function RoomsList() {
       />
 
     {/* view model */}
-    <Modal
-      open={openM}
-      onClose={handleCloseM}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-      sx={{ textAlign: "center" }}
-    >
-      <Box sx={style}>
-        <CardMedia
-          component="img"
-          style={{
-            width: "150px",
-            margin: "auto",
-            borderRadius: "3px",
-            marginBottom: "1rem",
-          }}
-          image={
-            roomView?.images[0]
-              ? roomView?.images[0]
-              : "/src/assets/roomIcon.png"
-          }
-          alt=" Image"
-        />
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Room Number: {roomView?.roomNumber}
-        </Typography>
-        <Typography id="modal-modal-description" variant="h6" sx={{ mt: 2 }}>
-          capacity : {roomView?.capacity}
-        </Typography>
-        <Typography id="modal-modal-description" variant="h6" sx={{ mt: 2 }}>
-          {roomView?.discount ? `discount ${roomView?.discount} LE` : ""}
-        </Typography>
-        <Typography id="modal-modal-description" variant="h6" sx={{ mt: 2 }}>
-          price : {roomView?.price ? roomView?.price + "LE" : ""}
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          {roomView?.facilities.map((f: any) => (
-            <Typography component="span" variant="h6" sx={{ mr: 2 }}>
-              {f.name}
-            </Typography>
-          ))}
-        </Typography>
-      </Box>
-    </Modal>
-
+    <RoomViewModal open={openM} onClose={handleCloseM} roomView={roomView} />
     {/* Pagination */}
     <CustomTablePagination
         count={totalItems}

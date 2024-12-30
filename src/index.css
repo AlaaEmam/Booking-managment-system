@@ -21,9 +21,9 @@
   --light-gray-row:#F8F9FB;
   --light-baby-blue:  #F7F7F7;
   --light-green:  #F1FFF0;
-  --dark-green:  #009247;
+  --light-blue:  #a9c6ff;
   --light-purple:#b800d8;
-  --gray-color:#B0B0B0;
+  --gray-color:#848484;
   --popular-color:#FF498B;
   --star-color: #FFCC47 ;
   --green-btn:#1abc9c;
@@ -105,25 +105,34 @@ body{font-family: "Poppins"}
   background-color: rgba(0, 0, 0, 0.1) !important;
 }
 /* RoomFacilitiesList.css */
+
 .table-container {
-  overflow-y: auto; /* Enable horizontal scrolling */
+  overflow-y: auto; 
 }
 
 .table {
-  min-width: 700px; /* Set a minimum width for the table */
+  min-width: 700px; 
 }
 
 @media (max-width: 600px) {
   .table {
-    min-width: 100%; /* Allow the table to take full width on smaller screens */
+    min-width: 100%; 
   }
 }
 
 .css-cturab-MuiTableCell-root {
   padding: 5px 0 !important;
-  display: inherit !important; 
+  /* display: inherit !important;  */
 
 }
 .css-4nmryk-MuiBackdrop-root-MuiModal-backdrop{
   background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.css-1nqt212-MuiFormLabel-root-MuiInputLabel-root {
+  color: var(--primary-color) !important;
+}
+.css-16sy2m-MuiFormLabel-root-MuiInputLabel-root{
+  color: var(--gray-color) !important;
+
 }

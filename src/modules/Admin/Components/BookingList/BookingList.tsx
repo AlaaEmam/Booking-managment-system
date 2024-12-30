@@ -7,7 +7,7 @@ import View from "../../../../assets/icons/View.svg";
 import BookingModal from './BookingModal';
 import { Button } from '@mui/material';
 import CustomTablePagination from '../Shared/Components/CustomTablePagination/CustomTablePagination';
-import { Grid } from '@mui/material';
+import  Grid  from '@mui/material/Grid2';
 
 // Styled 
 const Item = styled(Paper)(({ theme }) => ({
@@ -49,9 +49,7 @@ export default function BookingList() {
   }
   
   interface User {
-    user: {
-      userName: string;
-    };
+    userName: string;
   }
   
   interface BookingListProps {
@@ -60,14 +58,15 @@ export default function BookingList() {
     totalPrice: number;
     startDate: string;
     endDate: string;
-    user: {
-      userName: string;
-    };
+    status: string;
+    user: User;
   }
 
   
   
-const [bookingList, setBookingList] = React.useState([]); // Added missing state for bookingList
+  const [bookingList, setBookingList] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<BookingListProps | null>(null);
 
 const getBookingList = async () => {
   try {
@@ -77,6 +76,7 @@ const getBookingList = async () => {
         page: page,
       },
     });
+    console.log(response.data.data.booking);
     setBookingList(response.data.data.booking);
     setTotalItems(response.data.data.totalCount); // Set total count for pagination
   } catch (error) {
@@ -85,19 +85,16 @@ const getBookingList = async () => {
 };
 
   //Modal View
-  const [showView, setShowView] = useState<boolean>(false);
-  const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
 
-  const handleCloseView = () => setShowView(false);
-  const handleShowView = (booking: any) => {
+  const handleOpen = (booking: BookingListProps) => {
     setSelectedBooking(booking);
-    setShowView(true);
+    setOpenModal(true);
   };
- 
-  const [openModal, setOpenModal] = useState(false);
 
-  const handleOpen = () => setOpenModal(true);
-  const handleClose = () => setOpenModal(false);
+  const handleClose = () => {
+    setOpenModal(false);
+    setSelectedBooking(null);
+  };
 
    // Pagination states
    const rowsPerPageOptions = [5, 10, 25, 50, 100];
@@ -126,10 +123,10 @@ const getBookingList = async () => {
   <>
 
   <Grid container>
-      <Grid  xs={12} md={12}>
+      <Grid  size={12}>
         <Item sx={{ textAlign: { md: "left", sm: "center" } }}>
           <Typography sx={{ fontWeight: "bold" }} variant="h5">
-            User Table Details
+            Booking Table Details
           </Typography>
           <Typography variant="body2">
             You can check all details
@@ -137,7 +134,7 @@ const getBookingList = async () => {
         </Item>
       </Grid>
 
-      <Grid xs={12} md={12}>
+      <Grid size={12}>
       {bookingList.length > 0 ? (
         <TableContainer component={Paper} sx={{ maxHeight: '400px', overflow: 'auto' }}  className="table-container">
           <Table sx={{ minWidth: 700 }} className="table" aria-label="customized table">
@@ -147,6 +144,7 @@ const getBookingList = async () => {
                 <StyledTableCell sx={{ fontWeight: 700 }} align="center">Price</StyledTableCell>
                 <StyledTableCell sx={{ fontWeight: 700 }} align="center">Start Date</StyledTableCell>
                 <StyledTableCell sx={{ fontWeight: 700 }} align="center">End Date</StyledTableCell>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">Statues</StyledTableCell>
                 <StyledTableCell sx={{ fontWeight: 700 }} align="center">User </StyledTableCell>
                 <StyledTableCell sx={{ fontWeight: 700 }} align="center">Action</StyledTableCell>
               </TableRow>
@@ -162,11 +160,21 @@ const getBookingList = async () => {
                   <StyledTableCell align="center">
                     {new Date(booking.endDate).toLocaleString()}
                     </StyledTableCell>
+                    <StyledTableCell align="center" 
+                        style={{
+                            backgroundColor: booking.status === "pending" ? "#ffeb3b" : "#4caf50", // Yellow for Pending, Green for Completed
+                            color: booking.status === "pending" ? "#000" : "#fff", // Black text for Pending, White text for Completed
+                            fontWeight: 'bold', // Make text bold
+                            borderRadius: 'full', // Optional: rounded corners
+                            padding: '0px', // Optional: add some padding
+                        }}>
+                        {booking.status === "pending" ? "Pending" : "Completed"}
+                    </StyledTableCell>
+
                   <StyledTableCell align="center">{booking.user.userName}</StyledTableCell>
             
-                  <StyledTableCell align="center"sx={{ cursor: "pointer" }} onClick={handleOpen}>
+                  <StyledTableCell align="center"sx={{ cursor: "pointer" }} onClick={() => handleOpen(booking)}>
                   <img src={View} alt="View" />
-                  {/* <BookingModal open={openModal} onClose={handleClose} booking={booking}  /> */}
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
@@ -200,6 +208,10 @@ const getBookingList = async () => {
       </Grid>
   </Grid>
 
+
+     {/* Modal for booking details */}
+     <BookingModal open={openModal} onClose={handleClose} booking={selectedBooking} />
+      
       {/* Pagination */}
       <CustomTablePagination
         count={Math.ceil(totalItems / rowsPerPage) || 0}
@@ -209,65 +221,6 @@ const getBookingList = async () => {
         onRowsPerPageChange={handleChangeRowsPerPage}
         rowsPerPageOptions={rowsPerPageOptions}
       />
-
-        {/* <Modal
-        open={showView}
-        onClose={handleCloseView}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        
-        <Box sx={{ ...style, width: 500 }}>
-            <Stack alignItems="center" justifyContent={'space-between'} direction="row" gap={2}>
-
-              <Typography color='success' id="modal-modal-title" variant="h5" component="h2">
-                {selectedBooking?.user.userName}'s booking
-              </Typography>
-              <ClearIcon color='warning' onClick={handleCloseView}/>
-            </Stack>
-            
-            <Stack alignItems="center" direction="row" gap={2}>
-
-              <Typography color='primary' variant="h5" component="h2">
-                Room Number:
-              </Typography>
-              <Typography color='info' variant="h6">
-                {selectedBooking?.room.roomNumber}
-              </Typography>
-              
-            </Stack>
-            
-            <Stack alignItems="center" direction="row" gap={2}>
-
-              <Typography color='primary' variant="h5" component="h2">
-                Total Price:
-              </Typography>
-              <Typography color='info' variant="h6">
-                {selectedBooking?.totalPrice}
-              </Typography>
-            </Stack>
-
-            <Stack alignItems="center" direction="row" gap={2}>
-
-              <Typography color='primary'  variant="h5" component="h2">
-                Start Date:
-              </Typography>
-              <Typography color='info' variant="h6">
-                {selectedBooking?.startDate}
-              </Typography>
-            </Stack>
-
-            <Stack alignItems="center" direction="row" gap={2}>
-
-              <Typography color='primary' variant="h5" component="h2">
-                End Date:
-              </Typography>
-              <Typography color='info' variant="h6">
-                {selectedBooking?.endDate}
-              </Typography>
-            </Stack>
-        </Box>
-    </Modal> */}
 
   </>
     
