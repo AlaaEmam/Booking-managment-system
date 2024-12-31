@@ -4,7 +4,6 @@ import {
   AddressElement,
   CardElement,
   Elements,
-  PaymentElement,
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
@@ -13,7 +12,6 @@ import Grid from "@mui/material/Grid2";
 import axios from "axios";
 import { axiosInstance } from "../../../../constants/URLS";
 import { toast } from "react-toastify";
-import { blueGrey } from "@mui/material/colors";
 
 const stripe = loadStripe(
   "pk_test_51OTjURBQWp069pqTmqhKZHNNd3kMf9TTynJtLJQIJDOSYcGM7xz3DabzCzE7bTxvuYMY0IX96OHBjsysHEKIrwCK006Mu7mKw8"
@@ -30,12 +28,23 @@ export default function Payment() {
 }
 
 const payBooking = async (BOOKING_Id: string, token: string) => {
-  //const res= await axios.post (`https://upskilling-egypt.com:3000/api/v0/portal/booking/${BOOKING_Id}/pay`,{token});
-  const res = await axiosInstance.post(`/portal/booking/${BOOKING_Id}/pay`, {
-    token,
-  });
+  try {
+    // const res = await axios.post(
+    //   `https://upskilling-egypt.com:3000/api/v0/portal/booking/${BOOKING_Id}/pay`,
+    //   {
+    //     token,
+    //   },
+    //   { headers: { Authorization: localStorage.getItem("token") } }
+    // );
 
-  console.log(res);
+    const res = await axiosInstance.post(`/portal/booking/${BOOKING_Id}/pay`, {
+      token,
+    });
+    console.log(res);
+    toast.success("booking payed successfully");
+  } catch (error) {
+    console.log("error pay fun", error);
+  }
 };
 const CheckOutForm = () => {
   const stripee = useStripe();
@@ -53,10 +62,10 @@ const CheckOutForm = () => {
 
       const { error, token } = await stripee.createToken(cardelement);
       if (error) return;
-      console.log(token);
       const tokenValue = token.id;
-      await payBooking(`6773e095c01e1856618ca608`, tokenValue);
-      toast.success("booking payed successfully");
+      console.log(tokenValue);
+
+     await payBooking(`67740eafc01e1856618cab9e`, tokenValue);
     } catch (finalError) {
       toast.error(finalError.response.data.message);
     }
@@ -89,10 +98,11 @@ const CheckOutForm = () => {
                 >
                   <CardElement />
                 </div>
-                <AddressElement options={{ mode: "billing" }} />
-                <Button variant="contained" color="primary" type="submit">
+                {/* <AddressElement options={{ mode: "billing" }} /> */}
+                {/* <Button variant="contained" color="primary" type="submit">
                   Pay Bokking Click Me
-                </Button>
+                </Button> */}
+                <button type="submit"> Pay Bokking Click Me</button>
               </div>
             </form>
           </Grid>

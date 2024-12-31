@@ -32,6 +32,7 @@ import React from "react";
 import RoomForm from "./modules/Admin/Components/Rooms/RoomForm/RoomForm";
 import ExplorePage from "./modules/User/Components/Explore/ExplorePage";
 import Payment from "./modules/User/Components/Payment/Payment";
+import PaymentStep2 from "./modules/User/Components/Payment/paymentStep1";
 
 
 const lightTheme = createTheme({
@@ -168,6 +169,11 @@ function App() {
           ),
 
         },
+
+     
+
+
+
       ],
     },
   ]);
