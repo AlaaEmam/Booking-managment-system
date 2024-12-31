@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
-  Typography, IconButton, Menu, MenuItem, Button
+  Typography, IconButton, Menu, MenuItem, Button,
+  CircularProgress,
+  Box
 } from '@mui/material';
 import Grid from "@mui/material/Grid";
 import { Add as AddIcon, MoreVert as MoreVertIcon } from '@mui/icons-material';
@@ -73,7 +75,7 @@ export default function RoomAdListsList() {
     room: Room;
     isActive: boolean;
     roomName: string;
-    totalCount: number;
+    totalCount?: number;
   }
 
   const getAdsList = async () => {
@@ -155,6 +157,32 @@ export default function RoomAdListsList() {
   useEffect(() => {
     getAdsList();
   }, [page, rowsPerPage]);
+
+
+  
+  //Loading
+  const [isLoading, setIsLoading] = useState(true); // Loading state
+  useEffect(() => {
+    setIsLoading(true); // Set loading to true when data fetching starts
+    Promise.all([getAdsList()])
+      .then(() => setIsLoading(false)) // Set loading to false once all data is fetched
+      .catch(() => setIsLoading(false)); // Handle errors and stop loading
+  }, []);
+
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh", // Full viewport height
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <>

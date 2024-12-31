@@ -1,5 +1,5 @@
 
-import { Box, Button, Paper,  styled, Table,  TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { Box, Button, CircularProgress, Paper,  styled, Table,  TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import  { useEffect, useState } from 'react'
 import View from "../../../../assets/icons/View.svg";
 import { ADMINUSERS, axiosInstance } from '../../../../constants/URLS';
@@ -134,6 +134,32 @@ const getUserList = async () => {
     getUserList();
   },[page, rowsPerPage])
 
+
+  
+    //Loading
+      const [isLoading, setIsLoading] = useState(true); // Loading state
+      useEffect(() => {
+        setIsLoading(true); // Set loading to true when data fetching starts
+        Promise.all([getUserList()])
+          .then(() => setIsLoading(false)) // Set loading to false once all data is fetched
+          .catch(() => setIsLoading(false)); // Handle errors and stop loading
+      }, []);
+    
+      if (isLoading) {
+        return (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh", // Full viewport height
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        );
+      }
+      
   return (
   <>
     <Grid container>

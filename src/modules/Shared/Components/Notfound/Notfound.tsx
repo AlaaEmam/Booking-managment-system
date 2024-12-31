@@ -1,7 +1,6 @@
 import React from 'react';
-import './NotFound.css'; // Assuming you create a CSS file for styles
 import Logo from '../../../../assets/logo.svg';
-import ErrorImage from '../../../../../public/NotFound.svg'; // Path to your 404 image
+import ErrorImage from '../../../../assets/NotFound.svg'; // Path to your 404 image
 import { Link } from 'react-router-dom';
 import { Box, Grid, Typography, Button } from '@mui/material';
 

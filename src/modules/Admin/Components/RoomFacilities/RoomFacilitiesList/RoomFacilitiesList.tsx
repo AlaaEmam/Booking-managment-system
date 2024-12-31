@@ -9,6 +9,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  CircularProgress,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { Add as AddIcon } from "@mui/icons-material";
@@ -110,22 +111,28 @@ export default function RoomFacilitiesList() {
 
   // Handle delete
   const deleteFacility = async (id: string) => {
-    console.log("Deleting facility with ID:", id); // تسجيل الـ ID المرسل
-
+    console.log("Deleting facility with ID:", id); // Log the ID of the facility being deleted
+  
     if (!id) {
       toast.error("Facility ID is not provided.");
-      return; // لا تتابع العملية إذا لم يكن الـ ID موجودًا
+      return; // Don't continue if the ID is not provided
     }
+  
     try {
-      const responsedelete = await axiosInstance.delete(ADMINROOMFACILITIES.deleteRoomFacilities(id));
-      console.log("Response:", responsedelete); // تسجيل الاستجابة من الـ API
-
-      toast.success("Facility deleted successfully!");
-      getFacilityList();  // لتحديث قائمة المرافق بعد الحذف
-      setShowDelete(false); // إغلاق نافذة الحذف
+      const response = await axiosInstance.delete(ADMINROOMFACILITIES.deleteRoomFacilities(id));
+  
+      // If we get a 204, we simply acknowledge the success
+      if (response.status === 204) {
+        toast.success("Facility deleted successfully!");
+        getFacilityList();  // Refresh the facility list after deletion
+        setShowDelete(false);  // Close the delete modal
+      } else {
+        // In case the server responds with a non-204 code (which is uncommon for DELETE requests)
+        toast.error("Failed to delete facility.");
+      }
     } catch (error) {
       toast.error("Failed to delete facility.");
-      console.error(error);
+      console.error("Error deleting facility:", error);
     }
   };
   
@@ -199,18 +206,24 @@ export default function RoomFacilitiesList() {
   };
 
   // Handle Modal Delete
-
+  const [showDelete, setShowDelete] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [showDelete, setShowDelete] = useState(false);
-  
+
   const handleShowDelete = (id: string) => {
-    if (id) {
-      setSelectedId(id);  // تعيين الـ ID المختار
-      setShowDelete(true);  // فتح نافذة الحذف
-    } else {
-      console.error("Facility ID is missing.");
-    }
+    setSelectedId(id);
+    setShowDelete(true);
   };
+  // const [selectedId, setSelectedId] = useState<string | null>(null);
+  // const [showDelete, setShowDelete] = useState(false);
+  
+  // const handleShowDelete = (id: string) => {
+  //   if (id) {
+  //     setSelectedId(id); 
+  //     setShowDelete(true);  
+  //   } else {
+  //     console.error("Facility ID is missing.");
+  //   }
+  // };
   // Dropdown Menu
   const handleMenuClick = (
     event: React.MouseEvent<HTMLElement>,
@@ -246,6 +259,31 @@ export default function RoomFacilitiesList() {
   useEffect(() => {
     getFacilityList();
   }, [page, rowsPerPage]);
+  
+
+  //Loading
+    const [isLoading, setIsLoading] = useState(true); // Loading state
+    useEffect(() => {
+      setIsLoading(true); // Set loading to true when data fetching starts
+      Promise.all([getFacilityList()])
+        .then(() => setIsLoading(false)) // Set loading to false once all data is fetched
+        .catch(() => setIsLoading(false)); // Handle errors and stop loading
+    }, []);
+  
+    if (isLoading) {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh", // Full viewport height
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      );
+    }
   
   return (
     <>
