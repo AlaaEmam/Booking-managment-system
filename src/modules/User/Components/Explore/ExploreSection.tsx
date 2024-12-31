@@ -18,7 +18,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useNavigate } from "react-router-dom";
 import panner from "../../../../assets/banner.png";
-import { DateRangePicker } from "materialui-daterange-picker";
+ import { DateRangePicker } from "materialui-daterange-picker";
 import Pagination from "@mui/material/Pagination";
 
 const CssTextField = styled(TextField)({
@@ -121,7 +121,7 @@ export default function ExploreSection() {
 
 
             <Item sx={{ width: "100%}" }}>
-              <div>
+              {/* <div>
                 <CssTextField
                   id="outlined-basic"
                   fullWidth
@@ -161,8 +161,11 @@ export default function ExploreSection() {
                     );
                   }}
                 />
-              </div><Stack>
-              {/* <Stack
+              </div> */}
+
+
+              <Stack>
+              <Stack
                 direction={{ xs: "column", sm: "row" }}
                 spacing={{ md: 1 }}
               >
@@ -189,7 +192,7 @@ export default function ExploreSection() {
                     </DemoContainer>
                   </LocalizationProvider>
                 </Item>
-              </Stack> */}
+              </Stack>
 
               <Box sx={{ my: "1rem" }}>
                 <Typography

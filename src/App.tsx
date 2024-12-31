@@ -31,6 +31,7 @@ import { CssBaseline } from '@mui/material';
 import React from "react";
 import RoomForm from "./modules/Admin/Components/Rooms/RoomForm/RoomForm";
 import ExplorePage from "./modules/User/Components/Explore/ExplorePage";
+import Payment from "./modules/User/Components/Payment/Payment";
 
 
 const lightTheme = createTheme({
@@ -117,7 +118,7 @@ function App() {
         { index: true, element: <DashBoard /> },
 
         { path: "ads-list", element: <AdsList /> },
-  
+
         { path: "room-facility", element: <RoomFacilitiesList /> },
 
         { path: "rooms-list", element: <RoomsList /> },
@@ -154,6 +155,15 @@ function App() {
           element: (
             <ProtectedRoute loginData={loginData}>
               <FavoriteRoomPage />
+            </ProtectedRoute>
+          ),
+
+        },
+        {
+          path: "Bokking",
+          element: (
+            <ProtectedRoute loginData={loginData}>
+              <Payment/>
             </ProtectedRoute>
           ),
 
