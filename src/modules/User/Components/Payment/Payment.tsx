@@ -10,7 +10,7 @@ import {
 import { Button, Container, Stack, styled } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import axios from "axios";
-import { axiosInstance } from "../../../../constants/URLS";
+import { axiosInstance, payment } from "../../../../constants/URLS";
 import { toast } from "react-toastify";
 
 const stripe = loadStripe(
@@ -32,14 +32,14 @@ const payBooking = async (BOOKING_Id: string, token: string) => {
     // const res = await axios.post(
     //   `https://upskilling-egypt.com:3000/api/v0/portal/booking/${BOOKING_Id}/pay`,
     //   {
-    //     token,
+    //     token
     //   },
-    //   { headers: { Authorization: localStorage.getItem("token") } }
+    //   { headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzYyYWY1OGMwMWUxODU2NjE4ODk2YzQiLCJyb2xlIjoiYWRtaW4iLCJ2ZXJpZmllZCI6ZmFsc2UsImlhdCI6MTczNDUyMDY5MCwiZXhwIjoxNzM1NzMwMjkwfQ.q1xeqnFoGBejYG06zYqSbDT__Tp84MO-eRwreEW0P90` } }
     // );
 
-    const res = await axiosInstance.post(`/portal/booking/${BOOKING_Id}/pay`, {
-      token,
-    });
+    const res = await axiosInstance.post(payment.bokking(BOOKING_Id),{token});
+
+
     console.log(res);
     toast.success("booking payed successfully");
   } catch (error) {
@@ -65,7 +65,7 @@ const CheckOutForm = () => {
       const tokenValue = token.id;
       console.log(tokenValue);
 
-     await payBooking(`67740eafc01e1856618cab9e`, tokenValue);
+     await payBooking(`67741812c01e1856618cacf3`,tokenValue);
     } catch (finalError) {
       toast.error(finalError.response.data.message);
     }
@@ -96,7 +96,7 @@ const CheckOutForm = () => {
                     padding: "1rem",
                   }}
                 >
-                  <CardElement />
+                  <CardElement/>
                 </div>
                 {/* <AddressElement options={{ mode: "billing" }} /> */}
                 {/* <Button variant="contained" color="primary" type="submit">

@@ -8,6 +8,12 @@ export const axiosInstance = axios.create({
   headers: { Authorization: localStorage.getItem('token') },
 });
 
+//payment
+
+export const payment={
+
+  bokking:(BOOKING_Id:string)=>`portal/booking/${BOOKING_Id}/pay`
+}
 // Admin
 export const ADMINAUTHURLS = {
   createUser: `admin/users`,
