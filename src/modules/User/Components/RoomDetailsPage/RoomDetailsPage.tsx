@@ -30,13 +30,13 @@ interface rooms_IF {
 export default function RoomDetailsPage() {
 
   const [rooms, setRooms]=React.useState<rooms_IF[]>([]);
-  
+
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
-  
+
   const [value, setValue] = React.useState<number | null>(0);
   const {register, handleSubmit, formState: { errors },}=useForm();
-  
+
 
   const handleStartDateChange = (newStartDate: Dayjs | null ) => {
     setStartDate(newStartDate);
@@ -52,8 +52,8 @@ export default function RoomDetailsPage() {
 
   const getRoomsList = async () => {
     try {
-      const res = await axiosInstance.get(PORTALROOMS.getAllRoomsAll)
-  
+      const res = await axiosInstance.get(PORTALROOMS.getAllRooms)
+
       console.log(res.data.data.rooms);
       // console.log(res?.data?.data?.rooms[0]._id);
       setRooms(res?.data?.data.rooms[2]);
@@ -63,7 +63,7 @@ export default function RoomDetailsPage() {
 
   };
 
-  
+
   const onSubmitDate=async()=>{
     try{
       await axiosInstance.post(PORTALBOOKING.createBooking)
@@ -80,7 +80,7 @@ export default function RoomDetailsPage() {
       console.log(error);
     }
   }
-  
+
   const onSubmitComment=async()=>{
     try{
       const res= await axiosInstance.post(PORTALROOMREVIEW.createReview);
@@ -101,16 +101,16 @@ export default function RoomDetailsPage() {
       backgroundColor: '#1A2027',
     }),
   }));
-  
-    
-    
+
+
+
   useEffect(()=>{
     getRoomsList()
   },[]);
-  
+
   return (
     <Box sx={{  width: '100%', marginTop:5 }}>
-      
+
       <Stack sx={{color:"rgb(1, 7, 120)", justifyContent:'center', alignItems:"center"}}>
         <Typography variant='h4'>Village Angga</Typography>
         <Typography color='success' variant='subtitle1'>Bogor, Indonesia</Typography>
@@ -121,7 +121,7 @@ export default function RoomDetailsPage() {
         <Stack direction={'column'} spacing={1}>
           <ImageList sx={{ width: 300, height: 500 }}  cols={1} rowHeight={164}>
             <ImageListItem sx={{borderRadius:10}}>
-              
+
               <img
               style={{borderRadius:10}}
               src={bookingImg}
@@ -132,7 +132,7 @@ export default function RoomDetailsPage() {
             </ImageListItem>
 
             <ImageListItem sx={{borderRadius:10}}>
-             
+
              <img
              style={{borderRadius:10}}
              src={bookingImg}
@@ -141,7 +141,7 @@ export default function RoomDetailsPage() {
 
             </ImageListItem>
           </ImageList>
-          
+
         </Stack>
       </Stack>
 
@@ -149,84 +149,84 @@ export default function RoomDetailsPage() {
         alignItems:"center"}} direction={'row'}>
         <Box sx={{  width: '40%'}}>
           <Typography gutterBottom variant='subtitle1'>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
-          when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
-          It has survived not only five centuries, 
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+          when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+          It has survived not only five centuries,
           but also the leap into electronic typesetting, remaining essentially unchanged.
           </Typography>
           <Typography gutterBottom variant='subtitle1'>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
-          when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
-          It has survived not only five centuries, 
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+          when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+          It has survived not only five centuries,
           but also the leap into electronic typesetting, remaining essentially unchanged.
           </Typography>
           <Typography gutterBottom sx={{marginBottom:5}} variant='subtitle1'>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
-          when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
-          It has survived not only five centuries, 
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+          when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+          It has survived not only five centuries,
           but also the leap into electronic typesetting, remaining essentially unchanged.
           </Typography>
-          
+
           <Grid container sx={{marginLeft:10}} spacing={{ xs: 2, md: 2 }} columns={{ xs: 4, sm: 8, md: 8 }}>
             <Grid item xs={2}>
-              
+
               <KingBedOutlinedIcon fontSize='large'/>
               <Typography>5 bedrooms</Typography>
             </Grid>
 
             <Grid  item xs={2}>
               <LivingOutlinedIcon fontSize='large'/>
-              
+
               <Typography>1 living room</Typography>
             </Grid>
 
             <Grid  item xs={2}>
             <BathtubOutlinedIcon fontSize='large'/>
 
-              <Typography>3 bathroom</Typography>              
+              <Typography>3 bathroom</Typography>
             </Grid>
 
             <Grid item xs={2}>
               <DinnerDiningOutlinedIcon fontSize='large'/>
-              
+
               <Typography>1 dining room</Typography>
             </Grid>
-            
+
             <Grid item xs={2}>
               <WifiIcon fontSize='large'/>
-              
+
               <Typography>10 mpb/s</Typography>
             </Grid>
             <Grid item xs={2}>
               <AdUnitsIcon fontSize='large'/>
-              
+
               <Typography>7 unit ready</Typography>
             </Grid>
             <Grid xs={2}>
               <KitchenIcon fontSize='large'/>
-              
+
               <Typography>2 refigrator</Typography>
             </Grid>
             <Grid xs={2}>
               <TvIcon fontSize='large'/>
-              
+
               <Typography>4 television</Typography>
             </Grid>
           </Grid>
         </Box>
         <Box component={'form'}
           onSubmit={handleSubmit(onSubmitDate)}
-          sx={{ border:2, borderRadius:2, 
-          borderColor:"rgb(151, 151, 151)",  
+          sx={{ border:2, borderRadius:2,
+          borderColor:"rgb(151, 151, 151)",
           width: '40%', padding:5, marginBottom:30}}>
           <Typography variant='h5'>Start booking</Typography>
           <Typography variant='h3'>${(rooms.price-rooms.discount)} per night</Typography>
           <Typography color='error' variant='subtitle1'>Discount 20%</Typography>
-          
-          
+
+
           <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             sx={{marginTop:2}}
@@ -258,26 +258,26 @@ export default function RoomDetailsPage() {
         </Box>
       </Stack>
 
-          
 
-      <Stack sx={{justifyContent:'center', 
-        alignItems:"center", marginTop:10}} 
+
+      <Stack sx={{justifyContent:'center',
+        alignItems:"center", marginTop:10}}
         divider={<Divider orientation="vertical" flexItem />}
         spacing={2}
         direction={'row'}
       >
-        
+
         <Box sx={{  width: '30%'}}
-          component="form" 
+          component="form"
           noValidate
           autoComplete="off"
           onSubmit={handleSubmit(onSubmitRate)}
         >
           <Stack spacing={10} direction={'row'} sx={{marginBottom:5, justifyContent:'space-between'}}>
-            
+
             <Typography  variant='h5'>
-            
-              Rate 
+
+              Rate
             </Typography>
             <FormControl {...register("rate",{
               required:"please rate this room"
@@ -285,35 +285,35 @@ export default function RoomDetailsPage() {
             error={!!errors.rate}
             >
 
-              <Rating 
+              <Rating
                 value={value}
                 onChange={(event, newValue) => {
-                  setValue(newValue);  
+                  setValue(newValue);
                 }}/>
-            
+
             </FormControl>
           </Stack>
-          
+
           <Typography variant='h5' sx={{marginBottom:2}}>
             Message
           </Typography>
-          
+
           <TextField sx={{width:'90%'}} multiline
           rows={6} {...register("review", {
             required:"Please put your review before submitting"
           })}
           error={!!errors.review}/>
-          
+
           <Box sx={{marginTop:5}}>
             <Button sx={{paddingX:10, color:'white', backgroundColor:'rgb(50, 82, 223)'}}>Rate</Button>
           </Box>
-        
+
         </Box>
 
         <Box
-          component="form" 
+          component="form"
           noValidate
-          autoComplete="off"  
+          autoComplete="off"
           sx={{  width: '30%', paddingLeft:5}}
           onSubmit={handleSubmit(onSubmitComment)}
           >
@@ -322,8 +322,8 @@ export default function RoomDetailsPage() {
               Add your comment
             </Typography>
 
-            <TextField 
-            sx={{width:'100%', marginTop:10}} 
+            <TextField
+            sx={{width:'100%', marginTop:10}}
             multiline rows={6}
             {...register("comment",{
               required:"Please put your comment here"
@@ -343,4 +343,3 @@ export default function RoomDetailsPage() {
 
   )
 }
-

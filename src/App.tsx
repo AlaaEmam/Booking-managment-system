@@ -31,6 +31,10 @@ import { CssBaseline } from '@mui/material';
 import React from "react";
 import RoomForm from "./modules/Admin/Components/Rooms/RoomForm/RoomForm";
 import ExplorePage from "./modules/User/Components/Explore/ExplorePage";
+import Payment from "./modules/User/Components/Payment/Payment";
+import PaymentStep2 from "./modules/User/Components/Payment/paymentStep1";
+import RoomDeta from "./modules/User/Components/RoomDetailsPage/RoomDeta";
+import PaySucssed from "./modules/User/Components/Payment/PaySucssed";
 
 
 const lightTheme = createTheme({
@@ -117,7 +121,7 @@ function App() {
         { index: true, element: <DashBoard /> },
 
         { path: "ads-list", element: <AdsList /> },
-  
+
         { path: "room-facility", element: <RoomFacilitiesList /> },
 
         { path: "rooms-list", element: <RoomsList /> },
@@ -146,7 +150,7 @@ function App() {
         },
         { path: "explore-rooms", element: <ExploarePage /> },
         { path: "explore-rooms/:capacity", element: <ExplorePage /> },
-        { path: "explore-rooms/room-details/:room_id", element: <RoomDetailsPage /> },
+       { path: "explore-rooms/room-details/:room_id", element: <RoomDeta /> },
 
 
         {
@@ -158,6 +162,30 @@ function App() {
           ),
 
         },
+        {
+          path: "Bokking/:booking_id",
+          element: (
+            <ProtectedRoute loginData={loginData}>
+              <Payment/>
+            </ProtectedRoute>
+          ),
+
+        },
+        ,
+        {
+          path: "Bokking/sucssed",
+          element: (
+            <ProtectedRoute loginData={loginData}>
+              <PaySucssed/>
+            </ProtectedRoute>
+          ),
+
+        },
+
+
+
+
+
       ],
     },
   ]);
