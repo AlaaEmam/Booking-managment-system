@@ -8,6 +8,10 @@ export const axiosInstance = axios.create({
   headers: { Authorization: localStorage.getItem('token') },
 });
 
+axiosInstance.interceptors.request.use((config)=>{
+  config.headers.Authorization = localStorage.getItem('HMSToken')
+  return config
+  })
 // Admin
 export const ADMINAUTHURLS = {
   createUser: `admin/users`,
@@ -105,3 +109,4 @@ export const FAVROOMS={
   getAddDetailsFAVROOMS:(id: string) =>`/api/v0/portal/favorite-rooms${id}`,
 deleteDetailsFAVROOMS:(id:string)=>`/api/v0/portal/favorite-rooms/${id}`
 };
+
