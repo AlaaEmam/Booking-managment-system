@@ -7,17 +7,19 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import { Button, Container, Stack, styled } from "@mui/material";
+import { Button, Container, Stack, styled, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import axios from "axios";
 import { axiosInstance, payment } from "../../../../constants/URLS";
 import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router-dom";
 
 const stripe = loadStripe(
   "pk_test_51OTjURBQWp069pqTmqhKZHNNd3kMf9TTynJtLJQIJDOSYcGM7xz3DabzCzE7bTxvuYMY0IX96OHBjsysHEKIrwCK006Mu7mKw8"
 );
 
 export default function Payment() {
+
   return (
     <>
       <Elements stripe={stripe}>
@@ -28,20 +30,14 @@ export default function Payment() {
 }
 
 const payBooking = async (BOOKING_Id: string, token: string) => {
+
+  console.log(localStorage.getItem("token"));
+
   try {
-    // const res = await axios.post(
-    //   `https://upskilling-egypt.com:3000/api/v0/portal/booking/${BOOKING_Id}/pay`,
-    //   {
-    //     token
-    //   },
-    //   { headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzYyYWY1OGMwMWUxODU2NjE4ODk2YzQiLCJyb2xlIjoiYWRtaW4iLCJ2ZXJpZmllZCI6ZmFsc2UsImlhdCI6MTczNDUyMDY5MCwiZXhwIjoxNzM1NzMwMjkwfQ.q1xeqnFoGBejYG06zYqSbDT__Tp84MO-eRwreEW0P90` } }
-    // );
+    await axiosInstance.post(payment.bokking(BOOKING_Id), { token });
 
-    const res = await axiosInstance.post(payment.bokking(BOOKING_Id),{token});
-
-
-    console.log(res);
     toast.success("booking payed successfully");
+
   } catch (error) {
     console.log("error pay fun", error);
   }
@@ -49,6 +45,9 @@ const payBooking = async (BOOKING_Id: string, token: string) => {
 const CheckOutForm = () => {
   const stripee = useStripe();
   const elements = useElements();
+  const navigate=useNavigate()
+
+  const { booking_id } = useParams();
 
   const paymenthandler = async (e: FormEvent<HTMLFormElement>) => {
     try {
@@ -65,18 +64,36 @@ const CheckOutForm = () => {
       const tokenValue = token.id;
       console.log(tokenValue);
 
-     await payBooking(`67741812c01e1856618cacf3`,tokenValue);
+      await payBooking(`${booking_id}`, tokenValue);
+      navigate('/Bokking/sucssed')
     } catch (finalError) {
-      toast.error(finalError.response.data.message);
+      toast.error(finalError);
     }
   };
   return (
     <>
       {" "}
       <Container maxWidth="lg">
-        <Grid container spacing={1} sx={{ my: "4rem" }}>
+        <Grid container justifyContent="center" spacing={1} sx={{ my: "4rem" }}>
+          <Grid sx={{ textAlign: "center" }} size={{ md: 12 }} mb={2}>
+            <Typography
+              variant="h3"
+              sx={{ color: "var(--primary-color)", fontFamily: "Poppins" }}
+              gutterBottom
+            >
+              Payment
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              sx={{ color: "var(--txt-gray)", margin: "1rem 0" }}
+              gutterBottom
+            >
+              Kindly follow the instructions below{" "}
+            </Typography>
+          </Grid>
+
           <Grid
-            size={{ md: 8 }}
+            size={{ md: 6 }}
             sx={{ paddingRight: "2rem", backgroundColor: "whitesmoke" }}
           >
             <form onSubmit={paymenthandler}>
@@ -88,21 +105,40 @@ const CheckOutForm = () => {
                   margin: "1rem",
                 }}
               >
+
+<AddressElement options={{ mode: "billing" }} />
+
                 <div
                   style={{
-                    marginBottom: "2rem",
-                    border: "1px solid whitesmoke",
+                    marginTop: "1rem",
+                    border: "1px solid #e6e6e6",
                     width: "100%",
+                    borderRadius:"2px",
                     padding: "1rem",
                   }}
                 >
-                  <CardElement/>
+                  <CardElement />
                 </div>
-                {/* <AddressElement options={{ mode: "billing" }} /> */}
                 {/* <Button variant="contained" color="primary" type="submit">
                   Pay Bokking Click Me
                 </Button> */}
-                <button type="submit"> Pay Bokking Click Me</button>
+
+                <Button
+                  variant="contained"
+                  size="large"
+                  sx={{
+                    width: "100%",
+                    py: "0.7rem",
+                    margin: "3rem 0",
+                    borderRadius: 1,
+                    textTransform: "none",
+                    fontFamily: "Poppins",
+                    boxShadow: "0px 8px 15px 0px rgba(50, 82, 223, 0.30)",
+                  }}
+                  type="submit"
+                >
+                  Pay Bokking Click Me{" "}
+                </Button>
               </div>
             </form>
           </Grid>
