@@ -14,6 +14,7 @@ export const payment={
 
   bokking:(BOOKING_Id:string)=>`portal/booking/${BOOKING_Id}/pay`
 }
+
 // Admin
 export const ADMINAUTHURLS = {
   createUser: `admin/users`,
@@ -107,7 +108,9 @@ export const PORTALROOMREVIEW={
 };
 
 export const FAVROOMS={
-  getAddsFAVROOMS:`/api/v0/portal/favorite-rooms`,
-  getAddDetailsFAVROOMS:(id: string) =>`/api/v0/portal/favorite-rooms${id}`,
-deleteDetailsFAVROOMS:(id:string)=>`/api/v0/portal/favorite-rooms/${id}`
-};
+  getAddsFAVROOMS:`portal/favorite-rooms`,
+  getAddDetailsFAVROOMS:`portal/favorite-rooms`,
+deleteDetailsFAVROOMS:(id:string)=>`portal/favorite-rooms/${id}`
+}
+
+

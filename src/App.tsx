@@ -171,7 +171,6 @@ function App() {
           ),
 
         },
-        ,
         {
           path: "Bokking/sucssed",
           element: (
