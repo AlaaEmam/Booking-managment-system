@@ -42,6 +42,10 @@ export default function RoomDetailsPage() {
   const {register:registerRate, handleSubmit:handleSubmitRate , formState: { errors:errorRate },}=useForm();
   const {register:registerComment, handleSubmit:handleSubmitComment , formState: { errors:errorComment },}=useForm();
   
+  // const { register: registerRate, handleSubmit: handleRateSubmit, setValue: setValueRate } = useForm({ defaultValues: { roomId: room_id } });
+  // const { register: registerComment, handleSubmit: handleCommentSubmit } = useForm({ defaultValues: { roomId: room_id } });
+  // const { register, handleSubmit, formState: { errors, isSubmitting }  } = useForm({ defaultValues: { room: room_id,  } });
+
   const [roomDetails, setRoomDetails]=useState<rooms_IF[]>([])
 
   const room_id=params.room_id;
@@ -301,7 +305,7 @@ export default function RoomDetailsPage() {
             
               Rate 
             </Typography>
-            <FormControl {...registerRate("rate",{
+            <FormControl {...registerRate("rate", {
               required:"please rate this room"
             })}
             error={!!errorRate.rate}
@@ -364,6 +368,7 @@ export default function RoomDetailsPage() {
 
             </Box>
           </Stack>
+          
         </Box>
       </Stack>
       </Box>
