@@ -102,18 +102,26 @@ export default function RoomDeta() {
   }, []);
 
   const addStartDate = (newValue: dayjs.Dayjs | null) => {
-    localStorage.setItem("startDate", newValue.toISOString());
+    if (newValue) {
+      localStorage.setItem("startDate", newValue.toISOString());
+    }
     setStartDate(newValue)
   };
   const addEndDate = (newValue: dayjs.Dayjs | null) => {
-    localStorage.setItem("endDate", newValue.toISOString());
-    setendDate(newValue)
+    if (newValue) {
+      localStorage.setItem("endDate", newValue.toISOString());
+      setendDate(newValue);
+    }
   };
 
 const calcDays= async()=>
 {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+    if (!startDate || !endDate) {
+      toast.error("Please select both start and end dates.");
+      return;
+    }
+    const start = new Date(startDate.toISOString());
+    const end = new Date(endDate.toISOString());
 
     // Calculate the difference in milliseconds
     const differenceInTime = end.getTime() - start.getTime();
@@ -130,7 +138,7 @@ const calcDays= async()=>
     })
     console.log(res.data.data.booking._id)
     toast.info("booking created ")
-    navigator(`/Bokking/${res.data.data.booking._id}`)
+    navigator(`/Booking/${res.data.data.booking._id}`)
   //console.log(differenceInDays)
 
 }
@@ -172,13 +180,13 @@ const calcDays= async()=>
           {/*
 {roomDetails.facilities.map((item, index) => (
             <item size={{ md: 3 }} key={index}>
-              {item.name}
+              {item}
             </item>
           ))}
 
           {roomDetails.facilities.map((item, index) => (
             <Grid size={{ md: 3 }} key={index}>
-              {item.name}
+              {item}
             </Grid>
           ))} */}
         </Grid>
@@ -210,7 +218,7 @@ const calcDays= async()=>
               </Grid>
               {roomDetails.facilities.map((item, index) => (
                 <Grid size={{ md: 4 }} key={index}>
-                  {item.name}
+                  {item}
                 </Grid>
               ))}
             </Grid>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { axiosInstance, FAVROOMS } from '../../../../constants/URLS';
 import { Box, Card, Typography, Grid, CardMedia, IconButton, Pagination } from '@mui/material';
 import { FaHeart } from 'react-icons/fa';
+import Noimage from '../../../../assets/no-image.jpg';
 
 interface Room {
   _id: string;
@@ -74,7 +75,7 @@ const FavoriteRoomPage = () => {
         Your Rooms
       </Typography>
 
-      <Grid container spacing={3} sx={{ marginTop: 2 }}>
+<Grid container spacing={3} sx={{ marginTop: 2 }} >
   {favoriteRooms.map((favoriteRoom) => (
     <Grid item xs={12} sm={6} md={4} lg={3} key={favoriteRoom._id}>
       {favoriteRoom.rooms.map((room: Room) => (
@@ -84,6 +85,7 @@ const FavoriteRoomPage = () => {
             borderRadius: 3,
             boxShadow: 3,
             overflow: 'hidden',
+            margin: 5,
             position: 'relative',
             transition: 'transform 0.3s, box-shadow 0.3s',
             '&:hover': {
@@ -95,7 +97,7 @@ const FavoriteRoomPage = () => {
           <CardMedia
             component="img"
             height="180"
-            image={room.images[0] || '/default-image.jpg'}
+            image={room.images[0] || Noimage}
             alt={room.roomNumber}
             sx={{
               width: '100%',

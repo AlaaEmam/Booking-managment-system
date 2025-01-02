@@ -1,4 +1,6 @@
 import "./App.css";
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthLayout from "./modules/Shared/Components/AuthLayout/AuthLayout";
 import Notfound from "./modules/Shared/Components/Notfound/Notfound";
@@ -32,10 +34,9 @@ import React from "react";
 import RoomForm from "./modules/Admin/Components/Rooms/RoomForm/RoomForm";
 import ExplorePage from "./modules/User/Components/Explore/ExplorePage";
 import Payment from "./modules/User/Components/Payment/Payment";
-import PaymentStep2 from "./modules/User/Components/Payment/paymentStep1";
+// import PaymentStep2 from "./modules/User/Components/Payment/paymentStep1";
 import RoomDeta from "./modules/User/Components/RoomDetailsPage/RoomDeta";
 import PaySucssed from "./modules/User/Components/Payment/PaySucssed";
-
 
 const lightTheme = createTheme({
   palette: {
@@ -139,7 +140,7 @@ function App() {
       children: [
         { index: true, element: <HomePage /> },
         { path: "homepage", element: <HomePage /> },
-        { path: "room-details", element: <RoomDetailsPage /> },
+        { path: "room-details/:room_id", element: <RoomDetailsPage /> },
         {
           path: "payment",
           element: (
@@ -150,9 +151,7 @@ function App() {
         },
         { path: "explore-rooms", element: <ExploarePage /> },
         { path: "explore-rooms/:capacity", element: <ExplorePage /> },
-       { path: "explore-rooms/room-details/:room_id", element: <RoomDeta /> },
-
-
+        { path: "explore-rooms/room-details/:room_id", element: <RoomDeta /> },
         {
           path: "your-favorite",
           element: (
@@ -160,31 +159,23 @@ function App() {
               <FavoriteRoomPage />
             </ProtectedRoute>
           ),
-
         },
         {
-          path: "Bokking/:booking_id",
+          path: "Booking/:booking_id",
           element: (
             <ProtectedRoute loginData={loginData}>
               <Payment/>
             </ProtectedRoute>
           ),
-
         },
         {
-          path: "Bokking/sucssed",
+          path: "Booking/sucssed",
           element: (
             <ProtectedRoute loginData={loginData}>
               <PaySucssed/>
             </ProtectedRoute>
           ),
-
         },
-
-
-
-
-
       ],
     },
   ]);

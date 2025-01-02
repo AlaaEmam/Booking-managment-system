@@ -3,6 +3,7 @@ import { Grid, Container, Typography } from '@mui/material';
 import defaultImage from '../../../../assets/no-image.jpg';
 import { axiosInstance, PORTALADS, PORTALROOMS } from './../../../../constants/URLS';
 import RoomsCard from './RoomsCard';
+import Slider from "react-slick";
 
 
 interface Room {
@@ -20,6 +21,13 @@ interface Ads {
   room?: Room; 
 }
 export default function DataHomePage() {
+  var settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+  };
   const [rooms, setRooms] = React.useState<Room[]>([]);
   const [ads , setAds] = React.useState<Ads[]>([]);
 
@@ -66,18 +74,20 @@ export default function DataHomePage() {
           Popular Choice
         </Typography>
         <Grid container spacing={4} justifyContent="left">
-          {ads.filter(ad => ad.isActive).map((ad) => ( 
-            <Grid item key={ad._id}>
+        <Slider {...settings}>
+          {ads.filter(ad => ad.isActive).map((ad) => (
+            <div key={ad._id}>
               <RoomsCard
                 _id={ad.room?._id || 'default-id'}
-                title={ad.room?.roomNumber || 'No Room Number'} 
+                title={ad.room?.roomNumber || 'No Room Number'}
                 location='Bogor, Indonesia'
-                imageUrl={ad.room?.images[0] || defaultImage} 
-                price={ad.room?.price ?? 0} 
-                discount={ad.room?.discount ? `${ad.room.discount} Discount` : undefined} 
+                imageUrl={ad.room?.images[0] || defaultImage}
+                price={ad.room?.price ?? 0}
+                discount={ad.room?.discount ? `${ad.room.discount} Discount` : undefined}
               />
-            </Grid>
+            </div>
           ))}
+        </Slider>
         </Grid>
       </Container>
 

@@ -110,7 +110,7 @@ export const PORTALROOMREVIEW={
 export const FAVROOMS={
   getAddsFAVROOMS:`portal/favorite-rooms`,
   getAddDetailsFAVROOMS:`portal/favorite-rooms`,
-deleteDetailsFAVROOMS:(id:string)=>`portal/favorite-rooms/${id}`
+  deleteDetailsFAVROOMS:(id:string)=>`portal/favorite-rooms/${id}`
 }
 
 

@@ -14,11 +14,13 @@ export default function RoomDetailsPage() {
   const getRoomDetails = async () => {
     setIsLoading(true);
     try {
-      const res = await axiosInstance.get(`${PORTALROOMS.getRoomDetails(room_id)}`);
+      if (room_id) {
+        const res = await axiosInstance.get(`${PORTALROOMS.getRoomDetails(room_id)}`);
       if (res.data && res.data.data) {
         setRoom(res.data.data.room);
-      } else {
-        setError("Room not found");
+        } else {
+          setError("Room not found");
+        }
       }
     } catch (error) {
       console.error("Error fetching room details: ", error);
