@@ -55,7 +55,6 @@ export default function RoomDetailsPage() {
       const res = await axiosInstance.get(PORTALROOMS.getAllRooms)
 
       console.log(res.data.data.rooms);
-      // console.log(res?.data?.data?.rooms[0]._id);
       setRooms(res?.data?.data.rooms[2]);
      } catch (error) {
       console.log(error)
