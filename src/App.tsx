@@ -136,14 +136,6 @@ function App() {
         { index: true, element: <HomePage /> },
         { path: "homepage", element: <HomePage /> },
         { path: "room-details/:room_id", element: <RoomDetailsPage /> },
-        {
-          path: "payment",
-          element: (
-            <ProtectedRoute loginData={loginData}>
-              <BookingPage />
-            </ProtectedRoute>
-          ),
-        },
         { path: "explore-rooms", element: <ExploarePage /> },
         { path: "explore-rooms/:capacity", element: <ExplorePage /> },
         { path: "explore-rooms/room-details/:room_id", element: <RoomDeta /> },

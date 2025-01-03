@@ -53,7 +53,7 @@ export default function RoomDetailsPage() {
   const getRoomsList = async () => {
     try {
 
-      const res = await axiosInstance.get(PORTALROOMS.getAllRooms("1", "10"))
+      const res = await axiosInstance.get(PORTALROOMS.getAllRooms)
 
       console.log(res.data.data.rooms);
       setRooms(res?.data?.data.rooms[2]);
@@ -223,7 +223,7 @@ export default function RoomDetailsPage() {
           borderColor:"rgb(151, 151, 151)",
           width: '40%', padding:5, marginBottom:30}}>
           <Typography variant='h5'>Start booking</Typography>
-          <Typography variant='h3'>${(Number(rooms[0]?.price) - Number(rooms[0]?.discount))} per night</Typography>
+          <Typography variant='h3'>${(rooms.price-rooms.discount)} per night</Typography>
           <Typography color='error' variant='subtitle1'>Discount 20%</Typography>
 
 
@@ -248,7 +248,7 @@ export default function RoomDetailsPage() {
                 required:"please select your date"
               })}
               onChange={handleEndDateChange}
-              minDate={startDate ?? undefined}
+              minDate={startDate}
             />
           </Box>
           </LocalizationProvider>
