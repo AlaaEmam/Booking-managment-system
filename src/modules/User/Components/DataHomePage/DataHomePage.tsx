@@ -75,18 +75,23 @@ export default function DataHomePage() {
         </Typography>
         <Grid container spacing={4} justifyContent="left">
         <Slider {...settings}>
-          {ads.filter(ad => ad.isActive).map((ad) => (
-            <div key={ad._id}>
-              <RoomsCard
-                _id={ad.room?._id || 'default-id'}
-                title={ad.room?.roomNumber || 'No Room Number'}
-                location='Bogor, Indonesia'
-                imageUrl={ad.room?.images[0] || defaultImage}
-                price={ad.room?.price ?? 0}
-                discount={ad.room?.discount ? `${ad.room.discount} Discount` : undefined}
-              />
-            </div>
-          ))}
+        {ads.filter(ad => ad.isActive).length > 0 && (
+  <Slider {...settings}>
+    {ads.filter(ad => ad.isActive).map((ad) => (
+      <div key={ad._id}>
+        <RoomsCard
+          _id={ad.room?._id || 'default-id'}
+          title={ad.room?.roomNumber || 'No Room Number'}
+          location='Bogor, Indonesia'
+          imageUrl={ad.room?.images[0] || defaultImage}
+          price={ad.room?.price ?? 0}
+          discount={ad.room?.discount ? `${ad.room.discount} Discount` : undefined}
+        />
+      </div>
+    ))}
+  </Slider>
+)}
+
         </Slider>
         </Grid>
       </Container>
