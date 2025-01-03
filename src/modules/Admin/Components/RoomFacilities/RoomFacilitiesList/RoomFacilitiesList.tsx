@@ -9,7 +9,9 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  CircularProgress,
 } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import { Add as AddIcon } from "@mui/icons-material";
 import "./RoomFacilitiesList.css";
 import { styled } from "@mui/material/styles";
@@ -35,8 +37,19 @@ import { useForm } from "react-hook-form";
 import FacilityDialog from "../FacilityDialog/FacilityDialog";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CustomTablePagination from './../../Shared/Components/CustomTablePagination/CustomTablePagination';
+import CustomTablePagination from "../../Shared/Components/CustomTablePagination/CustomTablePagination";
+import { ADMINROOMFACILITIES, axiosInstance } from "../../../../../constants/URLS";
 // STYLE
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  boxShadow: "none",
+  color: 'var(--secondary-color)',
+  ...(theme.palette.mode === 'dark' && { backgroundColor: "#1A2027" }),
+}));
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "var(--light-gray)",
@@ -58,7 +71,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function RoomFacilitiesList() {
   interface Facility {
-    id: string;
+    totalCount: number;
+    _id: string;
     name: string;
     createdBy: {
       _id: string;
@@ -66,34 +80,29 @@ export default function RoomFacilitiesList() {
     };
     createdAt: string;
     updatedAt: string;
+  
   }
   const [facilityList, setFacilityList] = useState<Facility[]>([]);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [showDelete, setShowDelete] = useState<boolean>(false);
   const [showView, setShowView] = useState<boolean>(false);
-  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(
-    null
-  );
+  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(null);
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
-
-
+ 
   const getFacilityList = async () => {
     try {
-      const response = await axios.get(
-        `https://upskilling-egypt.com:3000/api/v0/admin/room-facilities`,
+      const response = await axiosInstance.get(
+        ADMINROOMFACILITIES.getRoomFacilities,
         {
           params: {
-            size: rowsPerPage, // Set the number of rows per page
-            page: page, // Set the current page number
+            size: rowsPerPage,
+            page: page,
           },
-          headers: { Authorization: localStorage.getItem("token") || "" },
         }
       );
+      console.log(response.data.data);
+      setTotalItems(response.data.data.totalCount);
       setFacilityList(response.data.data.facilities || []);
-      setTotalItems(response.data.data.totalCount  || 0); // Ensure this is a number
-
     } catch (error) {
       console.error(error);
       toast.error("Failed to fetch Facility.");
@@ -101,59 +110,51 @@ export default function RoomFacilitiesList() {
   };
 
   // Handle delete
-  const deleteFacility = async () => {
-    if (!selectedId) return;
-
+  const deleteFacility = async (id: string) => {
+    console.log("Deleting facility with ID:", id); // Log the ID of the facility being deleted
+  
+    if (!id) {
+      toast.error("Facility ID is not provided.");
+      return; // Don't continue if the ID is not provided
+    }
+  
     try {
-      await axios.delete(
-        `https://upskilling-egypt.com:3000/api/v0/admin/room-facilities/${selectedId}`,
-        {
-          
-          headers: { Authorization: localStorage.getItem("token") || "" },
-        }
-      );
-      toast.success("Operation completed successfully!");
-      getFacilityList();
-      setShowDelete(false);
+      const response = await axiosInstance.delete(ADMINROOMFACILITIES.deleteRoomFacilities(id));
+  
+      // If we get a 204, we simply acknowledge the success
+      if (response.status === 204) {
+        toast.success("Facility deleted successfully!");
+        getFacilityList();  // Refresh the facility list after deletion
+        setShowDelete(false);  // Close the delete modal
+      } else {
+        // In case the server responds with a non-204 code (which is uncommon for DELETE requests)
+        toast.error("Failed to delete facility.");
+      }
     } catch (error) {
       toast.error("Failed to delete facility.");
-      console.error(error);
+      console.error("Error deleting facility:", error);
     }
   };
-
-  // Modal View
-  // const handleCloseView = () => setShowView(false);
-  // const handleShowView = (facility: Facility) => {
-  //   setSelectedFacility(facility);
-  //   setShowView(true);
-  // };
+  
 
   // Handle saving the facility
   const handleSave = async (data: Facility) => {
     try {
       if (selectedFacility) {
         // Update existing facility
-        await axios.put(
-          `https://upskilling-egypt.com:3000/api/v0/admin/room-facilities/${selectedFacility}`,
+        await axiosInstance.put(
+          ADMINROOMFACILITIES.updateRoomFacilities(selectedFacility._id),
           data,
-          {
-            headers: { Authorization: localStorage.getItem("token") || "" },
-          }
         );
         toast.success("Facility updated successfully!");
       } else {
         // Create new facility
-        await axios.post(
-          `https://upskilling-egypt.com:3000/api/v0/admin/room-facilities`,
-          data,
-          {
-            headers: { Authorization: localStorage.getItem("token") || "" },
-          }
-        );
+        await axiosInstance.post(ADMINROOMFACILITIES.createRoomFacilities ,data);
         toast.success("Facility created successfully!");
       }
       handleCloseDialog();
       getFacilityList();
+      
       // Optionally refresh the facility list here
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -205,11 +206,24 @@ export default function RoomFacilitiesList() {
   };
 
   // Handle Modal Delete
+  const [showDelete, setShowDelete] = useState<boolean>(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const handleShowDelete = (id: string) => {
     setSelectedId(id);
     setShowDelete(true);
   };
+  // const [selectedId, setSelectedId] = useState<string | null>(null);
+  // const [showDelete, setShowDelete] = useState(false);
+  
+  // const handleShowDelete = (id: string) => {
+  //   if (id) {
+  //     setSelectedId(id); 
+  //     setShowDelete(true);  
+  //   } else {
+  //     console.error("Facility ID is missing.");
+  //   }
+  // };
   // Dropdown Menu
   const handleMenuClick = (
     event: React.MouseEvent<HTMLElement>,
@@ -224,157 +238,183 @@ export default function RoomFacilitiesList() {
     setSelectedFacility(null);
   };
 
-    //Handel pagination
-    const [page, setPage] = useState(1); // Start from page 1
-    const [rowsPerPage, setRowsPerPage] = useState(5); // Default rows per page
-    const [totalItems, setTotalItems] = useState(0); 
-    const rowsPerPageOptions = [5, 10, 25, 50, 100];
-
-    const handleChangePage = (newPage: number) => {
-      setPage(newPage); // Update the current page
-    };
   
-    const handleChangeRowsPerPage = (newRowsPerPage: number) => {
-      if (rowsPerPageOptions.includes(newRowsPerPage)) {
-        setRowsPerPage(newRowsPerPage); // Update the state with the new rows per page
-        setPage(1); // Reset to the first page
-      }
+    // Pagination states
+    const rowsPerPageOptions = [5, 10, 25, 50, 100];
+    const [page, setPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(5); 
+    const [totalItems, setTotalItems] = useState(0);
+    // Handle pagination
+    const handleChangePage = (newPage: number) => {
+      setPage(newPage);
     };
 
+  const handleChangeRowsPerPage = (newRowsPerPage: number) => {
+    if (rowsPerPageOptions.includes(newRowsPerPage)) {
+      setRowsPerPage(newRowsPerPage);
+      setPage(1); // Reset to the first page
+    }
+  };
 
-  // Fetch Facilities on component mount
   useEffect(() => {
     getFacilityList();
   }, [page, rowsPerPage]);
+  
 
+  //Loading
+    const [isLoading, setIsLoading] = useState(true); // Loading state
+    useEffect(() => {
+      setIsLoading(true); // Set loading to true when data fetching starts
+      Promise.all([getFacilityList()])
+        .then(() => setIsLoading(false)) // Set loading to false once all data is fetched
+        .catch(() => setIsLoading(false)); // Handle errors and stop loading
+    }, []);
+  
+    if (isLoading) {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh", // Full viewport height
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      );
+    }
+  
   return (
     <>
-      <Box
-        sx={{
-          width: "100%",
-          height: "12vh",
-          display: "flex",
-          justifyContent: "space-between",
-          backgroundColor: "#ffffff",
-          alignItems: "center",
-          padding: "0 2.25rem",
-          mb: "1.5rem",
-        }}
-      >
-        <Box>
-          <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+
+      <Grid container>
+        <Grid size={{ md: 6, sm: 12 }}>
+          <Item
+          sx={{ textAlign: { md: "left", sm: "center" } }}
+          >
+            <Typography sx={{ fontWeight: "bold" }} variant="h5">
             Facilities Table Details
-          </Typography>
-          <Typography variant="body2">You can check all details</Typography>
-        </Box>
-        <Button
-          onClick={() => handleOpenDialog()}
-          sx={{
-            borderRadius: 2,
-            px: 3,
-            py: 1.3,
-            backgroundColor: "var(--primary-color)",
-            color: "var(--off-white)",
-          }}
-          startIcon={<AddIcon />}
-        >
-          Add New Facility
-        </Button>
-      </Box>
-
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell sx={{ fontWeight: 700 }} align="center">
-                Facility Name
-              </StyledTableCell>
-              <StyledTableCell sx={{ fontWeight: 700 }} align="center">
-                Created By (Admin Name)
-              </StyledTableCell>
-              <StyledTableCell sx={{ fontWeight: 700 }} align="center">
-                Created At
-              </StyledTableCell>
-              <StyledTableCell sx={{ fontWeight: 700 }} align="center">
-                Updated At
-              </StyledTableCell>
-              <StyledTableCell sx={{ fontWeight: 700 }} align="center">
-                Actions
-              </StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {Array.isArray(facilityList) &&
-              facilityList.map((facility) => (
-                <StyledTableRow key={facility.id}>
-                  <StyledTableCell align="center">
-                    {facility.name}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {facility.createdBy.userName}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {new Date(facility.createdAt).toLocaleString()}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {new Date(facility.updatedAt).toLocaleString()}
-                  </StyledTableCell>
-                  {/* Actions */}
-                  <StyledTableCell align="center">
-                    <IconButton
-                      aria-controls={anchorEl ? "simple-menu" : undefined}
-                      aria-haspopup="true"
-                      onClick={(e) => handleMenuClick(e, facility)}
-                      className="text-success"
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
-
-                    <Menu
-                      id="simple-menu"
-                      anchorEl={anchorEl}
-                      open={Boolean(anchorEl)}
-                      onClose={handleClose}
-                    >
-                      {/* <MenuItem onClick={() => { handleShowView(facility); handleClose(); }}>
-                      <img src={View} alt="View" /> 
-                      <Typography sx={{ paddingInline: 1 }}>View</Typography>
-                    </MenuItem> */}
-
-                      <MenuItem
-                        onClick={() => {
-                          handleOpenDialog(facility);
-                          handleMenuClose();
-                        }}
+            </Typography>
+            <Typography variant="body2" >
+              You can check all details
+            </Typography>
+          </Item>
+        </Grid>
+        <Grid size={{ md: 6, sm: 12 }}>
+          <Item sx={{ textAlign: { md: "right", sm: "center" } }}>
+              <Button
+                onClick={() => handleOpenDialog()}
+                sx={{ padding: "0.6rem 3rem", borderRadius: "0.5rem" }}
+                variant="contained"
+                startIcon={<AddIcon />}
+              >
+                Add New Facility
+              </Button>
+          </Item>
+        </Grid>
+      
+        <Grid size={12}>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 700 , overflow: 'auto' ,paddingTop: 10 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">
+                  Facility Name
+                </StyledTableCell>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">
+                  Created By (Admin Name)
+                </StyledTableCell>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">
+                  Created At
+                </StyledTableCell>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">
+                  Updated At
+                </StyledTableCell>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">
+                  Actions
+                </StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {Array.isArray(facilityList) &&
+                facilityList.map((facility) => (
+                  <StyledTableRow key={facility._id}>
+                    <StyledTableCell align="center">
+                      {facility.name}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {facility.createdBy.userName}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {new Date(facility.createdAt).toLocaleString()}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {new Date(facility.updatedAt).toLocaleString()}
+                    </StyledTableCell>
+                    {/* Actions */}
+                    <StyledTableCell align="center">
+                      <IconButton
+                        aria-controls={anchorEl ? "simple-menu" : undefined}
+                        aria-haspopup="true"
+                        onClick={(e) => handleMenuClick(e, facility)}
+                        className="text-success"
                       >
-                        <EditIcon fontSize="small" />
-                        <Typography sx={{ paddingInline: 1 }}>Edit</Typography>
-                      </MenuItem>
+                        <MoreVertIcon />
+                      </IconButton>
 
-                      <MenuItem
-                        onClick={() => {
-                          handleShowDelete(facility.id);
-                          handleMenuClose();
-                        }}
+                      <Menu
+                        id="simple-menu"
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
                       >
-                        <img src={Delete} alt="Delete" />
-                        <Typography sx={{ paddingInline: 1 }}>
-                          Delete
-                        </Typography>
-                      </MenuItem>
-                    </Menu>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                        {/* <MenuItem onClick={() => { handleShowView(facility); handleClose(); }}>
+                        <img src={View} alt="View" /> 
+                        <Typography sx={{ paddingInline: 1 }}>View</Typography>
+                      </MenuItem> */}
+
+                        <MenuItem
+                          onClick={() => {
+                            handleOpenDialog(facility);
+                            handleMenuClose();
+                          }}
+                        >
+                          <EditIcon fontSize="small" />
+                          <Typography sx={{ paddingInline: 1 }}>Edit</Typography>
+                        </MenuItem>
+
+                        <MenuItem
+                          onClick={() => {
+                            handleShowDelete(`${facility._id}`);
+                          }}
+                        >
+                          <img src={Delete} alt="Delete" />
+                          <Typography sx={{ paddingInline: 1 }}>
+                            Delete
+                          </Typography>
+                        </MenuItem>
+                      </Menu>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        </Grid>
+    </Grid>
 
       <DeleteConfirmation
         deleteItem={"Facility"}
         handleCloseDelete={() => setShowDelete(false)}
         showDelete={showDelete}
-        deleteFunction={deleteFacility}
+        deleteFunction={() => {
+          if (selectedId) {
+            deleteFacility(selectedId);
+          } else {
+            console.error("No facility ID to delete.");
+          }
+        }}
       />
 
       <FacilityDialog
@@ -384,14 +424,16 @@ export default function RoomFacilitiesList() {
         facility={selectedFacility}
       />
 
+      {/* Pagination */}
       <CustomTablePagination
-        count={Math.ceil(totalItems / rowsPerPage) || 0} 
+        count={Math.ceil(totalItems / rowsPerPage) || 0}
         page={page}
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        rowsPerPageOptions={rowsPerPageOptions} // Pass the available options
-        />
+        rowsPerPageOptions={rowsPerPageOptions}
+      />
+      
     </>
   );
 }

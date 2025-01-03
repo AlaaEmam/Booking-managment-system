@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { axiosInstance, FAVROOMS } from '../../../../constants/URLS';
 import { Box, Card, Typography, Grid, CardMedia, IconButton, Pagination } from '@mui/material';
 import { FaHeart } from 'react-icons/fa';
+import Noimage from '../../../../assets/no-image.jpg';
 
 interface Room {
   _id: string;
@@ -74,67 +75,73 @@ const FavoriteRoomPage = () => {
         Your Rooms
       </Typography>
 
-      <Grid container spacing={3} sx={{ marginTop: 2 }}>
-        {favoriteRooms.map((favoriteRoom) => (
-          <Grid item xs={12} sm={6} md={4} key={favoriteRoom._id}>
-            {favoriteRoom.rooms.map((room: Room) => (
-              <Card
-                key={room._id}
-                sx={{
-                  borderRadius: 3,
-                  boxShadow: 3,
-                  overflow: 'hidden',
-                  position: 'relative',
-                  transition: 'transform 0.3s, box-shadow 0.3s',
-                  '&:hover': {
-                    transform: 'scale(1.05)',
-                    boxShadow: 6,
-                  },
-                }}
-              >
-                <CardMedia
-                  component="img"
-                  height="180"
-                  image={room.images[0] || '/default-image.jpg'}
-                  alt={room.roomNumber}
-                />
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    background: 'rgba(0, 0, 0, 0.6)',
-                    color: 'white',
-                    padding: 2,
-                  }}
-                >
-                  <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                    {room.roomNumber}
-                  </Typography>
-                  <Typography variant="body2">{`Price: $${room.price}`}</Typography>
-                </Box>
-                <IconButton
-                  sx={{
-                    position: 'absolute',
-                    bottom: 10,
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    color: 'white',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    '&:hover': {
-                      backgroundColor: 'rgba(255, 0, 0, 0.7)',
-                    },
-                  }}
-                  onClick={() => deleteDetailsFAVROOMS(room._id)}
-                >
-                  <FaHeart size={30} />
-                </IconButton>
-              </Card>
-            ))}
-          </Grid>
-        ))}
-      </Grid>
+<Grid container spacing={3} sx={{ marginTop: 2 }} >
+  {favoriteRooms.map((favoriteRoom) => (
+    <Grid item xs={12} sm={6} md={4} lg={3} key={favoriteRoom._id}>
+      {favoriteRoom.rooms.map((room: Room) => (
+        <Card
+          key={room._id}
+          sx={{
+            borderRadius: 3,
+            boxShadow: 3,
+            overflow: 'hidden',
+            margin: 5,
+            position: 'relative',
+            transition: 'transform 0.3s, box-shadow 0.3s',
+            '&:hover': {
+              transform: 'scale(1.05)',
+              boxShadow: 6,
+            },
+          }}
+        >
+          <CardMedia
+            component="img"
+            height="180"
+            image={room.images[0] || Noimage}
+            alt={room.roomNumber}
+            sx={{
+              width: '100%',
+              objectFit: 'cover',
+            }}
+          />
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              background: 'rgba(0, 0, 0, 0.6)',
+              color: 'white',
+              padding: 2,
+            }}
+          >
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+              {room.roomNumber}
+            </Typography>
+            <Typography variant="body2">{`Price: $${room.price}`}</Typography>
+          </Box>
+          <IconButton
+            sx={{
+              position: 'absolute',
+              bottom: 10,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              color: 'white',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 0, 0, 0.7)',
+              },
+            }}
+            onClick={() => deleteDetailsFAVROOMS(room._id)}
+          >
+            <FaHeart size={30} />
+          </IconButton>
+        </Card>
+      ))}
+    </Grid>
+  ))}
+</Grid>
+
 
       <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
         <Pagination

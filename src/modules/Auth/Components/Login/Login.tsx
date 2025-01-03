@@ -6,12 +6,13 @@ import {
   Link,
   Box,
   Container,
-  Grid,
   IconButton,
   InputAdornment,
   styled,
   Paper,
 } from "@mui/material";
+import Grid from "@mui/material/Grid2";
+
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -91,11 +92,13 @@ export default function Login() {
   };
 
   return (
+     <Container maxWidth="lg">
+
     <Grid
       container
       sx={{ textAlign: "left", display: "flex", alignItems: "center" }}
     >
-      <Grid xs={12} md={6}>
+      <Grid size={{ md: 6 }}>
         <Item
           sx={{
             padding: {
@@ -225,8 +228,7 @@ export default function Login() {
       </Grid>
       <Grid
         item
-        md={6}
-        xs={12}
+        size={{ md: 6, xs: 12 }}
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -297,5 +299,7 @@ export default function Login() {
         </Container>
       </Grid>
     </Grid>
+    </Container>
+
   );
 }

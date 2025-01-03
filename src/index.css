@@ -1,3 +1,5 @@
+
+
 * {
   margin: 0;
   padding: 0;
@@ -22,11 +24,16 @@
   --light-gray-row:#F8F9FB;
   --light-baby-blue:  #F7F7F7;
   --light-green:  #F1FFF0;
-  --dark-green:  #009247;
+  --light-blue:  #a9c6ff;
+  --light-purple:#b800d8;
+  --gray-color:#848484;
+  --popular-color:#FF498B;
+  --star-color: #FFCC47 ;
   --green-btn:#1abc9c;
   --light-purple:#b800d8;
   --pink :#FF498B;
   --red: #E74C3C;
+  --light-blue:  rgba(32, 63, 199, 0.21);
 
 
 
@@ -78,7 +85,10 @@ body{font-family: "Poppins"}
 .css-1wvake5 {
   border: 0 !important;
 }
-
+.css-dip3t8 {
+  position: fixed !important;
+  width: inherit !important;
+}
 .bi-trash,.bi-pencil-square{
   cursor: pointer;
 }
@@ -89,15 +99,46 @@ body{font-family: "Poppins"}
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important;
   transition: none !important ;
   border-radius: 11px !important;
-  box-shadow: var(--shadow) !important;
+  box-shadow: var(--shadow) !important;  
   background-image: none !important;
 }
 /* delete confirmation  */
 
 .css-78e6go-MuiImageList-root {
   display: inherit !important;
+}
+.css-4nmryk-MuiBackdrop-root-MuiModal-backdrop{
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}
+/* RoomFacilitiesList.css */
+
+.table-container {
+  overflow-y: auto; 
+}
+
+.table {
+  min-width: 700px; 
+}
+
+@media (max-width: 600px) {
+  .table {
+    min-width: 100%; 
+  }
+}
+
+.css-cturab-MuiTableCell-root {
+  padding: 5px 0 !important;
+  /* display: inherit !important;  */
 
 }
 .css-4nmryk-MuiBackdrop-root-MuiModal-backdrop{
   background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.css-1nqt212-MuiFormLabel-root-MuiInputLabel-root {
+  color: var(--primary-color) !important;
+}
+.css-16sy2m-MuiFormLabel-root-MuiInputLabel-root{
+  color: var(--gray-color) !important;
+
 }

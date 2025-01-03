@@ -18,8 +18,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useNavigate } from "react-router-dom";
 import panner from "../../../../assets/banner.png";
-import { DateRangePicker } from "materialui-daterange-picker";
-import Pagination from "@mui/material/Pagination";
 
 const CssTextField = styled(TextField)({
   ".MuiInputBase-input ": {
@@ -121,7 +119,7 @@ export default function ExploreSection() {
 
 
             <Item sx={{ width: "100%}" }}>
-              <div>
+              {/* <div>
                 <CssTextField
                   id="outlined-basic"
                   fullWidth
@@ -142,7 +140,7 @@ export default function ExploreSection() {
                     toggle();
                   }}
                 />
-                <DateRangePicker
+                 <DateRangePicker
                   open={open}
                   toggle={toggle}
                   onChange={(range) => {
@@ -160,9 +158,12 @@ export default function ExploreSection() {
                       range.startDate?.toISOString()
                     );
                   }}
-                />{" "}
-              </div><Stack>
-              {/* <Stack
+                />
+              </div> */}
+
+
+              <Stack>
+              <Stack
                 direction={{ xs: "column", sm: "row" }}
                 spacing={{ md: 1 }}
               >
@@ -189,7 +190,7 @@ export default function ExploreSection() {
                     </DemoContainer>
                   </LocalizationProvider>
                 </Item>
-              </Stack> */}
+              </Stack>
 
               <Box sx={{ my: "1rem" }}>
                 <Typography
@@ -266,7 +267,7 @@ export default function ExploreSection() {
           </Grid>
           <Grid size={{ lg: 6, md: 4, sm: 12 }}>
             <Item>
-              
+
               <img src={panner} alt="" width="100%" />
             </Item>
           </Grid>

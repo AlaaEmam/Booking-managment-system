@@ -5,6 +5,7 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import { useDrawingArea } from '@mui/x-charts/hooks';
 import { styled } from '@mui/material/styles';
 import { ADMINChart, axiosInstance } from '../../../../../constants/URLS';
+import { Typography } from '@mui/material';
 
 interface usersIF {
   user: number;
@@ -48,14 +49,20 @@ export default function PieChartWithCenterLabel() {
       }, [])
 
   const data = [
-                  { label: "admin" , value: users.admin ,color:"var(--light-blue)" },
-                  { label: 'user', value: users.user },
-
-                ];
+        { label: "admin" , value: users.admin ,color:"var(--light-blue)" },
+        { label: "user", value: users.user },
+      ];
 
   return (
+<>
+  <Typography variant="h6" sx={{ margin: 2, fontWeight: 900 }}>
+    Users & Admins Number 
+  </Typography>
+
     <PieChart series={[{ data, innerRadius: 80 }]} {...size}>
-      <PieCenterLabel> users</PieCenterLabel>
+      
+      <PieCenterLabel> Users</PieCenterLabel>
     </PieChart>
+</>
   );
 }

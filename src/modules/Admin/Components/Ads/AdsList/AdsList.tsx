@@ -1,94 +1,145 @@
 import React, { useEffect, useState } from 'react';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
-  Box, Typography, IconButton, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, Button,
-  TextField, Select, MenuItem as SelectMenuItem, FormControl, InputLabel, FormHelperText
+  Typography, IconButton, Menu, MenuItem, Button,
+  CircularProgress,
+  Box
 } from '@mui/material';
-import { Add as AddIcon, MoreVert as MoreVertIcon, Close as CloseIcon } from '@mui/icons-material';
+import Grid from "@mui/material/Grid";
+import { Add as AddIcon, MoreVert as MoreVertIcon } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
+import { ADMINADS, axiosInstance } from './../../../../../constants/URLS';
+import AdDialog from './../AdDialog/AdDialog';
+import { toast } from 'react-toastify';
+import DeleteConfirmation from './../../Shared/Components/DeleteConfirmation/DeleteConfirmation';
+import CustomTablePagination from './../../Shared/Components/CustomTablePagination/CustomTablePagination';
+import { tableCellClasses } from '@mui/material/TableCell';
+import DeleteIcon from "../../../../../assets/icons/delete.svg";
+import EditIcon from "../../../../../assets/icons/Edit.svg";
 
-// تعريف التوكين
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWExNGIxYTI4M2I1NmY1NjgyMTMyNGYiLCJyb2xlIjoiYWRtaW4iLCJ2ZXJpZmllZCI6ZmFsc2UsImlhdCI6MTczNDc4OTIxOSwiZXhwIjoxNzM1OTk4ODE5fQ.9_0Tmcv50I7q7456hyy-h_oF3lT4BNsPUPgaC_vKatw';
-
-interface Room {
-  roomNumber: string;
-  price: number;
-  discount: number;
-  capacity: number;
-}
-
-interface Ad {
-  _id: string;
-  room: Room;
-  isActive: boolean;
-}
-
-// إعداد axios instance مع التوكين
-const axiosInstance = axios.create({
-  baseURL: 'https://upskilling-egypt.com:3000',
-  headers: { Authorization: `Bearer ${token}` },
-});
+// Styled components
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  boxShadow: "none",
+  color: 'var(--secondary-color)',
+  ...(theme.palette.mode === 'dark' && { backgroundColor: "#1A2027" }),
+}));
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${TableCell.head}`]: {
-    backgroundColor: 'black',
-    color: 'white',
-    fontWeight: 'bold',
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "var(--light-gray)",
+    color: "var(--secondary-color)",
+    fontSize: 16,
+    fontWeight: "bold",
   },
-  [`&.${TableCell.body}`]: {
+  [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
   },
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
+  "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
-  '&:last-child td, &:last-child th': {
+  "&:last-child td, &:last-child th": {
     border: 0,
   },
 }));
 
-// API Routes
-export const ADMINADDS = {
-  getAdds: `/api/v0/admin/ads`,
-  getAddDetails: (id: string) => `/api/v0/admin/ads/${id}`,
-  deleteAdd: (id: string) => `/api/v0/admin/ads/${id}`,
-  updateAdd: (id: string) => `/api/v0/admin/ads/${id}`,
-};
-
-const AdList = () => {
-  const [ads, setAds] = useState<Ad[]>([]); // تحديد النوع هنا
+// Main component
+export default function RoomAdListsList() {
+  const [ads, setAds] = useState<Ad[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedAd, setSelectedAd] = useState<Ad | null>(null); // تحديد النوع هنا
+  const [selectedAd, setSelectedAd] = useState<Ad | null>(null);
   const [openEdit, setOpenEdit] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
-  const [openView, setOpenView] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [totalItems, setTotalItems] = useState(0);
+  
+  const rowsPerPageOptions = [5, 10, 25, 50, 100];
 
-  // State for form values
-  const [formData, setFormData] = useState({
-    roomName: '',
-    price: '',
-    discount: '',
-    capacity: '',
-    active: '',
-  });
+  interface Room {
+    roomNumber: string;
+    price: number;
+    discount: number;
+    capacity: number;
+  }
+  
+  interface Ad {
+    _id: string;
+    room: Room;
+    isActive: boolean;
+    roomName: string;
+    totalCount?: number;
+  }
 
-  useEffect(() => {
-    // جلب بيانات الإعلانات من الـ API
-    axiosInstance.get(ADMINADDS.getAdds)
-      .then((response) => {
-        if (response.data.success) {
-          setAds(response.data.data.ads);
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching ads:', error);
+  const getAdsList = async () => {
+    try {
+      const response = await axiosInstance.get(ADMINADS.getAds, {
+        params: { size: rowsPerPage, page },
       });
-  }, []);
+      setTotalItems(response.data.data.totalCount);
+      setAds(response.data.data.ads || []);
+    } catch (error) {
+      handleError(error);
+    }
+  };
 
-  const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>, ad: Ad) => { // تحديد النوع هنا
+  const handleSave = async (data: Ad) => {
+    try {
+      if (selectedAd) {
+        await axiosInstance.put(ADMINADS.updateAd(selectedAd._id), data);
+        toast.success("Ad updated successfully!");
+      } else {
+        await axiosInstance.post(ADMINADS.getAds, data);
+        toast.success("Ad created successfully!");
+      }
+      handleCloseDialog();
+      getAdsList();
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const deleteAds = async (id: string) => {
+    if (!id) {
+      toast.error("Ad ID is not provided.");
+      return;
+    }
+    try {
+      await axiosInstance.delete(ADMINADS.deleteAd(id));
+      toast.success("Ad deleted successfully!");
+      getAdsList();
+      setShowDelete(false);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const handleError = (error: any) => {
+    if (axios.isAxiosError(error) && error.response) {
+      toast.error(error.response.data.message || "An error occurred. Please try again.");
+    } else {
+      toast.error("An unexpected error occurred.");
+    }
+  };
+
+  const handleOpenDialog = (ad?: Ad) => {
+    setSelectedAd(ad || null);
+    setOpenEdit(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenEdit(false);
+    setSelectedAd(null);
+  };
+
+  const handleMenuClick = (event: React.MouseEvent<HTMLElement>, ad: Ad) => {
     setAnchorEl(event.currentTarget);
     setSelectedAd(ad);
   };
@@ -98,145 +149,172 @@ const AdList = () => {
     setSelectedAd(null);
   };
 
-  const handleEditClick = () => {
-    if (selectedAd) {
-      setFormData({
-        roomName: selectedAd.room.roomNumber,
-        price: selectedAd.room.price,
-        discount: selectedAd.room.discount,
-        capacity: selectedAd.room.capacity,
-        active: selectedAd.isActive ? 'Active' : 'Not Active',
-      });
-      setOpenEdit(true);
-    }
-    handleMenuClose();
+  const handleShowDelete = (id: string) => {
+    setSelectedId(id);
+    setShowDelete(true);
   };
 
-  const handleViewClick = () => {
-    if (selectedAd) {
-      setFormData({
-        roomName: selectedAd.room.roomNumber,
-        price: selectedAd.room.price,
-        discount: selectedAd.room.discount,
-        capacity: selectedAd.room.capacity,
-        active: selectedAd.isActive ? 'Active' : 'Not Active',
-      });
-      setOpenView(true);
-    }
-    handleMenuClose();
-  };
+  useEffect(() => {
+    getAdsList();
+  }, [page, rowsPerPage]);
 
-  const handleDeleteClick = () => {
-    setOpenDelete(true);
-    handleMenuClose();
-  };
 
-  const handleDialogClose = () => {
-    setOpenEdit(false);
-    setOpenDelete(false);
-    setOpenView(false);
-  };
+  
+  //Loading
+  const [isLoading, setIsLoading] = useState(true); // Loading state
+  useEffect(() => {
+    setIsLoading(true); // Set loading to true when data fetching starts
+    Promise.all([getAdsList()])
+      .then(() => setIsLoading(false)) // Set loading to false once all data is fetched
+      .catch(() => setIsLoading(false)); // Handle errors and stop loading
+  }, []);
 
-  // دالة لتحديث الإعلان عبر الـ API
-  const handleSaveClick = () => {
-    if (selectedAd) {
-      // إرسال التحديث إلى الـ API باستخدام axios
-      axiosInstance
-        .put(ADMINADDS.updateAdd(selectedAd._id), {
-          isActive: formData.active === 'Active',
-          discount: formData.discount,
-        })
-        .then((response) => {
-          if (response.data.success) {
-            // تحديث القائمة بالبيانات الجديدة
-            setAds(ads.map((ad) => (ad._id === selectedAd._id ? response.data.data : ad)));
-            setOpenEdit(false);
-          }
-        })
-        .catch((error) => {
-          console.error('Error updating ad:', error);
-        });
-    }
-  };
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh", // Full viewport height
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <>
-      {/* Header */}
-      <Box
-        sx={{
-          width: '100%',
-          height: '12vh',
-          display: 'flex',
-          justifyContent: 'space-between',
-          backgroundColor: '#ffffff',
-          alignItems: 'center',
-          padding: '0 2.25rem',
-          mb: '1.5rem',
-        }}
-      >
-        <Box>
-          <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-            ADS Table Details
-          </Typography>
-          <Typography variant="body2">You can check all details</Typography>
-        </Box>
-        <Button
-          sx={{
-            borderRadius: 2,
-            px: 3,
-            py: 1.3,
-            backgroundColor: 'var(--primary-color)',
-            color: 'var(--off-white)',
+      <Grid container>
+        <Grid item xs={12} md={6}>
+          <Item sx={{ textAlign: { md: "left", sm: "center" } }}>
+            <Typography sx={{ fontWeight: "bold" }} variant="h5">
+              Ads Table Details
+            </Typography>
+            <Typography variant="body2">
+              You can check all details
+            </Typography>
+          </Item>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Item sx={{ textAlign: { md: "right", sm: "center" } }}>
+            <Button
+              onClick={() => handleOpenDialog()}
+              sx={{ padding: "0.6rem 3rem", borderRadius: "0.5rem" }}
+              variant="contained"
+              startIcon={<AddIcon />}
+            >
+              Add New Ad
+            </Button>
+          </Item>
+        </Grid>
+
+        {/* Table */}
+        <Grid item xs={12}>
+          {ads.length > 0 ? (
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell align="center">Room Name</StyledTableCell>
+                    <StyledTableCell align="center">Price</StyledTableCell>
+                    <StyledTableCell align="center">Discount</StyledTableCell>
+                    <StyledTableCell align="center">Capacity</StyledTableCell>
+                    <StyledTableCell align="center">Active</StyledTableCell>
+                    <StyledTableCell align="center">Actions</StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {ads.map((ad) => (
+                    <StyledTableRow key={ad._id}>
+                      <StyledTableCell align="center">{ad.room.roomNumber}</StyledTableCell>
+                      <StyledTableCell align="center">{ad.room.price}</StyledTableCell>
+                      <StyledTableCell align="center">{ad.room.discount}</StyledTableCell>
+                      <StyledTableCell align="center">{ad.room.capacity}</StyledTableCell>
+                      <StyledTableCell align="center">{ad.isActive ? 'Active' : 'Inactive'}</StyledTableCell>
+                      <StyledTableCell align="center">
+                        <IconButton onClick={(event) => handleMenuClick(event, ad)}>
+                          <MoreVertIcon />
+                        </IconButton>
+                        <Menu
+                          anchorEl={anchorEl}
+                          open={Boolean(anchorEl) && selectedAd?._id === ad._id}
+                          onClose={handleMenuClose}
+                        >
+                          <MenuItem onClick={() => handleOpenDialog(ad)}>
+                            <img src={EditIcon} alt="Edit" />
+                            <Typography sx={{ paddingInline: 1 }}>Edit</Typography>
+                          </MenuItem>
+                          <MenuItem onClick={() => handleShowDelete(ad._id)}>
+                            <img src={DeleteIcon} alt="Delete" />
+                            <Typography sx={{ paddingInline: 1 }}>Delete</Typography>
+                          </MenuItem>
+                        </Menu>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ) : (
+            <Typography variant="body1" sx={{ textAlign: 'center', mt: 4 }}>No Ads found.</Typography>
+          )}
+        </Grid>
+
+        {/* Edit Dialog */}
+        <AdDialog
+          open={openEdit}
+          onClose={handleCloseDialog}
+          onSave={handleSave}
+          formData={selectedAd ? { 
+            _id: selectedAd._id,
+            roomName: selectedAd.roomName, 
+            room: {
+              roomNumber: selectedAd.room.roomNumber,
+              price: selectedAd.room.price,
+              discount: selectedAd.room.discount,
+              capacity: selectedAd.room.capacity,
+            },
+            isActive: selectedAd.isActive !== undefined ? selectedAd.isActive : false
+          } : { 
+            _id: '',
+            room: {
+              roomNumber: '', 
+              price: 0, 
+              discount: 0, 
+              capacity: 0
+            }, 
+            roomName: '', 
+            isActive: false 
           }}
-          startIcon={<AddIcon />}
-        >
-          Add New Ads
-        </Button>
-      </Box>
+          isEditMode={!!selectedAd}
+        />
 
-      {/* Table */}
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="center">Room Name</StyledTableCell>
-              <StyledTableCell align="center">Price</StyledTableCell>
-              <StyledTableCell align="center">Discount</StyledTableCell>
-              <StyledTableCell align="center">Capacity</StyledTableCell>
-              <StyledTableCell align="center">Active</StyledTableCell>
-              <StyledTableCell align="center">Actions</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {ads.map((ad) => (
-              <StyledTableRow key={ad._id}>
-                <StyledTableCell align="center">{ad.room.roomNumber}</StyledTableCell>
-                <StyledTableCell align="center">{ad.room.price}</StyledTableCell>
-                <StyledTableCell align="center">{ad.room.discount}</StyledTableCell>
-                <StyledTableCell align="center">{ad.room.capacity}</StyledTableCell>
-                <StyledTableCell align="center">{ad.isActive ? 'Active' : 'Inactive'}</StyledTableCell>
-                <StyledTableCell align="center">
-                  <IconButton onClick={(event) => handleMenuClick(event, ad)}>
-                    <MoreVertIcon />
-                  </IconButton>
-                  <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl) && selectedAd?._id === ad._id}
-                    onClose={handleMenuClose}
-                  >
-                    <MenuItem onClick={handleViewClick}>View</MenuItem>
-                    <MenuItem onClick={handleEditClick}>Edit</MenuItem>
-                    <MenuItem onClick={handleDeleteClick}>Delete</MenuItem>
-                  </Menu>
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+        {/* Delete Confirmation */}
+        <DeleteConfirmation
+          deleteItem={"Ad"}
+          handleCloseDelete={() => setShowDelete(false)}
+          showDelete={showDelete}
+          deleteFunction={() => selectedId && deleteAds(selectedId)}
+        />
 
-      {/* Edit Dialog */}
-      <Dialog open={openEdit} onClose={handleDialogClose}>
+        {/* Pagination */}
+        <CustomTablePagination
+          count={Math.ceil(totalItems / rowsPerPage) || 0}
+          page={page}
+          onPageChange={setPage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={setRowsPerPage}
+          rowsPerPageOptions={rowsPerPageOptions}
+        />
+      </Grid>
+    </>
+  );
+}
+
+  {/* Edit Dialog */}
+      {/* <Dialog open={openEdit} onClose={handleDialogClose}>
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           Edit Ads
           <IconButton
@@ -286,26 +364,26 @@ const AdList = () => {
             Cancel
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
 
       {/* Delete Dialog */}
-      <Dialog open={openDelete} onClose={handleDialogClose}>
-        <DialogTitle>Delete Ads</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1">Are you sure you want to delete this ad?</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" color="secondary" onClick={handleDialogClose}>
-            Cancel
-          </Button>
-          <Button variant="outlined" color="error" onClick={handleDialogClose}>
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+      // <Dialog open={openDelete} onClose={handleDialogClose}>
+      //   <DialogTitle>Delete Ads</DialogTitle>
+      //   <DialogContent>
+      //     <Typography variant="body1">Are you sure you want to delete this ad?</Typography>
+      //   </DialogContent>
+      //   <DialogActions>
+      //     <Button variant="contained" color="secondary" onClick={handleDialogClose}>
+      //       Cancel
+      //     </Button>
+      //     <Button variant="outlined" color="error" onClick={handleDialogClose}>
+      //       Delete
+      //     </Button>
+      //   </DialogActions>
+      // </Dialog>
 
       {/* View Dialog */}
-      <Dialog open={openView} onClose={handleDialogClose}>
+      {/* <Dialog open={openView} onClose={handleDialogClose}>
         <DialogTitle>View Ad</DialogTitle>
         <DialogContent>
           <TextField
@@ -352,9 +430,4 @@ const AdList = () => {
         <DialogActions>
           <Button onClick={handleDialogClose}>Close</Button>
         </DialogActions>
-      </Dialog>
-    </>
-  );
-};
-
-export default AdList;
+      </Dialog> */}

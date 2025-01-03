@@ -1,4 +1,6 @@
 import "./App.css";
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthLayout from "./modules/Shared/Components/AuthLayout/AuthLayout";
 import Notfound from "./modules/Shared/Components/Notfound/Notfound";
@@ -10,7 +12,6 @@ import VerifyAccount from "./modules/Auth/Components/VerifyAccount/VerifyAccount
 import ChangePassword from "./modules/Auth/Components/ChangePassword/ChangePassword";
 import DashBoard from "./modules/Admin/Components/DashBoard/Components/DashBoard";
 import AdsList from "./modules/Admin/Components/Ads/AdsList/AdsList";
-import AdsForm from "./modules/Admin/Components/Ads/AdsForm/AdsForm";
 import BookingList from "./modules/Admin/Components/BookingList/BookingList";
 import RoomFacilitiesList from "./modules/Admin/Components/RoomFacilities/RoomFacilitiesList/RoomFacilitiesList";
 import RoomsList from "./modules/Admin/Components/Rooms/RoomsList/RoomsList";
@@ -32,6 +33,10 @@ import { CssBaseline } from '@mui/material';
 import React from "react";
 import RoomForm from "./modules/Admin/Components/Rooms/RoomForm/RoomForm";
 import ExplorePage from "./modules/User/Components/Explore/ExplorePage";
+import Payment from "./modules/User/Components/Payment/Payment";
+// import PaymentStep2 from "./modules/User/Components/Payment/paymentStep1";
+import RoomDeta from "./modules/User/Components/RoomDetailsPage/RoomDeta";
+import PaySucssed from "./modules/User/Components/Payment/PaySucssed";
 
 const lightTheme = createTheme({
   palette: {
@@ -114,8 +119,7 @@ function App() {
       children: [
         { index: true, element: <DashBoard /> },
         { path: "ads-list", element: <AdsList /> },
-        { path: "ads-list/ads-form", element: <AdsForm /> },
-        { path: "ads-list/:adsId", element: <AdsForm /> },
+
         { path: "room-facility", element: <RoomFacilitiesList /> },
         { path: "rooms-list", element: <RoomsList /> },
         { path: "rooms-list/new-room", element: <RoomForm /> },
@@ -131,8 +135,7 @@ function App() {
       children: [
         { index: true, element: <HomePage /> },
         { path: "homepage", element: <HomePage /> },
-        { path: "room-details", element: <RoomDetailsPage /> },
-        { path: "explore-rooms/room-details/:roomId", element: <RoomDetailsPage /> },
+        { path: "room-details/:room_id", element: <RoomDetailsPage /> },
         {
           path: "payment",
           element: (
@@ -141,9 +144,9 @@ function App() {
             </ProtectedRoute>
           ),
         },
-        { path: "explore-rooms", element: <ExplorePage /> },
+        { path: "explore-rooms", element: <ExploarePage /> },
         { path: "explore-rooms/:capacity", element: <ExplorePage /> },
-        { path: "explore-rooms/room-details/:room_id", element: <RoomDetailsPage /> },
+        { path: "explore-rooms/room-details/:room_id", element: <RoomDeta /> },
         {
           path: "your-favorite",
           element: (
@@ -152,17 +155,38 @@ function App() {
             </ProtectedRoute>
           ),
         },
+        {
+          path: "Booking/:booking_id",
+          element: (
+            <ProtectedRoute loginData={loginData}>
+              <Payment/>
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "Booking/sucssed",
+          element: (
+            <ProtectedRoute loginData={loginData}>
+              <PaySucssed/>
+            </ProtectedRoute>
+          ),
+        },
       ],
     },
   ]);
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <button onClick={toggleTheme}>Toggle Theme</button>
-      <ToastContainer />
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {/* <button onClick={toggleTheme}>Toggle Theme</button> */}
+
+        <ToastContainer />
+        <RouterProvider router={router}></RouterProvider>
+
+      </ThemeProvider>
+
+    </>
   );
 }
 

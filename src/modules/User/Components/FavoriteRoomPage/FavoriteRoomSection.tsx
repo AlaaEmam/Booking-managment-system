@@ -1,215 +1,88 @@
+// FavoriteRoomSection.tsx
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // استيراد useNavigate
-import { Grid, Card, CardMedia, Box, Typography, Container } from "@mui/material";
-import { Favorite, Visibility } from "@mui/icons-material";
-import axios from "axios";
-import img from "../../../../imges/room.jpg";
+import { useNavigate } from "react-router-dom";
+import { Grid, Typography, Container } from "@mui/material";
+import { axiosInstance, FAVROOMS, PORTALROOMS } from "../../../../constants/URLS";
+import FavCard from './FavCard';
 
-interface Ad {
+interface Room {
   _id: string;
-  isActive: boolean;
-  room: {
-    _id: string;
-    roomNumber: string;
-    price: number;
-    capacity: number;
-    discount: number;
-    images: string[];
-  };
-  createdBy: {
-    _id: string;
-    userName: string;
-  };
+  roomNumber: string;
+  price: number;
+  images: string[];
 }
 
 const FavoriteRoomSection = () => {
-  const [ads, setAds] = useState<Ad[]>([]);
-  const navigate = useNavigate(); // تعريف useNavigate
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const callAds = async () => {
+    const callRooms = async () => {
       try {
-        const response = await axios.get('https://upskilling-egypt.com:3000/api/v0/portal/ads');
+        const response = await axiosInstance.get(PORTALROOMS.getAllRooms("1", "5"));
+        console.log("section");
+        console.log(response.data.data.rooms);
         if (response.data.success) {
-          setAds(response.data.data.ads);
+          setRooms(response.data.data.rooms);
+        } else {
+          console.error("Failed to fetch rooms:", response.data.message);
         }
       } catch (error) {
-        console.error("Error fetching ads:", error);
+        console.error("Error fetching rooms:", error);
       }
     };
 
-    callAds();
+    callRooms();
   }, []);
 
-  const handleCardClick = (adId: string) => {
-    navigate(`/your-favorite?adId=${adId}`); // توجيه إلى صفحة المفضلة مع تمرير ID الإعلان
+  const handleImageClick = async (id: string) => {
+    try {
+      await axiosInstance.post(FAVROOMS.getAddDetailsFAVROOMS, {
+        roomId: id,
+      });
+      navigate("/your-favorite");
+    } catch (error) {
+      console.error("Error sending favorite room:", error);
+    }
+  };
+
+  const handleViewClick = (id: string) => {
+    navigate(`/room-details/${id}`);
   };
 
   return (
-    <Container>
+    <Container sx={{ marginBottom: 5 }}>
       <Typography
-        variant="h5"
-        sx={{
-          fontWeight: "bold",
-          marginBottom: 2,
-          textAlign: "left",
-        }}
+        sx={{ fontSize: "24px", color: "var(--primary-color)", fontWeight: "bolder", marginBottom: 2 }}
+        align="left"
+        gutterBottom
       >
         Most Popular Ads
       </Typography>
 
       <Grid container spacing={3}>
+        {/* First section with one large image */}
         <Grid item xs={12} md={4}>
-          {ads.length > 0 && (
-            <Card
-              sx={{
-                position: "relative",
-                height: 516,
-                cursor: "pointer", // إضافة شكل اليد عند التحويم
-                "&:hover": {
-                  "& .hover-icons": { opacity: 1, transform: "translateY(0)" },
-                  "& .image": { filter: "brightness(0.8)" },
-                },
-              }}
-              onClick={() => handleCardClick(ads[0]._id)} // عند الضغط على الكارد
-            >
-              <CardMedia
-                className="image"
-                component="img"
-                alt={ads[0].room.roomNumber || "Default Room"}
-                image={ads[0].room.images[0] || img}
-                sx={{
-                  height: "100%",
-                  width: "100%",
-                  objectFit: "cover",
-                  transition: "all 0.3s ease-in-out",
-                }}
-              />
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: "10px",
-                  right: "0",
-                  backgroundColor: "rgba(255, 20, 147, 0.8)",
-                  color: "#fff",
-                  padding: "5px 10px",
-                  borderTopLeftRadius: "5px",
-                  borderBottomLeftRadius: "5px",
-                  fontWeight: "bold",
-                  fontSize: "14px",
-                }}
-              >
-                ${ads[0].room.price} per night
-              </Box>
-              <Typography
-                sx={{
-                  position: "absolute",
-                  bottom: "10px",
-                  left: "10px",
-                  color: "white",
-                  backgroundColor: "rgba(0, 0, 0, 0.5)",
-                  padding: "2px 5px",
-                  borderRadius: "3px",
-                  fontSize: "12px",
-                }}
-              >
-                {ads[0].createdBy.userName}
-              </Typography>
-              <Box
-                className="hover-icons"
-                sx={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  display: "flex",
-                  gap: "10px",
-                  opacity: 0,
-                  transition: "all 0.3s ease-in-out",
-                }}
-              >
-                <Favorite sx={{ color: "white", fontSize: "30px" }} />
-                <Visibility sx={{ color: "white", fontSize: "30px" }} />
-              </Box>
-            </Card>
+          {rooms.length > 0 && (
+            <FavCard
+              room={rooms[0]}
+              onFavorite={handleImageClick}
+              onView={handleViewClick}
+              isLarge={true} // Indicate this is a large card
+            />
           )}
         </Grid>
 
+        {/* Second section with four smaller images */}
         <Grid item xs={12} md={8}>
-          <Grid container spacing={2}>
-            {ads.slice(1, 5).map((ad) => (
-              <Grid item xs={6} key={ad._id}>
-                <Card
-                  sx={{
-                    position: "relative",
-                    height: 245,
-                    cursor: "pointer",
-                    "&:hover": {
-                      "& .hover-icons": { opacity: 1, transform: "translateY(0)" },
-                      "& .image": { filter: "brightness(0.8)" },
-                    },
-                  }}
-                  onClick={() => handleCardClick(ad._id)} // عند الضغط على الكارد
-                >
-                  <CardMedia
-                    className="image"
-                    component="img"
-                    alt={ad.room.roomNumber || "Default Room"}
-                    image={ad.room.images[0] || img}
-                    sx={{
-                      height: "100%",
-                      width: "100%",
-                      objectFit: "cover",
-                      transition: "all 0.3s ease-in-out",
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: "10px",
-                      right: "0",
-                      backgroundColor: "rgba(255, 20, 147, 0.8)",
-                      color: "#fff",
-                      padding: "5px 10px",
-                      borderTopLeftRadius: "5px",
-                      borderBottomLeftRadius: "5px",
-                      fontWeight: "bold",
-                      fontSize: "14px",
-                    }}
-                  >
-                    ${ad.room.price} per night
-                  </Box>
-                  <Typography
-                    sx={{
-                      position: "absolute",
-                      bottom: "10px",
-                      left: "10px",
-                      color: "white",
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                      padding: "2px 5px",
-                      borderRadius: "3px",
-                      fontSize: "12px",
-                    }}
-                  >
-                    {ad.createdBy.userName}
-                  </Typography>
-                  <Box
-                    className="hover-icons"
-                    sx={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      display: "flex",
-                      gap: "10px",
-                      opacity: 0,
-                      transition: "all 0.3s ease-in-out",
-                    }}
-                  >
-                    <Favorite sx={{ color: "white", fontSize: "30px" }} />
-                    <Visibility sx={{ color: "white", fontSize: "30px" }} />
-                  </Box>
-                </Card>
+          <Grid container spacing={3}>
+            {rooms.slice(1, 5).map((room) => (
+              <Grid item xs={12} sm={8} md={6} key={room._id}>
+                <FavCard
+                  room={room}
+                  onFavorite={handleImageClick}
+                  onView={handleViewClick}
+                />
               </Grid>
             ))}
           </Grid>

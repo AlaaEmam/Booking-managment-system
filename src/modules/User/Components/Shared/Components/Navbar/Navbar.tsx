@@ -16,6 +16,7 @@ import { useState } from "react"; // Only keep this import once
 import { useAuth } from "../../../../../../context/AuthContext"; // Custom hook
 import { useNavigate } from "react-router-dom";
 import { Notifications } from "@mui/icons-material";
+import LogoImage from '../../../../../../assets/Logo.svg';
 
 export default function Navbar() {
   const { loginData, clearLoginData } = useAuth(); // Using AuthContext
@@ -47,19 +48,18 @@ export default function Navbar() {
     >
       <Container maxWidth="lg">
         <Toolbar>
-          <Typography
-            variant="h5"
+         
+         <Box
             sx={{
               flexGrow: 1,
-              fontWeight: "bold",
-              color: " #152C5B",
+          
             }}
           >
-            <Box component="span" sx={{ color: " #3252DF" }}>
-              Stay
-            </Box>
-            cation.
-          </Typography>
+            <Link onClick={() => navigate("/")} >
+            <img src={LogoImage} alt="logo" style={{width: "150px"}}/>
+            </Link>
+          </Box>
+       
 
           <Box sx={{ display: "flex", gap: 3, alignItems: "center" }}>
             <Link
@@ -74,7 +74,7 @@ export default function Navbar() {
               Home
             </Link>
             <Link
-              onClick={() => navigate("/explore")}
+              onClick={() => navigate("/explore-rooms")}
               underline="none"
               sx={{ color: "black", fontWeight: "500", cursor: "pointer" }}
             >
@@ -90,7 +90,7 @@ export default function Navbar() {
                   Reviews
                 </Link>
                 <Link
-                  onClick={() => navigate("/favorites")}
+                  onClick={() => navigate("your-favorite")}
                   underline="none"
                   sx={{ color: "black", fontWeight: "500", cursor: "pointer" }}
                 >

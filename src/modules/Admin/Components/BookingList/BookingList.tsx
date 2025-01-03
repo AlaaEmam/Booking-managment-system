@@ -1,4 +1,4 @@
-import { Box,  Modal,  Paper,  Stack,  styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TableRow, Typography } from '@mui/material'
+import { Box,  CircularProgress,  Modal,  Paper,  Stack,  styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TableRow, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { ADMINBOOKING, axiosInstance } from '../../../../constants/URLS'
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -6,13 +6,25 @@ import ClearIcon from '@mui/icons-material/Clear';
 import View from "../../../../assets/icons/View.svg";
 import BookingModal from './BookingModal';
 import { Button } from '@mui/material';
-import CustomTablePagination from './../Shared/Components/CustomTablePagination/CustomTablePagination';
+import CustomTablePagination from '../Shared/Components/CustomTablePagination/CustomTablePagination';
+import  Grid  from '@mui/material/Grid2';
 
-// STYLE
+// Styled 
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  boxShadow: "none",
+  color: 'var(--secondary-color)',
+  ...(theme.palette.mode === 'dark' && { backgroundColor: "#1A2027" }),
+}));
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "var(--light-gray)",
     color: "var(--secondary-color)",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
@@ -27,6 +39,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
+
+
 
 export default function BookingList() {
 
@@ -44,189 +58,116 @@ export default function BookingList() {
     totalPrice: number;
     startDate: string;
     endDate: string;
+    status: string;
     user: User;
   }
 
   
   
-const [bookingList, setBookingList] = React.useState([]); // Added missing state for bookingList
-
-  const [page, setPage] = useState(1); // Start from page 1
-  const [rowsPerPage, setRowsPerPage] = useState(5); // Default rows per page
-  const [totalItems, setTotalItems] = useState(0); 
+  const [bookingList, setBookingList] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<BookingListProps | null>(null);
 
 const getBookingList = async () => {
   try {
     let response = await axiosInstance.get(ADMINBOOKING.getAllBooking, {
       params: {
-        size: rowsPerPage, // Set the number of rows per page
-        page: page, // Set the current page number
+        size: rowsPerPage,
+        page: page,
       },
     });
     console.log(response.data.data.booking);
-    setBookingList(response?.data?.data?.booking);
-    setTotalItems(response.data.data.totalCount  || 0); // Ensure this is a number
+    setBookingList(response.data.data.booking);
+    setTotalItems(response.data.data.totalCount); // Set total count for pagination
   } catch (error) {
     console.log(error);
   }
 };
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    fontSize: 16,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}));
-
   //Modal View
-  const [showView, setShowView] = useState<boolean>(false);
-  const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
 
-  const handleCloseView = () => setShowView(false);
-  const handleShowView = (booking: any) => {
+  const handleOpen = (booking: BookingListProps) => {
     setSelectedBooking(booking);
-    setShowView(true);
+    setOpenModal(true);
   };
-  // const style = {
-  //   position: 'absolute',
-  //   top: '50%',
-  //   left: '50%',
-  //   transform: 'translate(-50%, -50%)',
-  //   width: 400,
-  //   bgcolor: 'background.paper',
-  //   boxShadow: 24,
-  //   pt: 2,
-  //   px: 4,
-  //   pb: 3,
-  // };
 
+  const handleClose = () => {
+    setOpenModal(false);
+    setSelectedBooking(null);
+  };
 
-  const [openModal, setOpenModal] = useState(false);
-
-  const handleOpen = () => setOpenModal(true);
-  const handleClose = () => setOpenModal(false);
-
-  //Handel pagination
-  const rowsPerPageOptions = [5, 10, 25, 50, 100];
-
-  const handleChangePage = (newPage: number) => {
-    setPage(newPage); // Update the current page
+   // Pagination states
+   const rowsPerPageOptions = [5, 10, 25, 50, 100];
+   const [page, setPage] = useState(1);
+   const [rowsPerPage, setRowsPerPage] = useState(5);
+   const [totalItems, setTotalItems] = useState(0);
+ 
+   // Handle pagination
+   const handleChangePage = (newPage: number) => {
+    setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (newRowsPerPage: number) => {
     if (rowsPerPageOptions.includes(newRowsPerPage)) {
-      setRowsPerPage(newRowsPerPage); // Update the state with the new rows per page
+      setRowsPerPage(newRowsPerPage);
       setPage(1); // Reset to the first page
     }
   };
+
   useEffect(()=>{
     getBookingList();
   },[page, rowsPerPage]) 
   
-  return (
-  <>
-    {/* <Modal
-        open={showView}
-        onClose={handleCloseView}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        
-        <Box sx={{ ...style, width: 500 }}>
-            <Stack alignItems="center" justifyContent={'space-between'} direction="row" gap={2}>
 
-              <Typography color='success' id="modal-modal-title" variant="h5" component="h2">
-                {selectedBooking?.user.userName}'s booking
-              </Typography>
-              <ClearIcon color='warning' onClick={handleCloseView}/>
-            </Stack>
-            
-            <Stack alignItems="center" direction="row" gap={2}>
+  //Loading
+  const [isLoading, setIsLoading] = useState(true); // Loading state
+  useEffect(() => {
+    setIsLoading(true); // Set loading to true when data fetching starts
+    Promise.all([getBookingList()])
+      .then(() => setIsLoading(false)) // Set loading to false once all data is fetched
+      .catch(() => setIsLoading(false)); // Handle errors and stop loading
+  }, []);
 
-              <Typography color='primary' variant="h5" component="h2">
-                Room Number:
-              </Typography>
-              <Typography color='info' variant="h6">
-                {selectedBooking?.room.roomNumber}
-              </Typography>
-              
-            </Stack>
-            
-            <Stack alignItems="center" direction="row" gap={2}>
-
-              <Typography color='primary' variant="h5" component="h2">
-                Total Price:
-              </Typography>
-              <Typography color='info' variant="h6">
-                {selectedBooking?.totalPrice}
-              </Typography>
-            </Stack>
-
-            <Stack alignItems="center" direction="row" gap={2}>
-
-              <Typography color='primary'  variant="h5" component="h2">
-                Start Date:
-              </Typography>
-              <Typography color='info' variant="h6">
-                {selectedBooking?.startDate}
-              </Typography>
-            </Stack>
-
-            <Stack alignItems="center" direction="row" gap={2}>
-
-              <Typography color='primary' variant="h5" component="h2">
-                End Date:
-              </Typography>
-              <Typography color='info' variant="h6">
-                {selectedBooking?.endDate}
-              </Typography>
-            </Stack>
-        </Box>
-    </Modal> */}
-
-<div>
-
-    </div>
-
+  if (isLoading) {
+    return (
       <Box
         sx={{
-          width: "100%",
-          height: "12vh",
           display: "flex",
-          justifyContent: "space-between",
-          backgroundColor: "#ffffff",
+          justifyContent: "center",
           alignItems: "center",
-          padding: "2rem 2.25rem",
-          mb: "1.5rem",
+          height: "100vh", // Full viewport height
         }}
-      >        
-      <Box>
-          <Typography variant="h5" sx={{ fontWeight: "bold" }}>Booking Table Details</Typography>
-          <Typography variant="body2">You can check all details</Typography>
-        </Box>
+      >
+        <CircularProgress />
       </Box>
+    );
+  }
+  return (
+  <>
 
+  <Grid container>
+      <Grid  size={12}>
+        <Item sx={{ textAlign: { md: "left", sm: "center" } }}>
+          <Typography sx={{ fontWeight: "bold" }} variant="h5">
+            Booking Table Details
+          </Typography>
+          <Typography variant="body2">
+            You can check all details
+          </Typography>
+        </Item>
+      </Grid>
+
+      <Grid size={12}>
       {bookingList.length > 0 ? (
-        <TableContainer component={Paper} sx={{ maxHeight: 700, overflow: 'auto' }}>
-          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+        <TableContainer component={Paper} sx={{ maxHeight: '400px', overflow: 'auto' }}  className="table-container">
+          <Table sx={{ minWidth: 700 }} className="table" aria-label="customized table">
             <TableHead>
               <TableRow>
                 <StyledTableCell sx={{ fontWeight: 700 }} align="center">Room Number</StyledTableCell>
                 <StyledTableCell sx={{ fontWeight: 700 }} align="center">Price</StyledTableCell>
                 <StyledTableCell sx={{ fontWeight: 700 }} align="center">Start Date</StyledTableCell>
                 <StyledTableCell sx={{ fontWeight: 700 }} align="center">End Date</StyledTableCell>
+                <StyledTableCell sx={{ fontWeight: 700 }} align="center">Statues</StyledTableCell>
                 <StyledTableCell sx={{ fontWeight: 700 }} align="center">User </StyledTableCell>
                 <StyledTableCell sx={{ fontWeight: 700 }} align="center">Action</StyledTableCell>
               </TableRow>
@@ -234,17 +175,29 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
             <TableBody>
               {bookingList.map((booking: BookingListProps) => (
                 <StyledTableRow key={booking._id}>
-                  <StyledTableCell align="center">{booking.room.roomNumber}</StyledTableCell>
+                  <StyledTableCell align="center">{booking.room?.roomNumber}</StyledTableCell>
                   <StyledTableCell align="center">{booking.totalPrice}</StyledTableCell>
-                  <StyledTableCell align="center">{booking.startDate}</StyledTableCell>
-                  <StyledTableCell align="center">{booking.endDate}</StyledTableCell>
+                  <StyledTableCell align="center">
+                      {new Date(booking.startDate).toLocaleString()}
+                    </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {new Date(booking.endDate).toLocaleString()}
+                    </StyledTableCell>
+                    <StyledTableCell align="center" 
+                        style={{
+                            backgroundColor: booking.status === "pending" ? "#ffeb3b" : "#4caf50", // Yellow for Pending, Green for Completed
+                            color: booking.status === "pending" ? "#000" : "#fff", // Black text for Pending, White text for Completed
+                            fontWeight: 'bold', // Make text bold
+                            borderRadius: 'full', // Optional: rounded corners
+                            padding: '0px', // Optional: add some padding
+                        }}>
+                        {booking.status === "pending" ? "Pending" : "Completed"}
+                    </StyledTableCell>
+
                   <StyledTableCell align="center">{booking.user.userName}</StyledTableCell>
-                  {/* <StyledTableCell align="center" onClick={() => handleShowView(booking)} sx={{ cursor: "pointer" }}>
-                    <img src={View} alt="View" />
-                  </StyledTableCell> */}
-                  <StyledTableCell align="center"sx={{ cursor: "pointer" }} onClick={handleOpen}>
+            
+                  <StyledTableCell align="center"sx={{ cursor: "pointer" }} onClick={() => handleOpen(booking)}>
                   <img src={View} alt="View" />
-                  {/* <BookingModal open={openModal} onClose={handleClose} booking={booking}  /> */}
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
@@ -275,15 +228,22 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
         </TableContainer>
       )}
 
+      </Grid>
+  </Grid>
 
-    <CustomTablePagination
-    count={Math.ceil(totalItems / rowsPerPage) || 0} 
-    page={page}
-    onPageChange={handleChangePage}
-    rowsPerPage={rowsPerPage}
-    onRowsPerPageChange={handleChangeRowsPerPage}
-    rowsPerPageOptions={rowsPerPageOptions} // Pass the available options
-    />
+
+     {/* Modal for booking details */}
+     <BookingModal open={openModal} onClose={handleClose} booking={selectedBooking} />
+      
+      {/* Pagination */}
+      <CustomTablePagination
+        count={Math.ceil(totalItems / rowsPerPage) || 0}
+        page={page}
+        onPageChange={handleChangePage}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        rowsPerPageOptions={rowsPerPageOptions}
+      />
 
   </>
     

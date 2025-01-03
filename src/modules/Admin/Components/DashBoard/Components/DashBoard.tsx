@@ -1,77 +1,49 @@
-import { Box, Grid, Paper, styled, Typography } from "@mui/material";
-import {
-  ADMINADDS,
-  ADMINBOOKING,
-  ADMINROOMFACILITIES,
-  ADMINROOMS,
-  axiosInstance,
-  PORTALROOMS,
-} from "../../../../../constants/URLS";
-import { useEffect, useState } from "react";
-import BedIcon from "@mui/icons-material/Bed";
-import Chart from "../../Chart/Components/Chart";
-import UsersChart from "../../UsersChart/component/UsersChart";
-import shadows from "@mui/material/styles/shadows";
+import React, { useEffect, useState } from "react";
+import { Box, Grid, CircularProgress, Typography } from "@mui/material";
+import { axiosInstance, ADMINROOMS, ADMINROOMFACILITIES, ADMINADS, ADMINBOOKING } from "../../../../../constants/URLS";
+import BookingChart from "./BookingChart";
+import UsersChart from "./UsersChart";
+import DashboardCrad from "./DashboardCrad";
+import HomeIcon from "@mui/icons-material/Home"; // Icon for Rooms
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter"; // Icon for Facilities
+import CampaignIcon from '@mui/icons-material/Campaign'; // Correct icon for Advertisement
 
 export default function DashBoard() {
   interface RoomList {
     totalCount: number;
-    // other properties
   }
 
   interface FacilitiesList {
     totalCount: number;
-    // other properties
   }
 
   interface AdsList {
     totalCount: number;
-    // other properties
   }
 
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: "rgb(26, 27, 30)",
-    ...theme.typography.body2,
-    textAlign: "start",
-    padding: theme.spacing(2),
-    color: theme.palette.common.white,
-  }));
-
-  let [getRoomslist, setRoomsList] = useState<RoomList>();
-  let [getRoomFacilitieslist, setRoomFacilitiesList] =
-    useState<FacilitiesList>();
-  let [getAdslist, setAdsList] = useState<AdsList>();
-
+  const [getRoomslist, setRoomsList] = useState<RoomList>();
+  const [getRoomFacilitieslist, setRoomFacilitiesList] = useState<FacilitiesList>();
+  const [getAdslist, setAdsList] = useState<AdsList>();
   const [getBookinglist, setBookingList] = useState();
+  const [isLoading, setIsLoading] = useState(true); // Loading state
 
-  let getRooms = async () => {
+  const getRooms = async () => {
     let response = await axiosInstance.get(ADMINROOMS.getAllRooms);
-    let responsePortal = await axiosInstance.get(PORTALROOMS.getAllRooms);
-
-    console.log(response.data.data);
-    console.log(responsePortal.data.data);
     setRoomsList(response.data.data);
   };
-  let getBooking = async () => {
-    let response = await axiosInstance.get(ADMINBOOKING.getAllBooking);
-    console.log(response.data.data);
 
+  const getBooking = async () => {
+    let response = await axiosInstance.get(ADMINBOOKING.getAllBooking);
     setBookingList(response.data.data);
   };
 
-  let getFacilities = async () => {
-    let response = await axiosInstance.get(
-      ADMINROOMFACILITIES.getRoomFacilities
-    );
-    console.log(response.data.data);
-
+  const getFacilities = async () => {
+    let response = await axiosInstance.get(ADMINROOMFACILITIES.getRoomFacilities);
     setRoomFacilitiesList(response.data.data);
   };
 
-  let getAds = async () => {
-    let response = await axiosInstance.get(ADMINADDS.getAdds);
-    console.log(response.data.data);
-
+  const getAds = async () => {
+    let response = await axiosInstance.get(ADMINADS.getAds);
     setAdsList(response.data.data);
   };
 
@@ -80,64 +52,81 @@ export default function DashBoard() {
   const totalAds = getAdslist?.totalCount || 0;
 
   useEffect(() => {
-    getRooms();
-    getFacilities();
-    getAds();
-    getBooking();
+    setIsLoading(true); // Set loading to true when data fetching starts
+    Promise.all([getRooms(), getFacilities(), getAds(), getBooking()])
+      .then(() => setIsLoading(false)) // Set loading to false once all data is fetched
+      .catch(() => setIsLoading(false)); // Handle errors and stop loading
   }, []);
-  return (
-    <>
+
+  if (isLoading) {
+    return (
       <Box
         sx={{
-          height: "60vh", // Full viewport height
           display: "flex",
           justifyContent: "center",
-          backgroundImage: `url("/NOt")`, // Replace with your image URL
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          color: "black",
-          textAlign: "center",
+          alignItems: "center",
+          height: "100vh", // Full viewport height
         }}
       >
-        <Grid container sx={{ justifyContent:"center"}} spacing={3}>
-          <Grid item xs={4}>
-            <Item sx={{padding:"3rem 2rem" ,display: "flex", justifyContent: "space-between",margin:"3rem 0",borderRadius:"15px" }}>
-              <Typography variant="h4" >
-                {totalRoomCount}
-                <Typography>Rooms</Typography>
-              </Typography>
-              <BedIcon sx={{ color: "rgb(144, 191, 222)", fontSize: 40 }} />
-            </Item>
-          </Grid>
-          <Grid item xs={4}>
-          <Item sx={{padding:"3rem 2rem" ,display: "flex", justifyContent: "space-between",margin:"3rem 0",borderRadius:"15px" }}>
-          <Typography variant="h4">
-                {totalFacilities}
-                <Typography>Facilities</Typography>
-              </Typography>
-              <BedIcon sx={{ color: "rgb(144, 191, 222)", fontSize: 40 }} />
-            </Item>
-          </Grid>
-          <Grid item xs={4}>
-          <Item sx={{padding:"3rem 2rem" ,display: "flex", justifyContent: "space-between",margin:"3rem 0",borderRadius:"15px" }}>
-          <Typography variant="h4" >
-                {totalAds}
-                <Typography>Ads</Typography>
-              </Typography>
-              <BedIcon sx={{ color: "rgb(144, 191, 222)", fontSize: 40 }} />
-            </Item>
-          </Grid>
-          <Grid item xs={6}>
-          <Item sx={{ backgroundColor:"transparent" ,boxShadow:"none"}}>              <Chart />
-            </Item>
-          </Grid>
-          <Grid item xs={6}>
-            <Item sx={{ backgroundColor:"transparent" ,boxShadow:"none"}}>
-              <UsersChart />
-            </Item>
-          </Grid>
-        </Grid>
+        <CircularProgress />
       </Box>
-    </>
+    );
+  }
+
+  return (
+    <Box
+      sx={{
+        height: "60vh", // Full viewport height
+        display: "flex",
+        justifyContent: "center",
+        backgroundImage: `url("/NOt")`, // Replace with your image URL
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        color: "black",
+        textAlign: "left",
+      }}
+    >
+      <Grid container sx={{ justifyContent: "center" }} spacing={3}>
+        {/* Card for Rooms */}
+        <Grid item xs={12} sm={4}>
+          <DashboardCrad
+            count={totalRoomCount}
+            label="Rooms"
+            iconColor="rgb(144, 191, 222)"
+            Icon={HomeIcon} // Using HomeIcon
+          />
+        </Grid>
+
+        {/* Card for Facilities */}
+        <Grid item xs={12} sm={4}>
+          <DashboardCrad
+            count={totalFacilities}
+            label="Facilities"
+            iconColor="rgb(144, 191, 222)"
+            Icon={FitnessCenterIcon} // Using FitnessCenterIcon
+          />
+        </Grid>
+
+        {/* Card for Ads */}
+        <Grid item xs={12} sm={4}>
+          <DashboardCrad
+            count={totalAds}
+            label="Ads"
+            iconColor="rgb(144, 191, 222)"
+            Icon={CampaignIcon} // Using CampaignIcon
+          />
+        </Grid>
+
+        {/* Chart */}
+        <Grid item xs={12} sm={6}>
+          <BookingChart />
+        </Grid>
+
+        {/* Users Chart */}
+        <Grid item xs={12} sm={6}>
+          <UsersChart />
+        </Grid>
+      </Grid>
+    </Box>
   );
 }
