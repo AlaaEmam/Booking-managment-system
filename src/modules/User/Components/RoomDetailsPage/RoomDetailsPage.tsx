@@ -1,270 +1,345 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { Box, CircularProgress, Typography, Button, Grid, Paper, TextField, Rating } from "@mui/material";
-import { axiosInstance, PORTALROOMS } from "../../../../constants/URLS";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBed, faCouch, faBath, faUtensils, faWifi, faSnowflake, faTv, faFaucet } from '@fortawesome/free-solid-svg-icons';
-import defaultImage from '../../../../assets/no-image.jpg';
+import React, { useEffect, useState } from 'react'
+import bookingImg from "../../../../assets/bookingRoom.jpg";
+import { ADMINBOOKING, ADMINROOMS, axiosInstance, PORTALBOOKING, PORTALROOMREVIEW, PORTALROOMS } from '../../../../constants/URLS';
+import { Box, Button, Card, Divider, FormControl, Grid, Grid2, ImageListItem, Paper, Rating, Stack, styled, TextField, Typography } from '@mui/material';
+import ImageList from '@mui/material/ImageList';
+import KingBedOutlinedIcon from '@mui/icons-material/KingBedOutlined';
+import WifiIcon from '@mui/icons-material/Wifi';
+import LivingOutlinedIcon from '@mui/icons-material/LivingOutlined';
+import BathtubOutlinedIcon from '@mui/icons-material/BathtubOutlined';
+import KitchenIcon from '@mui/icons-material/Kitchen';
+import DinnerDiningOutlinedIcon from '@mui/icons-material/DinnerDiningOutlined';
+import AdUnitsIcon from '@mui/icons-material/AdUnits';
+import TvIcon from '@mui/icons-material/Tv';
 
+import dayjs, { Dayjs } from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+interface rooms_IF {
+  _id: number;
+  roomNumber: String;
+  price: String;
+  capacity: String;
+  discount: String;
+  images: string[];
+  facilities: string[];
+}
 export default function RoomDetailsPage() {
-  const { room_id } = useParams();
-  interface Room {
-    id: string;
-    roomNumber: string;
-    price: number;
-    images: string[];
-  }
 
-  const [room, setRoom] = useState<Room | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState("");
+  const [rooms, setRooms]=React.useState<rooms_IF[]>([]);
 
-  const getRoomDetails = async () => {
-    setIsLoading(true);
+  const [startDate, setStartDate] = useState<Dayjs | null>(null);
+  const [endDate, setEndDate] = useState<Dayjs | null>(null);
+
+  const [value, setValue] = React.useState<number | null>(0);
+  const {register, handleSubmit, formState: { errors },}=useForm();
+
+
+  const handleStartDateChange = (newStartDate: Dayjs | null ) => {
+    setStartDate(newStartDate);
+    if (endDate && newStartDate && newStartDate > endDate) {
+      setEndDate(null);  // Clear end date if it's earlier than start date
+    }
+  };
+
+  const handleEndDateChange = (newEndDate: Dayjs | null) => {
+    setEndDate(newEndDate);
+  };
+
+
+  const getRoomsList = async () => {
     try {
-      if (room_id) {
-        const res = await axiosInstance.get(`${PORTALROOMS.getRoomDetails(room_id)}`);
-        if (res.data && res.data.data) {
-          setRoom(res.data.data.room);
-        } else {
-          setError("Room not found");
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching room details: ", error);
-      setError("Failed to fetch room details");
-    } finally {
-      setIsLoading(false);
+
+      const res = await axiosInstance.get(PORTALROOMS.getAllRooms("1", "10"))
+
+      console.log(res.data.data.rooms);
+      setRooms(res?.data?.data.rooms[2]);
+     } catch (error) {
+      console.log(error)
     }
+
   };
 
-  useEffect(() => {
-    if (room_id) {
-      getRoomDetails();
+
+  const onSubmitDate=async()=>{
+    try{
+      await axiosInstance.post(PORTALBOOKING.createBooking)
+    }catch(error){
+      toast.error("Please put your dates properly")
     }
-  }, [room_id]);
-
-  const handleStartDateChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-    setStartDate(event.target.value);
-  };
-
-  const handleEndDateChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-    setEndDate(event.target.value);
-  };
-
-  const handleContinueBooking = () => {
-    console.log("Start Date:", startDate);
-    console.log("End Date:", endDate);
-    if (room) {
-      console.log("Room ID:", room.id);
-      console.log("Room Name:", room.roomNumber);
-      console.log("Room Price:", room.price);
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh" }}>
-        <CircularProgress size="3rem" sx={{ color: "#0288D1" }} />
-      </Box>
-    );
   }
 
-  if (error) {
-    return (
-      <Box sx={{ textAlign: "center", marginTop: "2rem" }}>
-        <Typography variant="h5" color="error" sx={{ color: "#D32F2F" }}>
-          {error}
-        </Typography>
-      </Box>
-    );
+  const onSubmitRate=async()=>{
+    try{
+      const res= await axiosInstance.post(PORTALROOMREVIEW.createReview);
+      toast.success("successfully");
+    }catch(error){
+      console.log(error);
+    }
   }
 
-  if (!room) {
-    return (
-      <Box sx={{ textAlign: "center", marginTop: "2rem" }}>
-        <Typography variant="h5" sx={{ color: "#1976D2" }}>
-          No room details found
-        </Typography>
-      </Box>
-    );
+  const onSubmitComment=async()=>{
+    try{
+      const res= await axiosInstance.post(PORTALROOMREVIEW.createReview);
+      toast.success("successfully");
+    }catch(error){
+      console.log(error);
+    }
   }
+
+
+  const Item = styled(Card)(({ theme }) => ({
+    backgroundColor: '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(4),
+    textAlign: 'center',
+    color: theme.palette.common.black,
+    ...theme.applyStyles('dark', {
+      backgroundColor: '#1A2027',
+    }),
+  }));
+
+
+
+  useEffect(()=>{
+    getRoomsList()
+  },[]);
 
   return (
-    <Box sx={{ padding: "3rem", backgroundColor: "#F5F5F5" }}>
-      {/* Top Section: Room Name and Image */}
-      <Box sx={{ textAlign: "center", marginBottom: "2rem" }}>
-        <Typography variant="h3" sx={{ fontWeight: "bold", color: "#0288D1", fontSize: "2.5rem" }}>
-          {room.roomNumber}
-        </Typography>
-        <img
-          src={room.images[0] || defaultImage}
-          alt="Room"
-          style={{ width: "50%", height: "auto", marginTop: "1rem", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}
-        />
-      </Box>
+    <Box sx={{  width: '100%', marginTop:5 }}>
 
-      {/* Bottom Section: Ratings, Comments, and Form */}
-      <Grid container spacing={4} sx={{ marginTop: "2rem" }}>
-        {/* Left Column: Form */}
-        <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ padding: "2rem", borderRadius: "10px", backgroundColor: "#FFFFFF", boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}>
-            <Typography variant="h5" sx={{ fontWeight: "bold", color: "#0288D1", marginBottom: "1rem" }}>
-              Room Booking Form
-            </Typography>
-            <TextField
-              label="Start Date"
-              value={startDate}
-              onChange={handleStartDateChange}
-              fullWidth
-              variant="outlined"
-              type="date"
-              sx={{ marginBottom: "1.5rem", backgroundColor: "#FFF" }}
-              InputLabelProps={{ shrink: true }}
-            />
-            <TextField
+      <Stack sx={{color:"rgb(1, 7, 120)", justifyContent:'center', alignItems:"center"}}>
+        <Typography variant='h4'>Village Angga</Typography>
+        <Typography color='success' variant='subtitle1'>Bogor, Indonesia</Typography>
+      </Stack>
+
+      <Stack direction={'row'} sx={{justifyContent:'center', alignItems:"center"}} spacing={1}>
+        <img width={500} style={{borderRadius:10}} height={500} src={bookingImg} alt="" />
+        <Stack direction={'column'} spacing={1}>
+          <ImageList sx={{ width: 300, height: 500 }}  cols={1} rowHeight={164}>
+            <ImageListItem sx={{borderRadius:10}}>
+
+              <img
+              style={{borderRadius:10}}
+              src={bookingImg}
+              alt="room"
+              loading="lazy"
+              />
+
+            </ImageListItem>
+
+            <ImageListItem sx={{borderRadius:10}}>
+
+             <img
+             style={{borderRadius:10}}
+             src={bookingImg}
+             alt="room"
+             loading="lazy"/>
+
+            </ImageListItem>
+          </ImageList>
+
+        </Stack>
+      </Stack>
+
+      <Stack sx={{justifyContent:'center', marginTop:5,
+        alignItems:"center"}} direction={'row'}>
+        <Box sx={{  width: '40%'}}>
+          <Typography gutterBottom variant='subtitle1'>
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+          when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+          It has survived not only five centuries,
+          but also the leap into electronic typesetting, remaining essentially unchanged.
+          </Typography>
+          <Typography gutterBottom variant='subtitle1'>
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+          when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+          It has survived not only five centuries,
+          but also the leap into electronic typesetting, remaining essentially unchanged.
+          </Typography>
+          <Typography gutterBottom sx={{marginBottom:5}} variant='subtitle1'>
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+          when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+          It has survived not only five centuries,
+          but also the leap into electronic typesetting, remaining essentially unchanged.
+          </Typography>
+
+          <Grid container sx={{marginLeft:10}} spacing={{ xs: 2, md: 2 }} columns={{ xs: 4, sm: 8, md: 8 }}>
+            <Grid item xs={2}>
+
+              <KingBedOutlinedIcon fontSize='large'/>
+              <Typography>5 bedrooms</Typography>
+            </Grid>
+
+            <Grid  item xs={2}>
+              <LivingOutlinedIcon fontSize='large'/>
+
+              <Typography>1 living room</Typography>
+            </Grid>
+
+            <Grid  item xs={2}>
+            <BathtubOutlinedIcon fontSize='large'/>
+
+              <Typography>3 bathroom</Typography>
+            </Grid>
+
+            <Grid item xs={2}>
+              <DinnerDiningOutlinedIcon fontSize='large'/>
+
+              <Typography>1 dining room</Typography>
+            </Grid>
+
+            <Grid item xs={2}>
+              <WifiIcon fontSize='large'/>
+
+              <Typography>10 mpb/s</Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <AdUnitsIcon fontSize='large'/>
+
+              <Typography>7 unit ready</Typography>
+            </Grid>
+            <Grid xs={2}>
+              <KitchenIcon fontSize='large'/>
+
+              <Typography>2 refigrator</Typography>
+            </Grid>
+            <Grid xs={2}>
+              <TvIcon fontSize='large'/>
+
+              <Typography>4 television</Typography>
+            </Grid>
+          </Grid>
+        </Box>
+        <Box component={'form'}
+          onSubmit={handleSubmit(onSubmitDate)}
+          sx={{ border:2, borderRadius:2,
+          borderColor:"rgb(151, 151, 151)",
+          width: '40%', padding:5, marginBottom:30}}>
+          <Typography variant='h5'>Start booking</Typography>
+          <Typography variant='h3'>${(Number(rooms[0]?.price) - Number(rooms[0]?.discount))} per night</Typography>
+          <Typography color='error' variant='subtitle1'>Discount 20%</Typography>
+
+
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            sx={{marginTop:2}}
+            label="Start Date"
+            value={startDate}
+            {...register("startDate",{
+              required:"please select your date"
+            })}
+            onChange={handleStartDateChange}
+          />
+          <Box>
+
+            <DatePicker
+              sx={{marginTop:2}}
               label="End Date"
               value={endDate}
+              disabled={!startDate}
+              {...register("startDate",{
+                required:"please select your date"
+              })}
               onChange={handleEndDateChange}
-              fullWidth
-              variant="outlined"
-              type="date"
-              sx={{ marginBottom: "1.5rem", backgroundColor: "#FFF" }}
-              InputLabelProps={{ shrink: true }}
+              minDate={startDate ?? undefined}
             />
-            <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              sx={{ marginTop: "1rem", backgroundColor: "#0288D1", padding: "0.8rem", borderRadius: "8px" }}
-              onClick={handleContinueBooking}
-            >
-              Continue Booking
-            </Button>
-          </Paper>
-        </Grid>
+          </Box>
+          </LocalizationProvider>
+          <Typography sx={{marginTop:2}}>You wil pay $480 per 2 persons</Typography>
+          <Button sx={{ marginTop:2, color:'white', paddingX:10,
+                backgroundColor:'rgb(50, 82, 223)'}}>Continue Book</Button>
+        </Box>
+      </Stack>
 
-        {/* Right Column: FontAwesome Icons and Paragraph */}
-        <Grid item xs={12} md={6}>
-          <Box sx={{ padding: "2rem", backgroundColor: "#FFFFFF", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}>
-            <Typography variant="body1" sx={{ color: "#757575", marginBottom: "1.5rem", fontSize: "1.1rem" }}>
-              Minimal techno is a minimalist subgenre of techno music. It is characterized by a stripped-down aesthetic that exploits the use of repetition and understated development. Minimal techno is thought to have been originally developed in the early 1990s by Detroit-based producers Robert Hood and Daniel Bell.
-              Such trends saw the demise of the soul-infused techno that typified the original Detroit sound. Robert Hood has noted that he and Daniel Bell both realized something was missing from techno in the post-rave era.
+
+
+      <Stack sx={{justifyContent:'center',
+        alignItems:"center", marginTop:10}}
+        divider={<Divider orientation="vertical" flexItem />}
+        spacing={2}
+        direction={'row'}
+      >
+
+        <Box sx={{  width: '30%'}}
+          component="form"
+          noValidate
+          autoComplete="off"
+          onSubmit={handleSubmit(onSubmitRate)}
+        >
+          <Stack spacing={10} direction={'row'} sx={{marginBottom:5, justifyContent:'space-between'}}>
+
+            <Typography  variant='h5'>
+
+              Rate
+            </Typography>
+            <FormControl {...register("rate",{
+              required:"please rate this room"
+            })}
+            error={!!errors.rate}
+            >
+
+              <Rating
+                value={value}
+                onChange={(event, newValue) => {
+                  setValue(newValue);
+                }}/>
+
+            </FormControl>
+          </Stack>
+
+          <Typography variant='h5' sx={{marginBottom:2}}>
+            Message
+          </Typography>
+
+          <TextField sx={{width:'90%'}} multiline
+          rows={6} {...register("review", {
+            required:"Please put your review before submitting"
+          })}
+          error={!!errors.review}/>
+
+          <Box sx={{marginTop:5}}>
+            <Button sx={{paddingX:10, color:'white', backgroundColor:'rgb(50, 82, 223)'}}>Rate</Button>
+          </Box>
+
+        </Box>
+
+        <Box
+          component="form"
+          noValidate
+          autoComplete="off"
+          sx={{  width: '30%', paddingLeft:5}}
+          onSubmit={handleSubmit(onSubmitComment)}
+          >
+          <Stack>
+            <Typography variant='h5'>
+              Add your comment
             </Typography>
 
-            {/* FontAwesome Icons with Names */}
-            <Box sx={{ display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "space-between" }}>
-              <Box sx={{ textAlign: "center" }}>
-                <FontAwesomeIcon icon={faBed} size="lg" color="#0288D1" />
-                <Typography variant="body2" sx={{ color: "#0288D1", marginTop: "0.5rem" }}>5 Bedroom</Typography>
-              </Box>
-              <Box sx={{ textAlign: "center" }}>
-                <FontAwesomeIcon icon={faCouch} size="lg" color="#0288D1" />
-                <Typography variant="body2" sx={{ color: "#0288D1", marginTop: "0.5rem" }}>1 Living Room</Typography>
-              </Box>
-              <Box sx={{ textAlign: "center" }}>
-                <FontAwesomeIcon icon={faBath} size="lg" color="#0288D1" />
-                <Typography variant="body2" sx={{ color: "#0288D1", marginTop: "0.5rem" }}>3 Bathroom</Typography>
-              </Box>
-              <Box sx={{ textAlign: "center" }}>
-                <FontAwesomeIcon icon={faUtensils} size="lg" color="#0288D1" />
-                <Typography variant="body2" sx={{ color: "#0288D1", marginTop: "0.5rem" }}>1 Dining Room</Typography>
-              </Box>
+            <TextField
+            sx={{width:'100%', marginTop:10}}
+            multiline rows={6}
+            {...register("comment",{
+              required:"Please put your comment here"
+            })}
+            error={!!errors.comment}
+            />
+            <Box sx={{marginTop:5, textAlign:'right'}}>
+              <Button sx={{ color:'white', paddingX:10,
+                backgroundColor:'rgb(50, 82, 223)'}}>Send</Button>
+
             </Box>
+          </Stack>
+        </Box>
+      </Stack>
+      </Box>
 
-            <Box sx={{ display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "space-between", marginTop: "1rem" }}>
-              <Box sx={{ textAlign: "center" }}>
-                <FontAwesomeIcon icon={faWifi} size="lg" color="#0288D1" />
-                <Typography variant="body2" sx={{ color: "#0288D1", marginTop: "0.5rem" }}>10 Mbps</Typography>
-              </Box>
-              <Box sx={{ textAlign: "center" }}>
-                <FontAwesomeIcon icon={faSnowflake} size="lg" color="#0288D1" />
-                <Typography variant="body2" sx={{ color: "#0288D1", marginTop: "0.5rem" }}>7 Unit Ready</Typography>
-              </Box>
-              <Box sx={{ textAlign: "center" }}>
-                <FontAwesomeIcon icon={faFaucet} size="lg" color="#0288D1" />
-                <Typography variant="body2" sx={{ color: "#0288D1", marginTop: "0.5rem" }}>2 Refrigerator</Typography>
-              </Box>
-              <Box sx={{ textAlign: "center" }}>
-                <FontAwesomeIcon icon={faTv} size="lg" color="#0288D1" />
-                <Typography variant="body2" sx={{ color: "#0288D1", marginTop: "0.5rem" }}>4 Television</Typography>
-              </Box>
-            </Box>
-          </Box>
-        </Grid>
-      </Grid>
 
-   {/* Bottom Section: Ratings and Comments */}
-<Box sx={{ marginTop: "2rem" }}>
-  <Grid container spacing={2}>
-    <Grid item xs={12} md={6}>
-      <Paper
-        elevation={3}
-        sx={{
-          padding: "1rem",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          minHeight: "250px", // تحديد الحد الأدنى للارتفاع
-        }}
-      >
-        <Typography variant="h6" sx={{ marginBottom: "0.5rem" }}>
-          Rate
-        </Typography>
-        <Rating
-          name="simple-controlled"
-          value={rating}
-          onChange={(event, newValue) => {
-            if (newValue !== null) {
-              setRating(newValue);
-            }
-          }}
-        />
-        <TextField
-          label="Message"
-          multiline
-          rows={4}
-          value={comment}
-          onChange={(event) => setComment(event.target.value)}
-          fullWidth
-          sx={{ marginTop: "1rem" }}
-        />
-        <Button variant="contained" color="primary" sx={{ marginTop: "1rem" }}>
-          Submit Rating
-        </Button>
-      </Paper>
-    </Grid>
-
-    <Grid item xs={12} md={6}>
-      <Paper
-        elevation={3}
-        sx={{
-          padding: "1rem",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          minHeight: "250px", // تحديد الحد الأدنى للارتفاع
-        }}
-      >
-        <Typography variant="h6">Add Your Comment</Typography>
-        <TextField
-          label="Your Comment"
-          multiline
-          rows={4}
-          fullWidth
-          sx={{ marginTop: "1rem" }}
-        />
-        <Button variant="contained" color="primary" sx={{ marginTop: "1rem" }}>
-          Submit Comment
-        </Button>
-      </Paper>
-    </Grid>
-  </Grid>
-</Box>
-    </Box>
-  );
+  )
 }
