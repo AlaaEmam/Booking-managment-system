@@ -44,6 +44,7 @@ const CssDatePicker = styled(DatePicker)({
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   boxShadow: "none",
+  backgroundColor: "transparent",
   ...theme.applyStyles("dark", {}),
 }));
 
@@ -83,7 +84,7 @@ export default function ExploreSection() {
     <>
       <Container maxWidth="lg">
         <Grid container spacing={2} sx={{ my: "4rem" }}>
-          <Grid size={{ lg: 6, md: 8, sm: 12 }} sx={{ paddingRight: "2rem" }}>
+          <Grid size={{ lg: 6, md: 8, sm: 12 }} sx={{ paddingRight: "2rem"}}>
             <Item>
               <Typography
                 variant="h3"
@@ -164,27 +165,27 @@ export default function ExploreSection() {
 
               <Stack>
               <Stack
-                direction={{ xs: "column", sm: "row" }}
+                direction={{ xs: "column", sm: "row"}}
                 spacing={{ md: 1 }}
               >
-                <Item sx={{ width: "50%}" }}>
+                <Item sx={{ width: "50%" }}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={["DatePicker"]}>
                       <CssDatePicker
                         onChange={getStartdDate}
-                        label="start date"
+                        label="Start date"
                         sx={{ width: "100%" }}
                       />
                     </DemoContainer>
                   </LocalizationProvider>
                 </Item>
 
-                <Item sx={{ width: "50%}" }}>
+                <Item sx={{ width: "50%" }}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={["DatePicker"]}>
                       <CssDatePicker
                         onChange={getEndDate}
-                        label="end date"
+                        label="End date"
                         sx={{ width: "100%" }}
                       />
                     </DemoContainer>

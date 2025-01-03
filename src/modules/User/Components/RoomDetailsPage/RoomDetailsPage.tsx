@@ -4,12 +4,20 @@ import { Box, CircularProgress, Typography, Button, Grid, Paper, TextField, Rati
 import { axiosInstance, PORTALROOMS } from "../../../../constants/URLS";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBed, faCouch, faBath, faUtensils, faWifi, faSnowflake, faTv, faFaucet } from '@fortawesome/free-solid-svg-icons';
+import defaultImage from '../../../../assets/no-image.jpg';
 
 export default function RoomDetailsPage() {
   const { room_id } = useParams();
-  const [room, setRoom] = useState(null);
+  interface Room {
+    id: string;
+    roomNumber: string;
+    price: number;
+    images: string[];
+  }
+
+  const [room, setRoom] = useState<Room | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [rating, setRating] = useState(0);
@@ -40,20 +48,22 @@ export default function RoomDetailsPage() {
     }
   }, [room_id]);
 
-  const handleStartDateChange = (event) => {
+  const handleStartDateChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setStartDate(event.target.value);
   };
 
-  const handleEndDateChange = (event) => {
+  const handleEndDateChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setEndDate(event.target.value);
   };
 
   const handleContinueBooking = () => {
     console.log("Start Date:", startDate);
     console.log("End Date:", endDate);
-    console.log("Room ID:", room.id);
-    console.log("Room Name:", room.roomNumber);
-    console.log("Room Price:", room.price);
+    if (room) {
+      console.log("Room ID:", room.id);
+      console.log("Room Name:", room.roomNumber);
+      console.log("Room Price:", room.price);
+    }
   };
 
   if (isLoading) {
@@ -92,7 +102,7 @@ export default function RoomDetailsPage() {
           {room.roomNumber}
         </Typography>
         <img
-          src={room.images[0]}
+          src={room.images[0] || defaultImage}
           alt="Room"
           style={{ width: "50%", height: "auto", marginTop: "1rem", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}
         />
@@ -208,7 +218,11 @@ export default function RoomDetailsPage() {
         <Rating
           name="simple-controlled"
           value={rating}
-          onChange={(event, newValue) => setRating(newValue)}
+          onChange={(event, newValue) => {
+            if (newValue !== null) {
+              setRating(newValue);
+            }
+          }}
         />
         <TextField
           label="Message"
