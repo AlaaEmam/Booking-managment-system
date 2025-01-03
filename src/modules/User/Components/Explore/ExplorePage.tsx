@@ -16,9 +16,12 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { axiosInstance, PORTALROOMS, baseURL } from "../../../../constants/URLS";
+import defaultImage from '../../../../assets/no-image.jpg';
 
 const Item = styled(Paper)(({ theme }) => ({
   boxShadow: "none",
+  backgroundColor: "transparent",
+  fontFamily: "Poppins",
 }));
 
 interface roomsIF {
@@ -102,7 +105,7 @@ export default function ExplorePage() {
           <Grid container spacing={2}>
             <Grid sx={{ textAlign: "center", margin: "4rem 0" }} size={{ md: 12 }}>
               <Item sx={{ position: "relative" }}>
-                <Typography variant="h3" sx={{ mt: "3rem", color: "var(--primary-color)" }} gutterBottom>
+                <Typography sx={{ mt: "3rem", color: "var(--primary-color)" , fontSize: "32px" , fontWeight: 'bolder'}} gutterBottom>
                   Explore ALL Rooms
                 </Typography>
 
@@ -121,7 +124,7 @@ export default function ExplorePage() {
                     <Link color="inherit" to="/">
                       home
                     </Link>
-                    <Link color="text.primary" to="/" aria-current="page">
+                    <Link color="text.primary" to="#" aria-current="page">
                       explore
                     </Link>
                   </Breadcrumbs>
@@ -133,7 +136,15 @@ export default function ExplorePage() {
               <Grid key={room._id} size={{ md: 4, sm: 6, xs: 12 }}>
                 <Link to={`/explore-rooms/room-details/${room._id}`} onClick={() => console.log(`Room ID: ${room._id}`)}>
                   <Item sx={{ position: "relative", mb: "1rem" }}>
-                    <CardMedia sx={{ height: 250, borderRadius: "15px" }} image={room.images[0]} component="img" title="Room Image" />
+                    <CardMedia 
+                    sx={{ 
+                      height: 250, 
+                      borderRadius: "15px",
+                      border: "0.5px solid rgba(140, 140, 140, 0.14)",
+                      boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                     }} 
+                    image={room.images[0] || defaultImage} 
+                    component="img" title="Room Image" />
                     <Box
                       sx={{
                         borderRadius: "0 15px 0 15px",

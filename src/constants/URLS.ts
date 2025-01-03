@@ -100,8 +100,8 @@ export const PORTALBOOKING = {
 };
 
 export const PORTALADS={
-  getAds:`admin/ads`,
-  getAddDetails:(id: string) =>`admin/ads/${id}`
+  getAds:`portal/ads`,
+  getAddDetails:(id: string) =>`portal/ads/${id}`
 };
 
 export const PORTALROOMSCOMMENTS={

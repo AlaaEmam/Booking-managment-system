@@ -108,7 +108,8 @@ const FavCard: React.FC<FavCardProps> = ({ room, onFavorite, onView, isLarge }) 
         }} 
         />        
         </IconButton>
-        <IconButton sx={{ width: '40px', height: '40px' }} onClick={() => onFavorite(room._id)}>
+        <IconButton sx={{ width: '40px', height: '40px' }} 
+        onClick={() => onFavorite(room._id)}>
            {/* if you login */}
             <Favorite 
             style={{ 

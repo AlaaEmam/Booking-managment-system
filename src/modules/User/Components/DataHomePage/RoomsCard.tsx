@@ -20,9 +20,11 @@ interface RoomsCardProps {
   location: string;
   price: number;
   discount?: string; 
+  onFavorite: (id: string) => void;
+  onView: (id: string) => void;
 }
 
-const RoomsCard: React.FC<RoomsCardProps> = ({_id, title, location, imageUrl, price, discount }) => {
+const RoomsCard: React.FC<RoomsCardProps> = ({onFavorite ,onView,_id, title, location, imageUrl, price, discount }) => {
 
   const navigate = useNavigate();
 
@@ -33,17 +35,17 @@ const RoomsCard: React.FC<RoomsCardProps> = ({_id, title, location, imageUrl, pr
         sx={{
           minWidth: 260,
           maxWidth: 260,
-          height: '300px',
+          height: '310px',
           fontFamily: 'Poppins',
           position: 'relative',
           borderRadius: '15px',
           display: 'flex',
           flexDirection: 'column',
-          overflow: 'hidden',
           transition: '0.3s',
+          margin: '10px',
           '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
           },
         }}
       >
@@ -108,7 +110,7 @@ const RoomsCard: React.FC<RoomsCardProps> = ({_id, title, location, imageUrl, pr
             },
           }}
         >
-          <IconButton sx={{ width: '40px', height: '40px' }}>
+          <IconButton sx={{ width: '40px', height: '40px' }}  onClick={() => onView(_id)}>
             <Visibility
             sx={{ 
               color: 'white', 
@@ -125,7 +127,7 @@ const RoomsCard: React.FC<RoomsCardProps> = ({_id, title, location, imageUrl, pr
             />
           </IconButton>
 
-          <IconButton sx={{ width: '40px', height: '40px' }}>
+          <IconButton sx={{ width: '40px', height: '40px' }}   onClick={() => onFavorite(_id)}>
           <Favorite 
           style={{ 
             color: 'white', 
