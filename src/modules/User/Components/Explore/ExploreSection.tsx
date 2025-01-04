@@ -23,7 +23,6 @@ const CssTextField = styled(TextField)({
   ".MuiInputBase-input ": {
     textAlign: "center",
     color: "var(--primary-color)",
-
     height: "1rem",
   },
   ".MuiOutlinedInput-notchedOutline": {
@@ -50,9 +49,11 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function ExploreSection() {
   const navigate = useNavigate();
-  //increase and decrese
+  // increase and decrease
 
   const [capacity, setCapacity] = useState<number>(2);
+  const [startDate, setStartDate] = useState<any | null>(null);
+  const [endDate, setEndDate] = useState<any | null>(null);
 
   const handleIncrease = () => {
     setCapacity((prev) => prev + 1);
@@ -67,24 +68,25 @@ export default function ExploreSection() {
   };
 
   const getStartdDate = (date: any | null) => {
-    localStorage.setItem("startDate", date.toISOString());
+    setStartDate(date);
+    localStorage.setItem("startDate", date?.toISOString());
   };
 
   const getEndDate = (date: any | null) => {
-    localStorage.setItem("endDate", date.toISOString());
+    setEndDate(date);
+    localStorage.setItem("endDate", date?.toISOString());
   };
+
   const [open, setOpen] = React.useState(false);
-  const [dateRange, setDateRange] = React.useState({
-    endDate: "2023-01-20",
-    startDate: "2023-01-10",
-  });
   const toggle = () => setOpen(!open);
+
+  const isExploreButtonDisabled = !startDate || !endDate;
 
   return (
     <>
       <Container maxWidth="lg">
         <Grid container spacing={2} sx={{ my: "4rem" }}>
-          <Grid size={{ lg: 6, md: 8, sm: 12 }} sx={{ paddingRight: "2rem"}}>
+          <Grid size={{ lg: 6, md: 8, sm: 12 }} sx={{ paddingRight: "2rem" }}>
             <Item>
               <Typography
                 variant="h3"
@@ -118,157 +120,90 @@ export default function ExploreSection() {
                 Pick a Date{" "}
               </Typography>
 
+              <Item sx={{ width: "100%" }}>
+                <Stack>
+                  <Stack direction={{ xs: "column", sm: "row" }} spacing={{ md: 1 }}>
+                    <Item sx={{ width: "50%" }}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={["DatePicker"]}>
+                          <CssDatePicker
+                            onChange={getStartdDate}
+                            label="Start date"
+                            sx={{ width: "100%" }}
+                          />
+                        </DemoContainer>
+                      </LocalizationProvider>
+                    </Item>
 
-            <Item sx={{ width: "100%}" }}>
-              {/* <div>
-                <CssTextField
-                  id="outlined-basic"
-                  fullWidth
-                  value={
-                    dateRange
-                      ? `${dateRange.startDate} : ${dateRange.endDate}`
-                      : ""
-                  }
-                  label=""
-                  variant="outlined"
-                  sx={{
-                    borderRadius: "0",
-                    textAlign: "left",
-                    padding: 0,
-                    backgroundColor: "var(--blue)",
-                  }}
-                  onClick={() => {
-                    toggle();
-                  }}
-                />
-                 <DateRangePicker
-                  open={open}
-                  toggle={toggle}
-                  onChange={(range) => {
-                    console.log(range);
-                    setDateRange({
-                      startDate: range.startDate?.toDateString(),
-                      endDate: range.startDate?.toDateString(),
-                    });
-                    localStorage.setItem(
-                      "endDate",
-                      range.endDate?.toISOString()
-                    );
-                    localStorage.setItem(
-                      "startDate",
-                      range.startDate?.toISOString()
-                    );
-                  }}
-                />
-              </div> */}
+                    <Item sx={{ width: "50%" }}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={["DatePicker"]}>
+                          <CssDatePicker
+                            onChange={getEndDate}
+                            label="End date"
+                            sx={{ width: "100%" }}
+                          />
+                        </DemoContainer>
+                      </LocalizationProvider>
+                    </Item>
+                  </Stack>
 
-
-              <Stack>
-              <Stack
-                direction={{ xs: "column", sm: "row"}}
-                spacing={{ md: 1 }}
-              >
-                <Item sx={{ width: "50%" }}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={["DatePicker"]}>
-                      <CssDatePicker
-                        onChange={getStartdDate}
-                        label="Start date"
-                        sx={{ width: "100%" }}
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </Item>
-
-                <Item sx={{ width: "50%" }}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={["DatePicker"]}>
-                      <CssDatePicker
-                        onChange={getEndDate}
-                        label="End date"
-                        sx={{ width: "100%" }}
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </Item>
-              </Stack>
-
-              <Box sx={{ my: "1rem" }}>
-                <Typography
-                  sx={{ color: "var(--primary-color)" }}
-                  variant="subtitle1"
-                  gutterBottom
-                >
-                  Capacity
-                </Typography>
-                <Box display="flex" alignItems="center">
-                  <ButtonGroup
-                    disableElevation
-                    variant="contained"
-                    aria-label="Disabled button group"
-                    fullWidth
-                  >
+                  <Box sx={{ my: "1rem" }}>
+                    <Typography sx={{ color: "var(--primary-color)" }} variant="subtitle1" gutterBottom>
+                      Capacity
+                    </Typography>
+                    <Box display="flex" alignItems="center">
+                      <ButtonGroup disableElevation variant="contained" aria-label="Disabled button group" fullWidth>
+                        <Button sx={{ width: "20%", background: "var(--red)" }} onClick={handleDecrease}>
+                          -
+                        </Button>
+                        <CssTextField
+                          type="number"
+                          sx={{
+                            width: "80%",
+                            textAlign: "center !important",
+                            borderRadius: "0",
+                            padding: 0,
+                            backgroundColor: "var(--blue)",
+                          }}
+                          value={capacity}
+                          placeholder="2person"
+                          InputProps={{
+                            readOnly: true,
+                            style: { textAlign: "center" },
+                          }}
+                          variant="outlined"
+                          margin="none"
+                        />
+                        <Button sx={{ width: "20%", background: "var(--green-btn)" }} onClick={handleIncrease}>
+                          +
+                        </Button>
+                      </ButtonGroup>
+                    </Box>
                     <Button
-                      sx={{ width: "20%", background: "var(--red)" }}
-                      onClick={handleDecrease}
-                    >
-                      -
-                    </Button>
-                    <CssTextField
-                      type="number"
+                      variant="contained"
+                      size="large"
                       sx={{
-                        width: "80%",
-                        textAlign: "center !important",
-                        borderRadius: "0",
-                        padding: 0,
-                        backgroundColor: "var(--blue)",
+                        width: "50%",
+                        py: "0.7rem",
+                        margin: "3rem 0",
+                        borderRadius: 1,
+                        textTransform: "none",
+                        fontFamily: "Poppins",
+                        boxShadow: "0px 8px 15px 0px rgba(50, 82, 223, 0.30)",
                       }}
-                      value={capacity}
-                      placeholder="2person"
-                      InputProps={{
-                        readOnly: true,
-                        style: { textAlign: "center" }, // Center the text
-                      }}
-                      variant="outlined"
-                      margin="none"
-                    />
-                    <Button
-                      sx={{ width: "20%", background: "var(--green-btn)" }}
-                      onClick={handleIncrease}
+                      onClick={explore}
+                      disabled={isExploreButtonDisabled}  // Disable button if startDate or endDate are not selected
                     >
-                      +
+                      Explore
                     </Button>
-                  </ButtonGroup>
-                </Box>
-                <Button
-                  variant="contained"
-                  size="large"
-                  sx={{
-                    width: "50%",
-                    py: "0.7rem",
-                    margin: "3rem 0",
-                    borderRadius: 1,
-                    textTransform: "none",
-                    fontFamily: "Poppins",
-                    boxShadow: "0px 8px 15px 0px rgba(50, 82, 223, 0.30)",
-                  }}
-                  onClick={explore}
-                >
-                  Explore
-                </Button>
-              </Box>
-            </Stack>
+                  </Box>
+                </Stack>
+              </Item>
             </Item>
-
-
-            </Item>
-
-
-
           </Grid>
           <Grid size={{ lg: 6, md: 4, sm: 12 }}>
             <Item>
-
               <img src={panner} alt="" width="100%" />
             </Item>
           </Grid>

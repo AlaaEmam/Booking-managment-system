@@ -112,7 +112,8 @@ export default function RoomDeta() {
   };
 
   const calcDays = async () => {
-    if (!startDate || !endDate) {
+    console.log(setRoomDetails)
+       if (!startDate || !endDate) {
       toast.error("Please select both start and end dates.");
       return;
     }

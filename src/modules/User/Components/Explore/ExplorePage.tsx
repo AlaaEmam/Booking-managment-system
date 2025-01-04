@@ -44,6 +44,7 @@ export default function ExplorePage() {
     setIsLoading(true);
     try {
       const res = await axiosInstance.get(`${baseURL}${PORTALROOMS.getAllRooms(page, size)}`);
+      console.log("All rooms data:", res.data.data.rooms); // لعرض الداتا في الكونسول
       setRooms(res.data.data.rooms);
       setTotalResult(res.data.data.totalCount);
       setIsLoading(false);
@@ -65,6 +66,7 @@ export default function ExplorePage() {
           size
         )}`
       );
+      console.log("Filtered rooms data:", res.data); // لعرض الداتا في الكونسول
       setRooms(res.data.data.rooms);
       setTotalResult(res.data.data.totalCount);
       setIsLoading(false);
@@ -105,7 +107,7 @@ export default function ExplorePage() {
           <Grid container spacing={2}>
             <Grid sx={{ textAlign: "center", margin: "4rem 0" }} size={{ md: 12 }}>
               <Item sx={{ position: "relative" }}>
-                <Typography sx={{ mt: "3rem", color: "var(--primary-color)" , fontSize: "32px" , fontWeight: 'bolder'}} gutterBottom>
+                <Typography sx={{ mt: "3rem", color: "var(--primary-color)", fontSize: "32px", fontWeight: 'bolder' }} gutterBottom>
                   Explore ALL Rooms
                 </Typography>
 
@@ -134,17 +136,22 @@ export default function ExplorePage() {
 
             {rooms.map((room) => (
               <Grid key={room._id} size={{ md: 4, sm: 6, xs: 12 }}>
-                <Link to={`/explore-rooms/room-details/${room._id}`} onClick={() => console.log(`Room ID: ${room._id}`)}>
+                <Link
+                  to={`/room-details/${room._id}`} // تم تعديل الباث ليشمل الـ room_id
+                  onClick={() => console.log(`Room ID: ${room._id}`)} // لإظهار الـ room_id عند الضغط
+                >
                   <Item sx={{ position: "relative", mb: "1rem" }}>
-                    <CardMedia 
-                    sx={{ 
-                      height: 250, 
-                      borderRadius: "15px",
-                      border: "0.5px solid rgba(140, 140, 140, 0.14)",
-                      boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                     }} 
-                    image={room.images[0] || defaultImage} 
-                    component="img" title="Room Image" />
+                    <CardMedia
+                      sx={{
+                        height: 250,
+                        borderRadius: "15px",
+                        border: "0.5px solid rgba(140, 140, 140, 0.14)",
+                        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                      }}
+                      image={room.images[0] || defaultImage}
+                      component="img"
+                      title="Room Image"
+                    />
                     <Box
                       sx={{
                         borderRadius: "0 15px 0 15px",
