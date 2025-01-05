@@ -93,7 +93,9 @@ const FavCard: React.FC<FavCardProps> = ({ room, onFavorite, onView, isLarge }) 
           },
         }}
       >
-        <IconButton sx={{ width: '40px', height: '40px' }} onClick={() => onView(room._id)}>
+        <IconButton sx={{ width: '40px', height: '40px' }} 
+        onClick={() => onView(room._id)}
+        >
          <Visibility
          sx={{ 
           color: 'white', 

@@ -142,3 +142,6 @@ body{font-family: "Poppins"}
   color: var(--gray-color) !important;
 
 }
+.css-15fbbcn-MuiPaper-root{
+  background-color: transparent !important;
+}

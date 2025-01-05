@@ -22,23 +22,22 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   reviewerRole,
 }) => {
   return (
-    <Grid container sx={{  height: '100vh' ,marginTop: 4}} spacing={2}>
-      <Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Grid container sx={{  height: 'auto' ,marginTop: 4 }} spacing={4}>
+      <Grid  xs={6} md={6} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <CardMedia component="img" height={600} image={imageUrl} alt={title} sx={{ width: '100%', objectFit: 'contain' }} />
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid  xs={6} md={6}>
         <Card sx={{ 
             backgroundColor: 'transparent',
             boxShadow: 'none',
             maxWidth: 600, 
             height: 'auto' ,
             borderRadius: '15px', 
-            position: 'absolute', 
             overflow: 'visible' , 
-            display: 'flex', 
+            display: 'flex',
             flexDirection: 'column', 
             justifyContent: 'space-between',
-            transform: 'translate(-10%, 30%)',
+            marginTop:{ xs: '30%', sm: '30%', md: '20%' } ,
             }}>
           <CardContent>
             <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' ,color: 'var(--primary-color)' , marginBottom: 2 }}>
@@ -51,7 +50,11 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
               </Typography>
              
             </Box>
-            <Typography sx={{fontSize: 32}} color="var(--secondary-color) ">
+            <Typography     
+            sx={{
+                fontSize: { xs: 20, sm: 24, md: 32 },
+                color: 'var(--secondary-color)',
+              }}>
               {reviewText}
             </Typography>
             <Typography  color="var(--gray-color) " fontSize={12} >

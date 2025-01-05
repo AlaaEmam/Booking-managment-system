@@ -28,7 +28,39 @@ export default function DataHomePage() {
     slidesToShow: 4,
     slidesToScroll: 1,
     autoplay: true,
+    centerMode: true, // Enable center mode to allow spacing
+     responsive: [
+    //   {
+    //     breakpoint: 900, // Medium screens
+    //     settings: {
+    //       slidesToShow: 3,
+    //       slidesToScroll: 1,
+    //       centerMode: true,
+    //       centerPadding: '62.5rem',
+
+    //     },
+    //   },
+      {
+        breakpoint: 600, // Small screens
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          centerMode: true,
+          centerPadding: '10%', // Adjust padding for small screens
+        },
+      },
+      {
+        breakpoint: 490, // Small screens
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          centerMode: true,
+          centerPadding: '10%', // Adjust padding for small screens
+        },
+      },
+    ],
   };
+
   const [rooms, setRooms] = React.useState<Room[]>([]);
   const [ads , setAds] = React.useState<Ads[]>([]);
 
@@ -78,15 +110,15 @@ const handleViewClick = (id: string) => {
   return (
   <>
       {/* ADS */}
-      <Container sx={{ height: 'auto', marginBlock: '10px', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-        <Typography sx={{ fontSize: '24px', color: 'var(--primary-color)', fontWeight: 'bolder' , display: 'block'}} align="left" gutterBottom>
+      <Container sx={{ height: 'auto', marginBlock: '0.625rem', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+        <Typography sx={{ fontSize: '1.5rem', color: 'var(--primary-color)', fontWeight: 'bolder' , display: 'block'}} align="left" gutterBottom>
           Popular Choice
         </Typography>
           <div>
           <Slider {...settings}>
           {ads.filter(ad => ad.isActive).length > 0 ? (
             ads.filter(ad => ad.isActive).map((ad) => (
-                <Grid key={ad._id}>
+                <Grid key={ad._id} sx={{ padding: 1, margin: '0 0.625rem' }}>
                     <RoomsCard
                         _id={ad.room?._id || 'default-id'}
                         title={ad.room?.roomNumber || 'No Room Number'}
@@ -107,13 +139,13 @@ const handleViewClick = (id: string) => {
       </Container>
 
     <Container  sx={{ paddingBlock: 1 ,overflow:'hidden', height:'auto' ,marginTop: 5 ,display: 'flex', flexDirection: 'column', justifyContent: 'center'}} >      
-      <Typography sx={{fontSize: '24px' , color: 'var(--primary-color)' , fontWeight: 'bolder'}} align="left" gutterBottom>
+      <Typography sx={{fontSize: '1.5rem' , color: 'var(--primary-color)' , fontWeight: 'bolder'}} align="left" gutterBottom>
       Hotels with large living room      
       </Typography>
       <div >
       <Slider {...settings}>
         {rooms.map((room) => (
-          <Grid item key={room._id}>
+          <Grid item key={room._id} sx={{ padding: 1, margin: '0 0.625rem' }}>
           <RoomsCard
               _id={room?._id || 'default-id'}
               title={room?.roomNumber || 'No Room Number'}

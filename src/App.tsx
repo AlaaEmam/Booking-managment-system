@@ -35,7 +35,7 @@ import RoomForm from "./modules/Admin/Components/Rooms/RoomForm/RoomForm";
 import ExplorePage from "./modules/User/Components/Explore/ExplorePage";
 import Payment from "./modules/User/Components/Payment/Payment";
 // import PaymentStep2 from "./modules/User/Components/Payment/paymentStep1";
-import RoomDeta from "./modules/User/Components/RoomDetailsPage/RoomDeta";
+// import RoomDeta from "./modules/User/Components/RoomDetailsPage/RoomDeta";
 import PaySucssed from "./modules/User/Components/Payment/PaySucssed";
 
 const lightTheme = createTheme({
@@ -146,7 +146,7 @@ function App() {
         },
         { path: "explore-rooms", element: <ExploarePage /> },
         { path: "explore-rooms/:capacity", element: <ExplorePage /> },
-        { path: "explore-rooms/room-details/:room_id", element: <RoomDeta /> },
+        // { path: "explore-rooms/room-details/:room_id", element: <RoomDeta /> },
         {
           path: "your-favorite",
           element: (

@@ -33,11 +33,9 @@ interface LoginData {
 
 // Styled component
 const Item = styled(Paper)(({ theme }) => ({
-  ...theme.typography.body2,
   textAlign: "left",
   border: "none",
   boxShadow: "none",
-  padding: "1.5rem",
 }));
 
 export default function Login() {
@@ -92,11 +90,11 @@ export default function Login() {
   };
 
   return (
-     <Container maxWidth="lg">
+  <Container >
 
     <Grid
       container
-      sx={{ textAlign: "left", display: "flex", alignItems: "center" }}
+      sx={{ textAlign: "left", display: "flex", alignItems: "center" , justifyContent: "space-around" }}
     >
       <Grid size={{ md: 6 }}>
         <Item
@@ -105,12 +103,12 @@ export default function Login() {
               xs: " 1.25rem",
               sm: "3.125rem",
               md: "6.25rem",
-              lg: "0.125rem 9.25rem",
+              // lg: "0.125rem 9.25rem",
             },
             boxShadow: "none",
           }}
         >
-          <Item sx={{ marginY: 4, boxShadow: "none" }}>
+          <Item sx={{ boxShadow: "none" }}>
             <img
               src={Logo}
               style={{ maxWidth: "100%", width: "80%" }}
@@ -129,7 +127,7 @@ export default function Login() {
           <Typography>If you don’t have an account register </Typography>
 
           <Typography sx={{ marginBottom: "2rem" }}>
-            You can{" "}
+            You can
             <Link
               onClick={() => navigate("/auth/registration")}
               underline="none"
@@ -227,7 +225,6 @@ export default function Login() {
         </Item>
       </Grid>
       <Grid
-        item
         size={{ md: 6, xs: 12 }}
         sx={{
           display: "flex",
@@ -235,7 +232,6 @@ export default function Login() {
           alignItems: "center",
           height: "100vh", // Full viewport height
           overflow: "hidden", // Prevent scrolling
-          padding: "1rem", // Add padding for spacing around the edges
           boxSizing: "border-box",
         }}
       >
@@ -260,7 +256,6 @@ export default function Login() {
               backgroundPosition: "center",
               display: "flex",
               maxHeight: "100vh",
-              padding: "2rem",
             }}
           >
             <Box

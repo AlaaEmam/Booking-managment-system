@@ -5,10 +5,10 @@ import {
   CardMedia,
   Typography,
   Chip,
+  IconButton,
+  Box,
 } from '@mui/material';
 import { Visibility, Favorite } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
-import { Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { axiosInstance, FAVROOMS } from '../../../../constants/URLS';
 
@@ -24,15 +24,12 @@ interface RoomsCardProps {
 }
 
 const RoomsCard: React.FC<RoomsCardProps> = ({ onFavorite, onView, _id, title, location, imageUrl, price, discount }) => {
-
   const navigate = useNavigate();
 
   // Handle adding to favorites
   const handleFavoriteClick = async (id: string) => {
     try {
-      await axiosInstance.post(FAVROOMS.getAddDetailsFAVROOMS, {
-        roomId: id,
-      });
+      await axiosInstance.post(FAVROOMS.getAddDetailsFAVROOMS, { roomId: id });
       console.log("Room added to favorites successfully!");
     } catch (error) {
       console.error("Error adding room to favorites:", error);
@@ -42,19 +39,29 @@ const RoomsCard: React.FC<RoomsCardProps> = ({ onFavorite, onView, _id, title, l
   return (
     <Card
       sx={{
-        minWidth: 260,
+        width: "100%",
         maxWidth: 260,
-        height: "300px",
+        height: "18.75rem",
         fontFamily: "Poppins",
         position: "relative",
-        borderRadius: "15px",
+        borderRadius: "0.9375rem",
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
         transition: "0.3s",
         "&:hover": {
           backgroundColor: "rgba(255, 255, 255, 0.8)",
-          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
+          boxShadow: "0 0.25rem 1.25rem rgba(0, 0, 0, 0.2)",
+        },
+        // Responsive width and height adjustments
+        '@media (max-width: 900px)': {
+          maxWidth: '300px', // Decrease the card size for medium screens
+        },
+        '@media (max-width: 600px)': {
+          maxWidth: '300px', // Further decrease for small screens
+        },
+        '@media (max-width: 490px)': {
+          maxWidth: '300px', // Full width on extra small screens
         },
       }}
     >
@@ -64,11 +71,11 @@ const RoomsCard: React.FC<RoomsCardProps> = ({ onFavorite, onView, _id, title, l
           label={`%${discount}`}
           sx={{
             position: "absolute",
-            width: "180px",
-            height: "40px",
-            fontSize: "16px",
+            width: "11.25rem",
+            height: "2.5rem",
+            fontSize: "1rem",
             fontWeight: 500,
-            borderRadius: "0px 0px 0px 15px",
+            borderRadius: "0rem 0rem 0rem 0.9375rem",
             right: 0,
             zIndex: 1,
             backgroundColor: "var(--popular-color)",
@@ -89,7 +96,7 @@ const RoomsCard: React.FC<RoomsCardProps> = ({ onFavorite, onView, _id, title, l
       {/* Card Content */}
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography
-          fontSize={20}
+          fontSize={{ xs: 16, sm: 18, md: 20 }} // Adjust font size based on screen size
           sx={{ fontWeight: 500 }}
           color="var(--primary-color)"
           component="div"
@@ -107,55 +114,68 @@ const RoomsCard: React.FC<RoomsCardProps> = ({ onFavorite, onView, _id, title, l
       {/* Icons for View and Favorite */}
       <Box
         sx={{
-          minWidth: 260,
-          maxWidth: 260,
-          height: '310px',
-          fontFamily: 'Poppins',
-          position: 'relative',
-          borderRadius: '15px',
+          position: 'absolute',
+          top: '0',
+          left: '0',
+          bottom: '0',
+          right: '0',
           display: 'flex',
-          flexDirection: 'column',
-          transition: '0.3s',
-          margin: '10px',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'var(--light-blue)',
+          cursor: 'pointer',
+          opacity: 0,
           '&:hover': {
-            backgroundColor: 'rgba(255, 255, 255, 0.8)',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+            opacity: 1,
           },
         }}
       >
         {/* View Button */}
         <IconButton
-          sx={{ width: "40px", height: "40px" }}
-          onClick={() => navigate(`/room-details/${_id}`)}
+          sx={{
+            width: "2.5rem",
+            height: "2.5rem",
+            '@media (max-width: 600px)': { // Adjust button size for small screens
+              width: '2rem',
+              height: '2rem',
+            },
+          }}
+          onClick={() => onView(_id)}
         >
           <Visibility
             sx={{
               color: 'white',
               fontSize: 20,
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'var(--star-color)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'white';
-              e.currentTarget.style.transform = 'scale(1)';
+              transition: 'color 0.3s',
+              '&:hover': {
+                color: 'var(--star-color)',
+                transform: 'scale(1.2)',
+              },
             }}
           />
         </IconButton>
 
         {/* Favorite Button */}
-        <IconButton sx={{ width: '40px', height: '40px' }} onClick={() => { onFavorite(_id); }}>
+        <IconButton
+          sx={{
+            width: "2.5rem",
+            height: "2.5rem",
+            '@media (max-width: 600px)': { // Adjust button size for small screens
+              width: '2rem',
+              height: '2rem',
+            },
+          }}
+          onClick={() => { onFavorite(_id); }}
+        >
           <Favorite
-            style={{
+            sx={{
               color: 'white',
               fontSize: 20,
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'var(--pink)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'white';
-              e.currentTarget.style.transform = 'scale(1)';
+              transition: 'color 0.3s',
+              '&:hover': {
+                color: 'var(--pink)',
+                transform: 'scale(1.2)',
+              },
             }}
           />
         </IconButton>
