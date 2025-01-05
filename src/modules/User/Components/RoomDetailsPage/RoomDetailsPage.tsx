@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Button, CircularProgress, Box, Typography, Grid, TextField, Paper, Rating } from '@mui/material';
+import { Button, CircularProgress, Box, Typography, Grid, TextField, Paper, Rating, Container, Stack, CardMedia, Breadcrumbs } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBed, faCouch, faBath, faUtensils, faWifi, faSnowflake, faFaucet, faTv } from '@fortawesome/free-solid-svg-icons';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { axiosInstance, PORTALBOOKING, PORTALROOMS } from '../../../../constants/URLS';
 import { toast } from 'react-toastify';
+import defaultImage from '../../../../assets/no-image.jpg';
+
 
 const RoomDetailsPage = () => {
   const { room_id } = useParams();
@@ -44,7 +46,16 @@ const RoomDetailsPage = () => {
   const handleStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => setStartDate(event.target.value);
   const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => setEndDate(event.target.value);
 
+  const isLoggedIn = () => {
+    return localStorage.getItem('token') !== null; // Adjust based on your authentication method
+  };
+
   const handleContinueBooking = async () => {
+    if (!isLoggedIn()) {
+      toast.error("You are not Login ,Please login first to continues your booking steps.");
+      return;
+    }
+    
     if (!room) {
       toast.error("Room data is not available.");
       return;
@@ -82,6 +93,28 @@ const RoomDetailsPage = () => {
     }
   };
 
+
+  
+  const handleSubmitRating = async () => {
+    if (!isLoggedIn()) {
+      toast.error("Please log in first.");
+      return;
+    }
+
+    // Add logic for submitting rating here
+    toast.info("Rating submitted!");
+  };
+
+  const handleSubmitComment = async () => {
+    if (!isLoggedIn()) {
+      toast.error("Please log in first.");
+      return;
+    }
+
+    // Add logic for submitting comment here
+    toast.info("Comment submitted!");
+  };
+
   if (isLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -99,176 +132,218 @@ const RoomDetailsPage = () => {
   }
 
   return (
-    <Box sx={{ padding: "3rem", backgroundColor: "#F5F5F5" }}>
-      {/* Top Section: Room Name and Image */}
-      <Box sx={{ textAlign: "center", marginBottom: "2rem" }}>
-        <Typography variant="h3" sx={{ fontWeight: "bold", color: "#0288D1", fontSize: "2.5rem" }}>
-          {room?.roomNumber}
-        </Typography>
-        <img
-          src={room?.images[0] || "https://via.placeholder.com/400 "}  // Replace with default image if room image is unavailable
-          alt="Room"
-          style={{ width: "50%", height: "auto", marginTop: "1rem", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}
-        />
-      </Box>
+   <>
+    <Container maxWidth="lg">
+      <Grid  justifyContent="center" spacing={2} sx={{ my: "4rem" }}>
+        <Grid item xs={12} sx={{ marginRight: "4rem"}}>
+              <div role="presentation">
+                <Breadcrumbs
+                  aria-label="breadcrumb"
+                  sx={{
+                    "& .MuiBreadcrumbs-separator": { color: "var(--txt-gray)" },
+                    "& a": {
+                      textDecoration: "none",
+                      color: "var(--txt-gray)",
+                      "&:hover": { textDecoration: "underline", color: "secondary.dark" },
+                    },
+                  }}
+                >
+                  <Link color="inherit" to="/">
+                    Home
+                  </Link>
+                  <Link color="var(--primary-color)" to="#" aria-current="page" >
+                    Room Details
+                  </Link>
+                </Breadcrumbs>
+              </div>
+              <Typography sx={{ color: "var(--primary-color)", fontSize: "32px", fontWeight: 'bolder' , textAlign: 'center'}} gutterBottom>
+              {room?.roomNumber}                
+              </Typography>
+          </Grid>
+          <Grid item xs={12} key={room_id}>
+            <CardMedia 
+            component="img" 
+            height="300" 
+            
+            image={room?.images[0] || defaultImage} 
+            sx={{ borderRadius: "5px" }} />
 
-      {/* Bottom Section: Ratings, Comments, and Form */}
-      <Grid container spacing={4} sx={{ marginTop: "2rem" }}>
-        {/* Left Column: Form */}
-        <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ padding: "2rem", borderRadius: "10px", backgroundColor: "#FFFFFF", boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}>
-            <Typography variant="h5" sx={{ fontWeight: "bold", color: "#0288D1", marginBottom: "1rem" }}>
-              Room Booking Form
+          </Grid>
+
+      </Grid>
+    </Container>
+
+    <Container>
+    {/* Bottom Section: Ratings, Comments, and Form */}
+    <Grid container spacing={6}>
+  
+        {/* left Column: FontAwesome Icons and Paragraph */}
+      <Grid container item xs={12} md={8} sx={{padding: 10}}>
+            <Typography sx={{lineHeight: 1.7 , color: "var(--txt-gray)", fontSize: "16x" }}>
+            Minimal techno is a minimalist subgenre of techno music. It is characterized by a stripped-down aesthetic that exploits the use of repetition and understated development. Minimal techno is thought to have been originally developed in the early 1990s by Detroit-based producers Robert Hood and Daniel Bell.            
             </Typography>
-            <TextField
-              label="Start Date"
-              value={startDate}
-              onChange={handleStartDateChange}
-              fullWidth
-              variant="outlined"
-              type="date"
-              sx={{ marginBottom: "1.5rem", backgroundColor: "#FFF" }}
-              InputLabelProps={{ shrink: true }}
-            />
-            <TextField
-              label="End Date"
-              value={endDate}
-              onChange={handleEndDateChange}
-              fullWidth
-              variant="outlined"
-              type="date"
-              sx={{ marginBottom: "1.5rem", backgroundColor: "#FFF" }}
-              InputLabelProps={{ shrink: true }}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              sx={{ marginTop: "1rem", backgroundColor: "#0288D1", padding: "0.8rem", borderRadius: "8px" }}
-              onClick={handleContinueBooking}
-            >
-              Continue Booking
-            </Button>
-          </Paper>
-        </Grid>
-
-        {/* Right Column: FontAwesome Icons and Paragraph */}
-        <Grid item xs={12} md={6}>
-          <Box sx={{ padding: "2rem", backgroundColor: "#FFFFFF", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}>
-            <Typography variant="body1" sx={{ color: "#757575", marginBottom: "1.5rem", fontSize: "1.1rem" }}>
-              Minimal techno is a minimalist subgenre of techno music. It is characterized by a stripped-down aesthetic that exploits the use of repetition and understated development. Minimal techno is thought to have been originally developed in the early 1990s by Detroit-based producers Robert Hood and Daniel Bell.
+            <Typography sx={{ lineHeight: 1.7 , color: "var(--txt-gray)" ,fontSize: "16x" }}>
+            Such trends saw the demise of the soul-infused techno that typified the original Detroit sound. Robert Hood has noted that he and Daniel Bell both realized something was missing from techno in the post-rave era.            
             </Typography>
-
-            {/* FontAwesome Icons with Names */}
-            <Box sx={{ display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "space-between" }}>
-              <Box sx={{ textAlign: "center" }}>
-                <FontAwesomeIcon icon={faBed} size="lg" color="#0288D1" />
-                <Typography variant="body2" sx={{ color: "#0288D1", marginTop: "0.5rem" }}>5 Bedroom</Typography>
-              </Box>
-              <Box sx={{ textAlign: "center" }}>
-                <FontAwesomeIcon icon={faCouch} size="lg" color="#0288D1" />
-                <Typography variant="body2" sx={{ color: "#0288D1", marginTop: "0.5rem" }}>1 Living Room</Typography>
-              </Box>
-              <Box sx={{ textAlign: "center" }}>
-                <FontAwesomeIcon icon={faBath} size="lg" color="#0288D1" />
-                <Typography variant="body2" sx={{ color: "#0288D1", marginTop: "0.5rem" }}>3 Bathroom</Typography>
-              </Box>
-              <Box sx={{ textAlign: "center" }}>
-                <FontAwesomeIcon icon={faUtensils} size="lg" color="#0288D1" />
-                <Typography variant="body2" sx={{ color: "#0288D1", marginTop: "0.5rem" }}>1 Dining Room</Typography>
-              </Box>
-            </Box>
-
-            <Box sx={{ display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "space-between", marginTop: "1rem" }}>
-              <Box sx={{ textAlign: "center" }}>
-                <FontAwesomeIcon icon={faWifi} size="lg" color="#0288 D1" />
-                <Typography variant="body2" sx={{ color: "#0288D1", marginTop: "0.5rem" }}>10 Mbps</Typography>
-              </Box>
-              <Box sx={{ textAlign: "center" }}>
-                <FontAwesomeIcon icon={faSnowflake} size="lg" color="#0288D1" />
-                <Typography variant="body2" sx={{ color: "#0288D1", marginTop: "0.5rem" }}>7 Unit Ready</Typography>
-              </Box>
-              <Box sx={{ textAlign: "center" }}>
-                <FontAwesomeIcon icon={faFaucet} size="lg" color="#0288D1" />
-                <Typography variant="body2" sx={{ color: "#0288D1", marginTop: "0.5rem" }}>2 Refrigerator</Typography>
-              </Box>
-              <Box sx={{ textAlign: "center" }}>
-                <FontAwesomeIcon icon={faTv} size="lg" color="#0288D1" />
-                <Typography variant="body2" sx={{ color: "#0288D1", marginTop: "0.5rem" }}>4 Television</Typography>
-              </Box>
-            </Box>
-          </Box>
+            <Typography sx={{lineHeight: 1.7 ,  color: "var(--txt-gray)", marginBottom: "1rem", fontSize: "16x" }}>
+            Design is a plan or specification for the construction of an object or system or for the implementation of an activity or process, or the result of that plan or specification in the form of a prototype, product or process. The national agency for design: enabling Singapore to use design for economic growth and to make lives better.            
+            </Typography>
+            <Grid>
+            <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 , color: "var(--primary-color)" }}>
+                Room Facilities:
+            </Typography>
+            {room?.facilities && room.facilities.length > 0 ? (
+                <Box
+                    sx={{
+                        textAlign: 'left',
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(2, 1fr)', // Two columns
+                        gap: 1, // Space between items
+                    }}
+                >
+                    {room.facilities.map((facility: { name: string }, index: React.Key) => (
+                        <Typography key={index} variant="h6" color='var(--gray-color)' sx={{ mb: 0.5 }}>
+                            <span style={{ marginRight: 4, color: 'black' }}>•</span> 
+                            {facility.name} {/* تأكد من أن هذا هو الشكل الصحيح للوصول إلى اسم المرفق */}
+                        </Typography>
+                    ))}
+                </Box>
+            ) : (
+                <Typography variant="body1" color='var(--gray-color)' sx={{ mb: 0.5 }}>
+                    No facilities available for this room.
+                </Typography>
+            )}
         </Grid>
       </Grid>
+      {/* Right Column: Form */}
+      <Grid item xs={12} sm={4} 
+      sx={{ 
+        maxHeight: "500px",  
+        border: "1px solid var(--light-gray)", 
+        padding: "2rem" , 
+        borderRadius: 3 ,
+        }}>
+        <Typography mb={2} sx={{fontSize: 20 , color: "var(--primary-color)" , fontWeight: 700}}>
+                Start Booking
+          </Typography>
 
-      {/* Bottom Section: Ratings and Comments */}
-      <Box sx={{ marginTop: "2rem" }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <Paper
-              elevation={3}
-              sx={{
-                padding: "1rem",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                minHeight: "250px", // تحديد الحد الأدنى للارتفاع
-              }}
-            >
-              <Typography variant="h6" sx={{ marginBottom: "0.5rem" }}>
-                Rate
-              </Typography>
-              <Rating
-                name="simple-controlled"
-                value={rating}
-                onChange={(event, newValue) => {
-                  if (newValue !== null) {
-                    setRating(newValue);
-                  }
-                }}
-              />
-              <TextField
-                label="Message"
-                multiline
-                rows={4}
-                value={comment}
-                onChange={(event) => setComment(event.target.value)}
-                fullWidth
-                sx={{ marginTop: "1rem" }}
-              />
-              <Button variant="contained" color="primary" sx={{ marginTop: "1rem" }}>
-                Submit Rating
-              </Button>
-            </Paper>
-          </Grid>
+          <Typography style={{ display: "flex", alignItems: "center", fontSize: "36px" }} mb={1}>
+              <span style={{ color: "var(--green-btn)", marginRight: "1rem" ,fontWeight: "bold"  }}>${room?.price}</span>
+              <span style={{ color: "var(--txt-gray)" , fontWeight: "lighter" }}> Per Night</span>
+          </Typography>
+            
+          <Typography mb={5} sx={{ color: "var(--red)" , fontSize: 16 }}>
+            Discount {room?.discount} % Off
+          </Typography>
+            
+          <TextField
+            label="Start Date"
+            value={startDate}
+            onChange={handleStartDateChange}
+            fullWidth
+            variant="outlined"
+            type="date"
+            sx={{ marginBottom: "1.5rem", backgroundColor: "#FFF" }}
+            InputLabelProps={{ shrink: true }}
+          />
+          <TextField
+            label="End Date"
+            value={endDate}
+            onChange={handleEndDateChange}
+            fullWidth
+            variant="outlined"
+            type="date"
+            sx={{ marginBottom: "0.5rem", backgroundColor: "#FFF" }}
+            InputLabelProps={{ shrink: true }}
+          />
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{
+              width: "100%",
+              py: "0.7rem",
+              margin: "3rem 0",
+              backgroundColor: "var(--primary-color)",
+              borderRadius: 1,
+              textTransform: "none",
+              fontFamily: "Poppins",
+              boxShadow: "0px 8px 15px 0px rgba(50, 82, 223, 0.30)",
+            }}             
+             onClick={handleContinueBooking}
+          >
+            Continue Booking
+          </Button>
+      </Grid>
+  
+    </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Paper
-              elevation={3}
-              sx={{
-                padding: "1rem",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                minHeight: "250px", // تحديد الحد الأدنى للارتفاع
+    {/* Bottom Section: Ratings and Comments */}
+    <Box 
+    sx={{ 
+      border: "1px solid var(--light-gray)", 
+      padding: "3rem" , 
+      borderRadius: 3 ,
+      }}>
+      <Grid container spacing={4}>
+        <Grid item xs={12} md={6} sx={{ borderRight: "1px solid var(--light-gray)" , paddingRight: "1rem"}}>
+              <Box sx={{display: 'flex' , justifyContent: "space-between"}}>
+            <Typography sx={{ marginBottom: "0.5rem" ,fontSize: "18px" ,color: "var(--primary-color)" ,fontWeight: "bold" }}>
+              Rate
+            </Typography>
+            <Rating
+              name="simple-controlled"
+              value={rating}
+              onChange={(event, newValue) => {
+                if (newValue !== null) {
+                  setRating(newValue);
+                }
               }}
+            />
+              </Box>
+            <TextField
+              label="Message"
+              multiline
+              rows={4}
+              value={comment}
+              onChange={(event) => setComment(event.target.value)}
+              fullWidth
+              sx={{ marginTop: "1rem" }}
+            />
+            <Button 
+            variant="contained" 
+            color="primary" 
+            sx={{ marginTop: "1rem" }}
+            onClick={handleSubmitRating} // Call submit rating function
+
             >
-              <Typography variant="h6">Add Your Comment</Typography>
-              <TextField
-                label="Your Comment"
-                multiline
-                rows={4}
-                fullWidth
-                sx={{ marginTop: "1rem" }}
-              />
-              <Button variant="contained" color="primary" sx={{ marginTop: "1rem" }}>
-                Submit Comment
-              </Button>
-            </Paper>
-          </Grid>
+              Submit Rating
+            </Button>
         </Grid>
-      </Box>
+
+        <Grid item xs={12} md={6}>
+          <Typography sx={{ marginBottom: "0.5rem" ,fontSize: "18px" ,color: "var(--primary-color)",fontWeight: "bold"  }}>
+          Add Your Comment
+          </Typography>
+            <TextField
+              label="Your Comment"
+              multiline
+              rows={4}
+              fullWidth
+              sx={{ marginTop: "1rem" }}
+            />
+            <Button 
+            variant="contained" 
+            color="primary" 
+            sx={{ marginTop: "1rem" }}
+            onClick={handleSubmitComment} // Call submit comment function
+              >
+              Submit Comment
+            </Button>
+        </Grid>
+      </Grid>
     </Box>
+    </Container>
+    </>
   );
 };
 
