@@ -1,5 +1,5 @@
 import React from 'react';
-import Logo from '../../../../assets/logo.svg';
+import Logo from '../../../../assets/Logo.svg';
 import ErrorImage from '../../../../assets/NotFound.svg'; // Path to your 404 image
 import { Link } from 'react-router-dom';
 import { Box, Grid, Typography, Button } from '@mui/material';
