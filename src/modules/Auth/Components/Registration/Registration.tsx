@@ -71,7 +71,7 @@ export default function Registration() {
 
     try {
       console.log(data);
-      const res = await axiosInstance.post(PORTALAUTHURLS.createUser,formata)
+      const res = await axiosInstance.post(PORTALAUTHURLS.createUser,formata);
       // const res = await axios.post(
       //   "https://upskilling-egypt.com:3000/api/v0/portal/users",
       //formata
