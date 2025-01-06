@@ -65,7 +65,7 @@ const CheckOutForm = () => {
       console.log(tokenValue);
 
       await payBooking(`${booking_id}`, tokenValue);
-      navigate('/Bokking/sucssed')
+      navigate('/Booking/sucssed');
     } catch (finalError) {
       toast.error(finalError);
     }
