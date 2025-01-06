@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { axiosInstance, PORTALAUTHURLS } from "../../../../constants/URLS";
 import { toast } from "react-toastify";
 
+
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -68,21 +69,44 @@ export default function Registration() {
     formata.append("password", data.password);
     formata.append("confirmPassword", data.confirmPassword);
     formata.append("role", data.role);
-
+  
     try {
       console.log(data);
-      const res = await axiosInstance.post(PORTALAUTHURLS.createUser,formata);
-      // const res = await axios.post(
-      //   "https://upskilling-egypt.com:3000/api/v0/portal/users",
-      //formata
-      // );
+      const res = await axiosInstance.post(PORTALAUTHURLS.createUser, formata);
       toast.success(res.data.message);
-      navigate('/auth/login')
+      navigate('/auth/login');
       console.log(res);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      // Check for network error (no response from server)
+      if (!error.response) {
+        toast.error("Network error: Please check your internet connection or try again later.");
+        console.error("Network error:", error);
+        return;
+      }
+  
+      // Handle errors based on the response status code
+      const status = error.response?.status;
+      switch (status) {
+        case 400:
+          toast.error("Bad Request: There seems to be an issue with the data you provided.");
+          console.error("Bad request:", error.response?.data);
+          break;
+        case 401:
+          toast.error("Unauthorized: You do not have permission to perform this action.");
+          console.error("Unauthorized:", error.response?.data);
+          break;
+        case 500:
+          toast.error("Server error: Something went wrong on the server. Please try again later.");
+          console.error("Server error:", error.response?.data);
+          break;
+        default:
+          toast.error("An unexpected error occurred. Please try again later.");
+          console.error("Error:", error.response?.data);
+          break;
+      }
     }
   };
+  
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: "#fff",
