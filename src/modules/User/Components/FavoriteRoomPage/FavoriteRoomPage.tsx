@@ -3,6 +3,7 @@ import { axiosInstance, FAVROOMS } from '../../../../constants/URLS';
 import { Box, Card, Typography, Grid, CardMedia, IconButton, Pagination } from '@mui/material';
 import { FaHeart } from 'react-icons/fa';
 import Noimage from '../../../../assets/no-image.jpg';
+import { toast } from 'react-toastify';
 
 interface Room {
   _id: string;
@@ -46,6 +47,7 @@ const FavoriteRoomPage = () => {
       });
       if (response.data.success) {
         loadFavoriteRooms(currentPage);
+        toast.info("The room has been removed from your favorites. You can always add it back!");
       } else {
         console.error('Failed to delete the favorite room');
       }

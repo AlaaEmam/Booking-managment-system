@@ -5,6 +5,8 @@ import { axiosInstance, FAVROOMS, PORTALADS, PORTALROOMS } from './../../../../c
 import RoomsCard from './RoomsCard';
 import Slider from "react-slick";
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 
 interface Room {
@@ -86,17 +88,36 @@ export default function DataHomePage() {
 
 
 
+
+const navigate = useNavigate();
+
+const isLoggedIn = () => {
+  return localStorage.getItem('token') !== null; // Adjust based on your authentication method
+};
+
 const handleImageClick = async (id: string) => {
+  if (!isLoggedIn()) {
+    toast.error("You are not logged in. Please login first to continue your Add Favorite room step.");
+    return;
+  }
+
   try {
-    await axiosInstance.post(FAVROOMS.getAddDetailsFAVROOMS, {
-      roomId: id,
-    });
+    const res = await axios.post(
+      `https://upskilling-egypt.com:3000/api/v0/portal/favorite-rooms`,
+      {
+        roomId: id,
+      },
+      {
+        headers: { Authorization: localStorage.getItem('token') },
+      }
+    );
+
     navigate("/your-favorite");
+    toast.success("Great choice! The room has been added to your favorites ")
   } catch (error) {
     console.error("Error sending favorite room:", error);
   }
 };
-const navigate = useNavigate();
 
 const handleViewClick = (id: string) => {
   navigate(`/room-details/${id}`);
